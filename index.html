@@ -331,6 +331,12 @@
       if (chKey) startChapter(chKey);
     } else if (d.action === 'nextLesson') {
       goForward();
+    } else if (d.action === 'navigateLesson') {
+      // Jump to a specific lesson file within the current chapter
+      if (currentChapter && d.file) {
+        var idx = CHAPTERS[currentChapter].lessons.indexOf(d.file);
+        if (idx !== -1) { currentIdx = idx; loadUrl(CHAPTERS[currentChapter].root + d.file); }
+      }
     } else if (d.action === 'goBack') {
       // Back from lessons page → go to splash
       loadUrl(ROOT1 + 'moosa-splash.html');
