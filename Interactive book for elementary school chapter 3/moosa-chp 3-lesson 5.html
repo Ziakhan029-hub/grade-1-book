@@ -199,7 +199,39 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
 </style>
 </head>
 <body>
-<script>window.__NARR_AUDIO__={};</script>
+<script>window.__NARR_AUDIO__={"انظر إلى النمط وأنشئه في المربعات أدناه":"../audio/c3c8a3fb.mp3"};</script>
+<script>
+(function(){
+  var _lTxt='',_au=null,debT=null,retryT=null,_spk=false;
+  var SELS=['.q-banner','.tray-lbl'];
+  function _strip(t){return t.replace(/[^\u0600-\u06FF\u0020-\u007E]/g,'').replace(/\s+/g,' ').trim();}
+  function speak(raw){
+    var txt=_strip(raw);
+    if(!txt||txt===_lTxt)return;
+    _lTxt=txt;_spk=true;clearInterval(retryT);
+    if(_au){_au.pause();_au=null;}
+    var src=(window.__NARR_AUDIO__||{})[txt];
+    if(src){_au=new Audio(src);_au.play().catch(function(){});}
+    else{var u=new SpeechSynthesisUtterance(txt);u.lang='ar-AE';u.pitch=1.2;u.rate=0.9;speechSynthesis.cancel();speechSynthesis.speak(u);}
+  }
+  function readQ(){
+    if(document.querySelector('.win-overlay.show'))return;
+    for(var i=0;i<SELS.length;i++){var el=document.querySelector(SELS[i]);if(el&&el.textContent.trim().length>2){speak(el.textContent.trim());return;}}
+  }
+  window.addEventListener('load',function(){
+    var btn=document.createElement('button');btn.textContent='\uD83D\uDD0A';
+    btn.setAttribute('aria-label','\u0627\u0633\u062A\u0645\u0639 \u0645\u062C\u062F\u062F\u0627\u064B');
+    btn.style.cssText='position:fixed;bottom:20px;right:16px;z-index:9999;background:linear-gradient(135deg,#FCD34D,#F59E0B);border:none;border-radius:50%;width:48px;height:48px;font-size:24px;cursor:pointer;box-shadow:0 4px 0 #B45309,0 6px 16px rgba(180,100,0,.28);display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;';
+    btn.addEventListener('click',function(){_lTxt='';_spk=false;readQ();});
+    document.body.appendChild(btn);
+    setTimeout(readQ,300);setTimeout(readQ,900);setTimeout(readQ,2200);
+    retryT=setInterval(function(){if(_spk){clearInterval(retryT);return;}_lTxt='';readQ();},650);
+    setTimeout(function(){clearInterval(retryT);},9000);
+  });
+  var root=document.querySelector('.ml-widget')||document.body,_lp='';
+  try{new MutationObserver(function(){clearTimeout(debT);debT=setTimeout(function(){var el=document.querySelector(SELS.join(','));var nt=el?el.textContent.trim():'';if(nt&&nt!==_lp){_lp=nt;speak(nt);}},420);}).observe(root,{childList:true,subtree:true,characterData:true});}catch(e){}
+})();
+</script>
 <div class="ml-widget" id="mlWidget">
 
   <div class="top-bar" id="topBar"></div>
