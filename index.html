@@ -113,6 +113,8 @@
 
   var ROOT2 = 'Interactive book for elementary school chapter 2/';
 
+  var ROOT3 = 'Interactive book for elementary school chapter 3/';
+
   var CHAPTERS = {
     ch1: {
       root: ROOT1,
@@ -138,6 +140,19 @@
       ],
       lessonsPage: ROOT1 + 'moosa-lessons.html',
       dataId: '2'
+    },
+    ch3: {
+      root: ROOT3,
+      lessons: [
+        'moosa-chp 3-lesson 1.html',
+        'moosa-chp 3-lesson 2.html',
+        'moosa-chp 3-lesson 3.html',
+        'moosa-chp 3-lesson 4.html',
+        'moosa-chp 3-lesson 5.html',
+        'moosa-chp 3-lesson 6.html'
+      ],
+      lessonsPage: ROOT1 + 'moosa-lessons.html',
+      dataId: '3'
     }
   };
 
@@ -210,7 +225,7 @@
 
     if (fname === 'moosa-lessons.html') {
       injectLessonsPage();
-    } else if (fname.match(/moosa-lesson-classify|moosa-chp 2-lesson/)) {
+    } else if (fname.match(/moosa-lesson-classify|moosa-chp 2-lesson|moosa-chp 3-lesson/)) {
       watchForWin();
     }
   });
@@ -221,7 +236,7 @@
       var doc = frame.contentDocument;
 
       // Wire up lesson buttons to navigate
-      var lessonMap = { '1': 'ch1', '2': 'ch2' };
+      var lessonMap = { '1': 'ch1', '2': 'ch2', '3': 'ch3' };
       doc.querySelectorAll('.lesson').forEach(function(btn) {
         btn.addEventListener('click', function() {
           var chKey = lessonMap[btn.dataset.id];
@@ -311,7 +326,7 @@
     if (!d || typeof d !== 'object') return;
 
     if (d.action === 'openLesson') {
-      var idMap = { '1': 'ch1', '2': 'ch2' };
+      var idMap = { '1': 'ch1', '2': 'ch2', '3': 'ch3' };
       var chKey = idMap[String(d.id)];
       if (chKey) startChapter(chKey);
     } else if (d.action === 'nextLesson') {
