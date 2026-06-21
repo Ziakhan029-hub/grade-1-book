@@ -1,0 +1,117 @@
+<style>
+
+/* ── Female Narrator indicator ── */
+.f-narrator{
+  position:fixed!important;bottom:18px!important;right:12px!important;
+  top:auto!important;left:auto!important;
+  z-index:9999;
+  display:flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,#FCD34D,#F59E0B);
+  border:3px solid #fff;border-radius:999px;
+  padding:8px 14px 8px 10px;
+  box-shadow:0 4px 0 #B45309,0 6px 18px rgba(180,100,0,.28);
+  direction:rtl;
+  transition:opacity .3s;
+}
+.f-narrator-icon{font-size:20px;line-height:1;}
+.f-narrator-waves{display:flex;align-items:center;gap:3px;height:18px;}
+.f-narrator-waves span{
+  display:inline-block;width:3px;border-radius:3px;
+  background:#fff;opacity:.5;
+  animation:fnWave 1.2s ease-in-out infinite;
+}
+.f-narrator-waves span:nth-child(1){height:6px;animation-delay:0s}
+.f-narrator-waves span:nth-child(2){height:12px;animation-delay:.15s}
+.f-narrator-waves span:nth-child(3){height:18px;animation-delay:.3s}
+.f-narrator-waves span:nth-child(4){height:12px;animation-delay:.45s}
+.f-narrator-waves span:nth-child(5){height:6px;animation-delay:.6s}
+.f-narrator.speaking .f-narrator-waves span{opacity:1;background:#fff;}
+@keyframes fnWave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.4)}}
+/* ── Animated guide hand ── */
+#mlGuideHand{position:fixed;z-index:9990;pointer-events:none;font-size:38px;opacity:0;transform-origin:bottom center;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));will-change:left,top,opacity,transform;}
+#mlGuideHand.appear{animation:guideAppear .4s ease forwards;}
+@keyframes guideAppear{0%{opacity:0;transform:scale(.4) rotate(-30deg)}100%{opacity:1;transform:scale(1.2) rotate(-20deg)}}
+</style>
+
+
+
+<!-- Arabic Female Narrator + animated guide -->
+<div id="fNarrator" class="f-narrator" aria-live="polite" aria-label="المرشدة الصوتية">
+  <span class="f-narrator-icon">🧕</span>
+  <div class="f-narrator-waves">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+</div>
+<script>
+(function(){
+  if(!('speechSynthesis' in window)) return;
+  var lastTxt='',debT=null,unlocked=false,narEl=null,voiceReady=false;
+  speechSynthesis.onvoiceschanged=function(){
+    speechSynthesis.getVoices();
+    if(!voiceReady){voiceReady=true;setTimeout(readQ,300);}
+  };
+  function getVoice(){
+    var vs=speechSynthesis.getVoices();
+    return vs.find(function(v){return v.lang.startsWith('ar')&&/female|أنثى|hoda|salma|laila|amira/i.test(v.name);})||vs.find(function(v){return v.lang.startsWith('ar');})||null;
+  }
+  function speak(txt){
+    if(!txt||txt===lastTxt)return;
+    lastTxt=txt;
+    var u=new SpeechSynthesisUtterance(txt);
+    u.lang='ar-SA';
+    var v=getVoice();if(v)u.voice=v;
+    u.onstart=function(){if(narEl)narEl.classList.add('speaking');};
+    u.onend=function(){if(narEl)narEl.classList.remove('speaking');};
+    speechSynthesis.cancel();speechSynthesis.speak(u);
+  }
+  var SELS=['#ml-qPrompt','#ml-prompt','.q-prompt','.q-banner-text','.prompt-line','.tray-lbl','.count-reveal-label'];
+  function readQ(){
+    if(document.querySelector('.win-overlay.show'))return;
+    for(var i=0;i<SELS.length;i++){var el=document.querySelector(SELS[i]);if(el){var t=el.textContent.replace(/\s+/g,' ').trim();if(t.length>2){speak(t);return;}}}
+  }
+  function unlock(){if(unlocked)return;unlocked=true;speechSynthesis.cancel();setTimeout(readQ,200);}
+  document.addEventListener('touchstart',unlock,{once:true,passive:true});
+  document.addEventListener('click',unlock,{once:true});
+  var root=document.querySelector('.ml-widget')||document.body;
+  try{new MutationObserver(function(){clearTimeout(debT);debT=setTimeout(readQ,400);}).observe(root,{childList:true,subtree:true,characterData:true});}catch(e){}
+  window.addEventListener('load',function(){narEl=document.getElementById('fNarrator');setTimeout(readQ,500);setTimeout(readQ,1500);});
+})();
+</script>
+<script>
+(function(){
+  var hand=null,idleT=null,animT=null,IDLE=2000;
+  function init(){
+    hand=document.createElement('div');hand.id='mlGuideHand';hand.textContent='👆';
+    document.body.appendChild(hand);
+    schedule(2000);
+    document.addEventListener('pointerdown',onAction,{passive:true});
+    var qEl=document.getElementById('ml-qPrompt');
+    if(qEl)new MutationObserver(function(){onAction();schedule(2000);}).observe(qEl,{childList:true,characterData:true,subtree:true});
+  }
+  function onAction(){clearTimeout(idleT);clearTimeout(animT);hide();schedule(IDLE);}
+  function schedule(ms){clearTimeout(idleT);idleT=setTimeout(run,ms);}
+  function hide(){if(!hand)return;hand.style.transition='opacity .25s';hand.style.opacity='0';hand.classList.remove('appear');}
+  function run(){
+    if(!hand)return;
+    var items=document.querySelectorAll('#ml-tray .item:not(.placed)');
+    if(!items.length)return;
+    var item=items[0],box=document.getElementById('ml-box'+item.dataset.answer);
+    if(!box)return;
+    var iR=item.getBoundingClientRect(),bR=box.getBoundingClientRect();
+    hand.style.transition='none';
+    hand.style.left=(iR.left+iR.width/2-19)+'px';
+    hand.style.top=(iR.top-14)+'px';
+    hand.style.opacity='0';
+    hand.classList.add('appear');
+    animT=setTimeout(function(){
+      hand.style.transition='left .75s cubic-bezier(.4,0,.2,1),top .75s cubic-bezier(.4,0,.2,1),transform .75s,opacity .3s';
+      hand.style.left=(bR.left+bR.width/2-19)+'px';
+      hand.style.top=(bR.top+bR.height/2-19)+'px';
+      hand.style.transform='scale(.9) rotate(0deg)';
+      hand.style.opacity='1';
+      animT=setTimeout(function(){hide();animT=setTimeout(run,1800);},900);
+    },700);
+  }
+  if(document.readyState==='loading'){window.addEventListener('load',init);}else{init();}
+})();
+</script>

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>موسى التعليمي — اختيار الدرس</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root {
+  /* Brand palette */
+  --amber:        #F59E0B;
+  --amber-light:  #FCD34D;
+  --amber-dark:   #D97706;
+  --amber-shadow: #B45309;
+  --green:        #22C55E;
+  --green-dark:   #16A34A;
+  --green-shadow: #15803D;
+  --bg-top:       #FEF3C7;
+  --bg-bot:       #FDE68A;
+  --card-bg:      #FFFBF0;
+  --card-border:  rgba(255,255,255,0.95);
+  --ink:          #1C1917;
+  --ink-soft:     #78716C;
+  --tile-1:       #FEE2E2; --tile-1-icon: #DC2626;
+  --tile-2:       #DBEAFE; --tile-2-icon: #2563EB;
+  --tile-3:       #D1FAE5; --tile-3-icon: #059669;
+  --tile-4:       #EDE9FE; --tile-4-icon: #7C3AED;
+  --tile-5:       #FCE7F3; --tile-5-icon: #DB2777;
+  --tile-6:       #FFEDD5; --tile-6-icon: #EA580C;
+  --font-d: 'Baloo Bhaijaan 2', 'Tajawal', sans-serif;
+  --font-b: 'Tajawal', sans-serif;
+  --ease-b: cubic-bezier(.34,1.56,.64,1);
+  --ease-s: cubic-bezier(.25,.46,.45,.94);
+  --radius: 20px;
+}
+
+html,body {
+  width:100%; min-height:100vh; overflow-x:hidden;
+}
+
+body {
+  background: linear-gradient(160deg, var(--bg-top) 0%, var(--bg-bot) 100%);
+  font-family: var(--font-b);
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100svh;
+}
+
+/* subtle dot pattern */
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none;
+  background-image: radial-gradient(circle, rgba(180,120,0,.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.phone {
+  position: relative; z-index: 1;
+  width: min(390px, 100vw); min-height: 100vh; min-height: 100svh;
+  background: #FFFEF9;
+  display: flex; flex-direction: column;
+  padding: 0 0 32px; overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(200,160,60,.12), 0 24px 64px rgba(120,80,0,.12);
+}
+
+/* ── Header bar ── */
+.header {
+  background: linear-gradient(135deg, var(--amber) 0%, var(--amber-dark) 100%);
+  padding: 20px 20px 16px;
+  display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0;
+}
+.header-icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  background: rgba(255,255,255,.2);
+  border: 2px solid rgba(255,255,255,.4);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.header-icon svg { width:20px; height:20px; stroke:#fff; fill:none; }
+.header-text { flex:1; }
+.header-title {
+  font-family: var(--font-d); font-size: 20px; font-weight: 800;
+  color: #fff; line-height: 1;
+  text-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+.header-sub {
+  font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,.75); margin-top: 3px;
+}
+
+/* chapter badge */
+.chapter-badge {
+  margin: 16px 16px 8px;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, var(--amber-light), var(--amber));
+  border: 3px solid rgba(255,255,255,.9);
+  border-radius: 999px; padding: 6px 16px 6px 10px;
+  box-shadow: 0 4px 0 var(--amber-shadow), 0 6px 16px rgba(180,100,0,.18);
+  align-self: flex-start;
+}
+.chapter-badge-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,.9);
+}
+.chapter-badge-text {
+  font-family: var(--font-d); font-size: 13px; font-weight: 700;
+  color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+
+/* ── Lesson list ── */
+.lessons {
+  display: flex; flex-direction: column;
+  gap: 10px; flex-grow: 1;
+  padding: 8px 16px 16px;
+}
+
+.lesson {
+  display: flex; align-items: center; gap: 14px;
+  width: 100%; padding: 12px 14px;
+  background: var(--card-bg);
+  border: 3px solid var(--card-border);
+  border-radius: var(--radius);
+  cursor: pointer; position: relative;
+  box-shadow:
+    0 6px 0 rgba(180,130,60,.15),
+    0 8px 20px rgba(120,80,20,.08),
+    inset 0 2px 0 rgba(255,255,255,.9);
+  transition: transform 150ms var(--ease-b), box-shadow 150ms var(--ease-s), filter 150ms;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  outline: none;
+}
+.lesson:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 8px 0 rgba(180,130,60,.18),
+    0 12px 24px rgba(120,80,20,.12),
+    inset 0 2px 0 rgba(255,255,255,.9);
+  filter: brightness(1.02);
+}
+.lesson:active {
+  transform: scale(.98) translateY(4px);
+  box-shadow:
+    0 2px 0 rgba(180,130,60,.15),
+    0 4px 8px rgba(120,80,20,.08),
+    inset 0 2px 0 rgba(255,255,255,.9);
+  filter: brightness(.98);
+}
+.lesson:focus-visible {
+  outline: 3px solid var(--amber);
+  outline-offset: 2px;
+}
+
+/* tile per lesson — coloured */
+.tile {
+  flex-shrink: 0; width: 52px; height: 52px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  border: 2px solid rgba(255,255,255,.8);
+  box-shadow: inset 0 -2px 4px rgba(0,0,0,.06), 0 2px 6px rgba(0,0,0,.06);
+}
+.lesson:nth-child(1) .tile { background:var(--tile-1); }
+.lesson:nth-child(2) .tile { background:var(--tile-2); }
+.lesson:nth-child(3) .tile { background:var(--tile-3); }
+.lesson:nth-child(4) .tile { background:var(--tile-4); }
+.lesson:nth-child(5) .tile { background:var(--tile-5); }
+.lesson:nth-child(6) .tile { background:var(--tile-6); }
+
+.lesson-info { flex: 1; min-width: 0; }
+.lesson-label {
+  font-family: var(--font-d); font-size: 17px; font-weight: 800;
+  color: var(--ink); letter-spacing: .2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.lesson-num {
+  font-size: 12px; font-weight: 500; color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+/* chevron arrow */
+.lesson-arrow {
+  flex-shrink: 0; width: 28px; height: 28px; border-radius: 8px;
+  background: rgba(0,0,0,.04);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 150ms;
+}
+.lesson-arrow svg { width:14px; height:14px; stroke:var(--ink-soft); fill:none; }
+.lesson:hover .lesson-arrow { background: rgba(245,158,11,.12); }
+.lesson:hover .lesson-arrow svg { stroke: var(--amber-dark); }
+
+/* ── Selected state ── */
+.lesson.selected {
+  background: linear-gradient(135deg, var(--amber-light) 0%, var(--amber) 100%);
+  border-color: rgba(255,255,255,.95);
+  box-shadow:
+    0 6px 0 var(--amber-shadow),
+    0 8px 24px rgba(180,100,0,.25),
+    inset 0 2px 0 rgba(255,255,255,.55);
+}
+.lesson.selected .lesson-label { color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.2); }
+.lesson.selected .lesson-num  { color: rgba(255,255,255,.75); }
+.lesson.selected .lesson-arrow { background: rgba(255,255,255,.25); }
+.lesson.selected .lesson-arrow svg { stroke: #fff; }
+.lesson.selected .tile {
+  background: rgba(255,255,255,.3);
+  border-color: rgba(255,255,255,.6);
+}
+.lesson.selected:hover {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+  box-shadow:
+    0 8px 0 var(--amber-shadow),
+    0 12px 28px rgba(180,100,0,.3),
+    inset 0 2px 0 rgba(255,255,255,.55);
+}
+
+/* ── Bottom row ── */
+.bottom {
+  display: flex; gap: 12px; align-items: stretch;
+  padding: 0 16px;
+  animation: slideUp .5s var(--ease-b) .45s both;
+}
+
+.btn-back {
+  flex-shrink: 0; width: 60px;
+  background: #F5F0E8;
+  border: 3px solid rgba(255,255,255,.9); border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  box-shadow:
+    0 5px 0 rgba(180,150,100,.3),
+    0 7px 14px rgba(0,0,0,.06),
+    inset 0 2px 0 rgba(255,255,255,.9);
+  transition: transform 150ms var(--ease-b), box-shadow 150ms var(--ease-s);
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+.btn-back svg { width:22px; height:22px; stroke:var(--ink-soft); fill:none; }
+.btn-back:hover { filter: brightness(.97); }
+.btn-back:active {
+  transform: scale(.97) translateY(3px);
+  box-shadow: 0 1px 0 rgba(180,150,100,.3), 0 3px 6px rgba(0,0,0,.06), inset 0 2px 0 rgba(255,255,255,.9);
+}
+.btn-back:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+
+.btn-continue {
+  flex-grow: 1;
+  background: linear-gradient(135deg, #4ADE80 0%, var(--green) 50%, var(--green-dark) 100%);
+  border: 3px solid rgba(255,255,255,.9); border-radius: var(--radius);
+  font-family: var(--font-d); font-size: 22px; font-weight: 800;
+  color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.2);
+  cursor: pointer; padding: 16px;
+  box-shadow:
+    0 6px 0 var(--green-shadow),
+    0 8px 20px rgba(22,163,74,.25),
+    inset 0 2px 0 rgba(255,255,255,.4);
+  position: relative; overflow: hidden;
+  transition: transform 150ms var(--ease-b), box-shadow 150ms var(--ease-s), filter 150ms;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+.btn-continue::after {
+  content:''; position:absolute; top:4px; inset-inline: 20px;
+  height:6px; border-radius:6px;
+  background: rgba(255,255,255,.35); pointer-events:none;
+}
+.btn-continue:hover { filter: brightness(1.06); }
+.btn-continue:active {
+  transform: scale(.98) translateY(4px);
+  box-shadow: 0 1px 0 var(--green-shadow), 0 3px 8px rgba(22,163,74,.2), inset 0 2px 0 rgba(255,255,255,.4);
+}
+.btn-continue:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+
+/* ── Entrance animations ── */
+.header { animation: slideDown .5s var(--ease-b) both; }
+.chapter-badge { animation: popIn .45s var(--ease-b) .1s both; }
+.lesson { animation: slideIn .45s var(--ease-b) both; }
+.lesson:nth-child(1){ animation-delay:.08s }
+.lesson:nth-child(2){ animation-delay:.14s }
+.lesson:nth-child(3){ animation-delay:.20s }
+.lesson:nth-child(4){ animation-delay:.26s }
+.lesson:nth-child(5){ animation-delay:.32s }
+.lesson:nth-child(6){ animation-delay:.38s }
+
+@keyframes slideDown { 0%{transform:translateY(-32px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+@keyframes slideIn   { 0%{transform:translateX(32px);opacity:0} 100%{transform:translateX(0);opacity:1} }
+@keyframes slideUp   { 0%{transform:translateY(32px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+@keyframes popIn     { 0%{transform:scale(.7);opacity:0} 100%{transform:scale(1);opacity:1} }
+
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after { animation-duration:.01ms !important; transition-duration:.01ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+    </div>
+    <div class="header-text">
+      <div class="header-title">موسى التعليمي</div>
+      <div class="header-sub">اختر الدرس</div>
+    </div>
+  </div>
+
+  <!-- Chapter label -->
+  <div class="chapter-badge">
+    <span class="chapter-badge-dot"></span>
+    <span class="chapter-badge-text">الفصل الأول</span>
+  </div>
+
+  <!-- Lesson cards -->
+  <div class="lessons" id="lessons" role="listbox" aria-label="قائمة الدروس">
+
+    <button class="lesson selected" data-id="1" role="option" aria-selected="true">
+      <span class="tile" aria-hidden="true">⚖️</span>
+      <span class="lesson-info">
+        <span class="lesson-label">المقارنة والتصنيف</span>
+        <span class="lesson-num">الدرس ١</span>
+      </span>
+      <span class="lesson-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </span>
+    </button>
+
+    <button class="lesson" data-id="2" role="option" aria-selected="false">
+      <span class="tile" aria-hidden="true">🔢</span>
+      <span class="lesson-info">
+        <span class="lesson-label">الأعداد حتى ٥</span>
+        <span class="lesson-num">الدرس ٢</span>
+      </span>
+      <span class="lesson-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </span>
+    </button>
+
+    <button class="lesson" data-id="3" role="option" aria-selected="false">
+      <span class="tile" aria-hidden="true">🧩</span>
+      <span class="lesson-info">
+        <span class="lesson-label">الموقع والنمط</span>
+        <span class="lesson-num">الدرس ٣</span>
+      </span>
+      <span class="lesson-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </span>
+    </button>
+
+    <button class="lesson" data-id="4" role="option" aria-selected="false">
+      <span class="tile" aria-hidden="true">🔟</span>
+      <span class="lesson-info">
+        <span class="lesson-label">الأعداد حتى ١٠</span>
+        <span class="lesson-num">الدرس ٤</span>
+      </span>
+      <span class="lesson-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </span>
+    </button>
+
+    <button class="lesson" data-id="5" role="option" aria-selected="false">
+      <span class="tile" aria-hidden="true">🔣</span>
+      <span class="lesson-info">
+        <span class="lesson-label">الأعداد حتى ٢٠</span>
+        <span class="lesson-num">الدرس ٥</span>
+      </span>
+      <span class="lesson-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </span>
+    </button>
+
+    <button class="lesson" data-id="6" role="option" aria-selected="false">
+      <span class="tile" aria-hidden="true">➕</span>
+      <span class="lesson-info">
+        <span class="lesson-label">الجمع</span>
+        <span class="lesson-num">الدرس ٦</span>
+      </span>
+      <span class="lesson-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </span>
+    </button>
+
+  </div>
+
+  <!-- Bottom actions -->
+  <div class="bottom">
+    <button class="btn-back" onclick="handleBack()" aria-label="رجوع">
+      <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </button>
+    <button class="btn-continue" onclick="handleContinue()">متابعة</button>
+  </div>
+
+</div>
+
+<script>
+const lessons = document.getElementById('lessons');
+let selectedId = '1';
+
+lessons.querySelectorAll('.lesson').forEach(function(el) {
+  el.addEventListener('click', function() {
+    lessons.querySelectorAll('.lesson').forEach(function(l) {
+      l.classList.remove('selected');
+      l.setAttribute('aria-selected', 'false');
+    });
+    el.classList.add('selected');
+    el.setAttribute('aria-selected', 'true');
+    selectedId = el.dataset.id;
+    // Notify parent shell to open lesson
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ action: 'openLesson', id: selectedId }, '*');
+    }
+  });
+});
+
+function handleContinue() {
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ action: 'openLesson', id: selectedId }, '*');
+  }
+}
+function handleBack() {
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ action: 'goBack' }, '*');
+  }
+}
+</script>
+</body>
+</html>
