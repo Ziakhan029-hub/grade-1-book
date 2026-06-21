@@ -1,52 +1,54 @@
 'use strict';
 
-const textToSpeech = require('@google-cloud/text-to-speech');
+const sdk = require('microsoft-cognitiveservices-speech-sdk');
 const fs = require('fs');
 const path = require('path');
 
 /**
- * Build a TTS client from env vars.
+ * Synthesise Arabic text with the ar-AE-FatimaNeural voice and write an MP3.
  *
- * Priority:
- *   1. GCLOUD_TTS_KEY_JSON  – raw service-account JSON string (good for CI/CD)
- *   2. GOOGLE_APPLICATION_CREDENTIALS – path to a JSON key file (standard GCP default)
- */
-function buildClient() {
-  const raw = process.env.GCLOUD_TTS_KEY_JSON;
-  if (raw) {
-    const credentials = JSON.parse(raw);
-    return new textToSpeech.TextToSpeechClient({ credentials });
-  }
-  // Falls back to GOOGLE_APPLICATION_CREDENTIALS automatically when no options passed.
-  return new textToSpeech.TextToSpeechClient();
-}
-
-/**
- * Synthesise Arabic text with the ar-XA-Wavenet-D voice and write an MP3.
+ * Reads credentials from:
+ *   AZURE_SPEECH_KEY    – Azure Cognitive Services subscription key
+ *   AZURE_SPEECH_REGION – Azure region (e.g. uaenorth)
  *
  * @param {string} text       Arabic text to speak.
- * @param {string} outputPath Destination file path (will be created/overwritten).
+ * @param {string} outputPath Destination file path (created/overwritten).
  * @returns {Promise<string>} Resolves with the absolute output path.
  */
-async function synthesize(text, outputPath) {
+function synthesize(text, outputPath) {
   if (!text || !text.trim()) throw new Error('text must not be empty');
 
-  const client = buildClient();
-
-  const [response] = await client.synthesizeSpeech({
-    input: { text },
-    voice: {
-      languageCode: 'ar-XA',
-      name: 'ar-XA-Wavenet-D',
-      ssmlGender: 'FEMALE',
-    },
-    audioConfig: { audioEncoding: 'MP3' },
-  });
+  const key    = process.env.AZURE_SPEECH_KEY;
+  const region = process.env.AZURE_SPEECH_REGION;
+  if (!key || !region) {
+    throw new Error('AZURE_SPEECH_KEY and AZURE_SPEECH_REGION must be set');
+  }
 
   const abs = path.resolve(outputPath);
   fs.mkdirSync(path.dirname(abs), { recursive: true });
-  fs.writeFileSync(abs, response.audioContent, 'binary');
-  return abs;
+
+  const speechConfig = sdk.SpeechConfig.fromSubscription(key, region);
+  speechConfig.speechSynthesisVoiceName = 'ar-AE-FatimaNeural';
+  speechConfig.speechSynthesisOutputFormat =
+    sdk.SpeechSynthesisOutputFormat.Audio16Khz32KBitRateMonoMp3;
+
+  const audioConfig  = sdk.AudioConfig.fromAudioFileOutput(abs);
+  const synthesizer  = new sdk.SpeechSynthesizer(speechConfig, audioConfig);
+
+  return new Promise((resolve, reject) => {
+    synthesizer.speakTextAsync(
+      text,
+      result => {
+        synthesizer.close();
+        if (result.reason === sdk.ResultReason.SynthesizingAudioCompleted) {
+          resolve(abs);
+        } else {
+          reject(new Error(result.errorDetails || 'Synthesis failed'));
+        }
+      },
+      err => { synthesizer.close(); reject(err); }
+    );
+  });
 }
 
 module.exports = { synthesize };

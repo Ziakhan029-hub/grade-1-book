@@ -4,14 +4,14 @@ Arabic interactive book for Grade 1 students, built as a progressive web app.
 
 ---
 
-## Google Cloud Text-to-Speech
+## Azure Text-to-Speech
 
-The `tts/` module generates high-quality Arabic MP3s using the **ar-XA-Wavenet-D** (female) voice from Google Cloud TTS.
+The `tts/` module generates high-quality Arabic MP3s using the **ar-AE-FatimaNeural** (female) voice via Azure Cognitive Services Speech.
 
 ### Prerequisites
 
-1. A Google Cloud project with the **Cloud Text-to-Speech API** enabled.
-2. A service account with the `Cloud Text-to-Speech User` role and a downloaded JSON key.
+An Azure Cognitive Services Speech resource. Get your key and region from:
+**portal.azure.com → your Speech resource → Keys and Endpoint**
 
 ### Setup
 
@@ -23,14 +23,14 @@ npm install
 cp .env.example .env
 ```
 
-Edit `.env` and set **one** of the following:
+Edit `.env`:
 
-| Variable | When to use |
-|---|---|
-| `GCLOUD_TTS_KEY_JSON` | Paste the entire service-account JSON as a string (CI/CD, no file needed) |
-| `GOOGLE_APPLICATION_CREDENTIALS` | Path to a local JSON key file (standard local dev) |
+```
+AZURE_SPEECH_KEY=your-key-here
+AZURE_SPEECH_REGION=uaenorth
+```
 
-> **Never commit `.env` or `*-credentials.json` files.** They are already in `.gitignore`.
+> **Never commit `.env` or any key files.** They are in `.gitignore`.
 
 ### Usage
 
@@ -51,4 +51,4 @@ await synthesize('مرحبا بالعالم', 'output/hello.mp3');
 // → writes MP3 to output/hello.mp3
 ```
 
-Voice details: language `ar-XA`, name `ar-XA-Wavenet-D`, encoding `MP3`.
+Voice: `ar-AE-FatimaNeural` (Arabic UAE, female neural), MP3 output at 16 kHz / 32 kbps.
