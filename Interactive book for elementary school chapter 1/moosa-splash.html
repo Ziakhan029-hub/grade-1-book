@@ -151,14 +151,7 @@ body::before{
 .btn-primary:hover{filter:brightness(1.06);}
 .btn-primary:active{box-shadow:0 2px 0 var(--green-shadow),0 4px 10px rgba(22,163,74,.2);}
 
-/* secondary — amber */
-.btn-secondary{
-  background:linear-gradient(135deg,var(--amber-light) 0%,var(--amber) 50%,var(--amber-dark) 100%);
-  color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.2);
-  box-shadow:0 7px 0 var(--amber-shadow),0 9px 20px rgba(180,100,0,.22);
-}
-.btn-secondary:hover{filter:brightness(1.06);}
-.btn-secondary:active{box-shadow:0 2px 0 var(--amber-shadow),0 4px 10px rgba(180,100,0,.18);}
+
 
 .btn+.btn{margin-top:14px;}
 
@@ -205,10 +198,6 @@ body::before{
       <span class="btn-icon">🚀</span>
       ابدأ اللعبة
     </button>
-    <button class="btn btn-secondary" onclick="handleLeaderboard()">
-      <span class="btn-icon">🏆</span>
-      لوحة المتصدرين
-    </button>
   </div>
   <div class="version">الإصدار ١.٠ · موسى التعليمي</div>
 </div>
@@ -235,7 +224,6 @@ body::before{
   }
 })();
 function handleStart(){window.location.href='moosa-lessons.html';}
-function handleLeaderboard(){alert('انتقل إلى لوحة المتصدرين');}
 </script>
 </body>
 </html>
