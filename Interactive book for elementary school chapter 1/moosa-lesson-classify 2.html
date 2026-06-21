@@ -28128,6 +28128,7 @@ renderQuestion();
   speechSynthesis.onvoiceschanged=function(){setTimeout(readQ,200);};
   window.addEventListener('load',function(){
     narEl=document.getElementById('fNarrator');
+    if(narEl){var _b=document.createElement('button');_b.textContent='🔊';_b.setAttribute('aria-label','استمع مجدداً');_b.style.cssText='background:rgba(255,255,255,.3);border:none;border-radius:50%;width:26px;height:26px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s,transform .12s;';_b.onmouseenter=function(){_b.style.background='rgba(255,255,255,.6)';_b.style.transform='scale(1.12)';};_b.onmouseleave=function(){_b.style.background='rgba(255,255,255,.3)';_b.style.transform='';};_b.addEventListener('click',function(e){e.stopPropagation();lastTxt='';spoken=false;readQ();});narEl.appendChild(_b);}
     if(speechSynthesis.getVoices().length) readQ();
     setTimeout(readQ,300);setTimeout(readQ,800);setTimeout(readQ,2000);
     retryT=setInterval(function(){if(spoken){clearInterval(retryT);return;}lastTxt='';readQ();},500);
