@@ -27377,18 +27377,16 @@ window.addEventListener('resize',function(){sizeCanvas();drawGuide();});
   speechSynthesis.onvoiceschanged=function(){setTimeout(readQ,200);};
   window.addEventListener('load',function(){
     narEl=document.getElementById('fNarrator');
-    if(narEl) narEl.style.display='none';
+    if(narEl){narEl.remove();narEl=null;}
     (function(){var s=document.createElement('button');s.id='mlSpeakerBtn';s.textContent='🔊';s.setAttribute('aria-label','استمع مجدداً');s.style.cssText='position:fixed;bottom:20px;right:16px;z-index:9999;background:linear-gradient(135deg,#FCD34D,#F59E0B);border:none;border-radius:50%;width:48px;height:48px;font-size:24px;cursor:pointer;box-shadow:0 4px 0 #B45309,0 6px 16px rgba(180,100,0,.28);display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:transform .12s;';s.addEventListener('click',function(){lastTxt='';spoken=false;readQ();});s.addEventListener('mouseenter',function(){s.style.transform='scale(1.08)';});s.addEventListener('mouseleave',function(){s.style.transform='';});document.body.appendChild(s);})();
     if(speechSynthesis.getVoices().length) readQ();
     setTimeout(readQ,300);setTimeout(readQ,800);setTimeout(readQ,2000);
     retryT=setInterval(function(){if(spoken){clearInterval(retryT);return;}lastTxt='';readQ();},500);
     setTimeout(function(){clearInterval(retryT);},8000);
   });
-  function unlock(){setTimeout(function(){lastTxt='';readQ();},150);}
-  document.addEventListener('touchstart',unlock,{once:true,passive:true});
-  document.addEventListener('click',unlock,{once:true});
   var root=document.querySelector('.ml-widget')||document.body;
-  try{new MutationObserver(function(){clearTimeout(debT);debT=setTimeout(function(){lastTxt='';spoken=false;readQ();},400);}).observe(root,{childList:true,subtree:true,characterData:true});}catch(e){}
+  var _lp='';
+  try{new MutationObserver(function(){clearTimeout(debT);debT=setTimeout(function(){var pEl=document.querySelector(SELS.join(','));var nt=pEl?pEl.textContent.replace(/\s+/g,' ').trim():'';if(nt&&nt!==_lp){_lp=nt;lastTxt='';spoken=false;readQ();}},400);}).observe(root,{childList:true,subtree:true,characterData:true});}catch(e){}
 })();
 </script>
 <script>
