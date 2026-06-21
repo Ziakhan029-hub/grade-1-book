@@ -5,6 +5,8 @@
     "microsoft-cognitiveservices-speech-sdk": "^1.42.0"
   },
   "scripts": {
-    "tts": "node tts/cli.js"
+    "tts": "node tts/cli.js",
+    "generate-audio": "node tts/generate-audio.js",
+    "patch-lessons": "node tts/patch-lessons.js"
   }
 }

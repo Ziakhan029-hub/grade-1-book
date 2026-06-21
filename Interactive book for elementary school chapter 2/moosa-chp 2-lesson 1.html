@@ -28005,6 +28005,7 @@ renderQuestion(STEPS[0]);
     <span></span><span></span><span></span><span></span><span></span>
   </div>
 </div>
+<script>window.__NARR_AUDIO__={"صنّف الفاكهة المتشابهة":"../audio/12fc14bb.mp3","صنّف الأحذية المتشابهة":"../audio/39a1115d.mp3","صنّف أدوات المائدة":"../audio/96eb0a49.mp3","صنّف الفاكهة المتشابهة. الخاصية: نوع الفاكهة":"../audio/911403d4.mp3","صنّف الأحذية المتشابهة. الخاصية: نوع الحذاء":"../audio/0c07bfbb.mp3","صنّف أدوات المائدة. الخاصية: نوع الإناء":"../audio/f29cbb76.mp3","صنّف حسب الشكل":"../audio/1eef0024.mp3","صنّف حسب اللون":"../audio/26423a87.mp3","صنّف حسب الشكل. الخاصية: الشكل":"../audio/af43ae0b.mp3","صنّف حسب اللون. الخاصية: اللون":"../audio/6ae4c9d5.mp3","صنِّف القمصان حسب اللون":"../audio/fa64cf44.mp3","صنِّف الجوارب حسب اللون":"../audio/b75f353c.mp3","صنِّف القبعات حسب اللون":"../audio/486853c1.mp3","صنِّف الأحذية حسب اللون":"../audio/3f27263f.mp3","صنِّف القمصان حسب اللون. الخاصية: اللون الأزرق":"../audio/76bb1571.mp3","صنِّف الجوارب حسب اللون. الخاصية: اللون البنفسجي":"../audio/e04c4a41.mp3","صنِّف القبعات حسب اللون. الخاصية: اللون البرتقالي":"../audio/2d2cc644.mp3","صنِّف الأحذية حسب اللون. الخاصية: اللون الأحمر":"../audio/d718372b.mp3","صِل كلّ عنصر بما يُسَاويه":"../audio/e231db15.mp3","عُدّ الفراشات ثم اكتب الرقم ١":"../audio/e549fdcf.mp3","عُدّ الكُرات ثم اكتب الرقم ٢":"../audio/16025ff7.mp3","عُدّ الزهور ثم اكتب الرقم ٣":"../audio/90522597.mp3","اكتب الرقم ٢ من الذاكرة":"../audio/abb683e2.mp3","اكتب الرقم ٣ من الذاكرة":"../audio/48bc5016.mp3","اعدد الدببة 🐻":"../audio/6e7fb3d7.mp3","صنّف الأعداد":"../audio/601a00e5.mp3","اعدد النحل 🐝":"../audio/b35998fb.mp3","كم عدد الضفادع؟":"../audio/91044a58.mp3","صنّف حسب الكمية":"../audio/8eec2fcc.mp3","كم عدد المناطيد؟":"../audio/a8be7208.mp3","صنّف الأعداد. العدد ٤ أم ٥؟":"../audio/2f16749a.mp3","صنّف حسب الكمية. قليل أم كثير؟":"../audio/6af0e663.mp3","عُدّ الشاحنات ثم اكتب الرقم ٤":"../audio/22a80dc5.mp3","عُدّ اللافتات ثم اكتب الرقم ٥":"../audio/e44a6799.mp3","عُدّ الخوذات ثم اكتب الرقم ٤":"../audio/1500bf34.mp3","عُدّ الشاحنات ثم اكتب الرقم ٥":"../audio/e923d3ec.mp3","عُدّ المخاريط ثم اكتب الرقم ٤":"../audio/c2484382.mp3","الآلة فارغة! اكتب الرقم صفر ٠":"../audio/af541735.mp3","عُدّ الكرات ثم اكتب الرقم ١":"../audio/0bb4540d.mp3","عُدّ الكرات ثم اكتب الرقم ٢":"../audio/7626557c.mp3","عُدّ الكرات ثم اكتب الرقم ٣":"../audio/0764a620.mp3","عُدّ الكرات ثم اكتب الرقم ٤":"../audio/654330c7.mp3","عُدّ الكرات ثم اكتب الرقم ٥":"../audio/48fbbfbd.mp3","اكتب صفر ٠ من الذاكرة":"../audio/18181245.mp3"};</script>
 <script>
 (function(){
   if(!('speechSynthesis' in window)) return;
@@ -28017,9 +28018,14 @@ renderQuestion(STEPS[0]);
   }
   function speak(txt){
     if(!txt) return;
-    if(!speechSynthesis.getVoices().length) return;
     if(txt===lastTxt) return;
     lastTxt=txt;
+    var _src=(window.__NARR_AUDIO__||{})[txt];
+    if(_src){spoken=true;clearInterval(retryT);var _a=new Audio(_src);_a.onplay=function(){if(narEl)narEl.classList.add('speaking');};_a.onended=function(){if(narEl)narEl.classList.remove('speaking');};_a.onerror=function(){spoken=false;lastTxt='';_wsSpeak(txt);};_a.play().catch(function(){spoken=false;lastTxt='';_wsSpeak(txt);});return;}
+    _wsSpeak(txt);
+  }
+  function _wsSpeak(txt){
+    if(!speechSynthesis.getVoices().length){lastTxt='';return;}
     var u=new SpeechSynthesisUtterance(txt);
     u.lang='ar-SA';
     var v=getVoice();if(v)u.voice=v;u.pitch=1.3;
