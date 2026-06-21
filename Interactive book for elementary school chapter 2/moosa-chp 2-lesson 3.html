@@ -326,11 +326,8 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
   <div class="flash" id="ml-flash"></div>
   <div id="ml-confettiContainer"></div>
 
-  <!-- Narrator -->
-  <button class="narrator-btn" onclick="mlSpeak()" aria-label="استمع">
-    <div class="narrator-waves"><span></span><span></span><span></span><span></span></div>
-    <div class="narrator-face">🧕</div>
-  </button>
+  <!-- Speaker button -->
+  <button id="mlSpeakerBtn" onclick="mlSpeak()" aria-label="استمع مجدداً" style="position:fixed;bottom:20px;right:16px;z-index:9999;background:linear-gradient(135deg,#FCD34D,#F59E0B);border:none;border-radius:50%;width:48px;height:48px;font-size:24px;cursor:pointer;box-shadow:0 4px 0 #B45309,0 6px 16px rgba(180,100,0,.28);display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:transform .12s;">🔊</button>
 
 </div>
 

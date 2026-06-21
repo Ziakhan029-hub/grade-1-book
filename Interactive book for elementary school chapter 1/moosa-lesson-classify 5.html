@@ -27745,7 +27745,8 @@ render();
   speechSynthesis.onvoiceschanged=function(){setTimeout(readQ,200);};
   window.addEventListener('load',function(){
     narEl=document.getElementById('fNarrator');
-    if(narEl){var _b=document.createElement('button');_b.textContent='🔊';_b.setAttribute('aria-label','استمع مجدداً');_b.style.cssText='background:rgba(255,255,255,.3);border:none;border-radius:50%;width:26px;height:26px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s,transform .12s;';_b.onmouseenter=function(){_b.style.background='rgba(255,255,255,.6)';_b.style.transform='scale(1.12)';};_b.onmouseleave=function(){_b.style.background='rgba(255,255,255,.3)';_b.style.transform='';};_b.addEventListener('click',function(e){e.stopPropagation();lastTxt='';spoken=false;readQ();});narEl.appendChild(_b);}
+    if(narEl) narEl.style.display='none';
+    (function(){var s=document.createElement('button');s.id='mlSpeakerBtn';s.textContent='🔊';s.setAttribute('aria-label','استمع مجدداً');s.style.cssText='position:fixed;bottom:20px;right:16px;z-index:9999;background:linear-gradient(135deg,#FCD34D,#F59E0B);border:none;border-radius:50%;width:48px;height:48px;font-size:24px;cursor:pointer;box-shadow:0 4px 0 #B45309,0 6px 16px rgba(180,100,0,.28);display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:transform .12s;';s.addEventListener('click',function(){lastTxt='';spoken=false;readQ();});s.addEventListener('mouseenter',function(){s.style.transform='scale(1.08)';});s.addEventListener('mouseleave',function(){s.style.transform='';});document.body.appendChild(s);})();
     if(speechSynthesis.getVoices().length) readQ();
     setTimeout(readQ,300);setTimeout(readQ,800);setTimeout(readQ,2000);
     retryT=setInterval(function(){if(spoken){clearInterval(retryT);return;}lastTxt='';readQ();},500);
