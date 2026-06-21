@@ -28,7 +28,7 @@
   --radius: 20px;
 }
 
-html,body{width:100%;min-height:100vh;min-height:100svh;overflow-x:hidden}
+html,body{width:100%;height:100%;overflow:hidden}
 body{
   background:linear-gradient(160deg,var(--bg-top) 0%,var(--bg-bot) 100%);
   font-family:var(--font-b);
@@ -57,9 +57,11 @@ body::before{
 .phone{
   position:relative;z-index:2;
   width:100%;max-width:480px;margin:0 auto;
-  height:100vh;height:100svh;
+  height:100vh;height:100dvh;
   background:var(--card-bg);
-  display:flex;flex-direction:column;align-items:center;padding-bottom:48px;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;
+  padding-bottom:max(24px,env(safe-area-inset-bottom,16px));
+  overflow:hidden;
   box-shadow:0 0 0 1px rgba(200,160,60,.12),0 24px 64px rgba(120,80,0,.12);
 }
 
@@ -90,7 +92,7 @@ body::before{
   animation:slideDown .6s var(--ease-b) both;
 }
 .logo-img{
-  width:200px;height:auto;
+  width:160px;max-height:68px;height:auto;object-fit:contain;
   filter:brightness(0) invert(1);
   drop-shadow:0 2px 8px rgba(0,0,0,.15);
 }
@@ -102,8 +104,8 @@ body::before{
 }
 
 /* mascot */
-.mascots{position:relative;z-index:4;margin-top:6px;width:100%;display:flex;justify-content:center;align-items:flex-end;height:320px;flex-grow:1;}
-.mascot-img{width:300px;height:315px;object-fit:contain;object-position:bottom center;
+.mascots{position:relative;z-index:4;margin-top:6px;width:100%;display:flex;justify-content:center;align-items:flex-end;flex:1 1 0;min-height:0;overflow:hidden;}
+.mascot-img{width:auto;max-width:300px;height:100%;max-height:320px;object-fit:contain;object-position:bottom center;
   animation:mascotFloat 3.6s ease-in-out infinite;
   filter:drop-shadow(0 12px 20px rgba(80,40,0,.3));}
 @keyframes mascotFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
@@ -166,8 +168,16 @@ body::before{
 @keyframes slideUp{0%{transform:translateY(44px);opacity:0}100%{transform:translateY(0);opacity:1}}
 
 @media(min-height:800px){
-  .mascots{height:340px;}
-  .mascot-img{width:320px;height:335px}
+  .mascot-img{max-width:320px;max-height:340px;}
+}
+@media(max-height:700px){
+  .arch{height:160px;}
+  .logo-wrap{margin-top:8px;}
+  .logo-img{width:130px;}
+  .top-stars{padding:12px 28px 0;}
+  .btn{padding:13px 20px;font-size:20px;min-height:52px;}
+  .btns{padding:14px 16px 16px;}
+  .version{margin-top:10px;font-size:11px;}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
