@@ -27645,7 +27645,7 @@ renderQuestion();
 <script>
 (function(){
   if(!('speechSynthesis' in window)) return;
-  var lastTxt='',debT=null,narEl=null,spoken=false,retryT=null;
+  var lastTxt='',debT=null,narEl=null,spoken=false,retryT=null,voicesDone=false;
   function getVoice(){
     var vs=speechSynthesis.getVoices().filter(function(v){return v.lang.startsWith('ar');});
     return vs.find(function(v){return /female|أنثى|hoda|salma|laila|amira|zeina|dina|zara|rana|mona|yasmin|nour/i.test(v.name);})||
@@ -27686,7 +27686,7 @@ renderQuestion();
   });
   var root=document.querySelector('.ml-widget')||document.body;
   var _lp='';
-  try{new MutationObserver(function(){clearTimeout(debT);debT=setTimeout(function(){var pEl=document.querySelector(SELS.join(','));var nt=pEl?pEl.textContent.replace(/\s+/g,' ').trim():'';if(nt&&nt!==_lp){_lp=nt;lastTxt='';spoken=false;readQ();}},400);}).observe(root,{childList:true,subtree:true,characterData:true});}catch(e){}
+  try{new MutationObserver(function(){clearTimeout(debT);debT=setTimeout(function(){var pEl=document.querySelector(SELS.join(','));var nt=pEl?pEl.textContent.replace(/\s+/g,' ').trim():'';if(nt&&nt!==_lp){_lp=nt;speak(nt);}},400);}).observe(root,{childList:true,subtree:true,characterData:true});}catch(e){}
 })();
 </script>
 <script>
@@ -27727,5 +27727,59 @@ renderQuestion();
   if(document.readyState==='loading'){window.addEventListener('load',init);}else{init();}
 })();
 </script>
-</body>
-</html>
+<style>
+/* lesson-topbar-nav */
+.top-bar{
+  padding:8px 12px!important;
+  gap:8px!important;
+  justify-content:center!important;
+}
+.top-bar .score-label,.top-bar .score-val{display:none!important;}
+.top-bar .lsn-btn{
+  min-width:32px;height:32px;
+  border-radius:8px;
+  background:rgba(255,255,255,.38);
+  color:rgba(61,38,16,.75);
+  font-size:15px;font-weight:700;font-family:inherit;
+  border:2px solid transparent;
+  cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:0 7px;
+  transition:transform .15s,background .15s;
+}
+.top-bar .lsn-btn.active{
+  background:rgba(180,83,9,.22);
+  color:#fff;
+  border-color:rgba(120,53,5,.55);
+  transform:scale(1.08);
+}
+.top-bar .lsn-btn.done{
+  background:rgba(22,163,74,.28);
+  color:#fff;
+}
+.top-bar .lsn-btn:hover{transform:scale(1.12);background:rgba(255,255,255,.55);}
+/* hide dots bar entirely */
+#ml-dots,#mlDots,.progress-dots{display:none!important;}
+</style>
+<script>
+(function(){
+  var L=['moosa-lesson-classify 1.html', 'moosa-lesson-classify 2.html', 'moosa-lesson-classify 3.html', 'moosa-lesson-classify 4.html', 'moosa-lesson-classify 5.html'];
+  function build(){
+    var bar=document.querySelector('.top-bar');
+    if(bar){
+      bar.querySelectorAll('.lsn-btn').forEach(function(b){b.remove();});
+      var cur=decodeURIComponent(window.location.pathname.split('/').pop());
+      var ci=L.indexOf(cur);
+      L.forEach(function(lf,i){
+        var b=document.createElement('button');
+        b.className='lsn-btn'+(i===ci?' active':i<ci?' done':'');
+        b.textContent=i+1;
+        b.addEventListener('click',function(){window.location.href=lf;});
+        bar.appendChild(b);
+      });
+    }
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',build);}
+  else{build();}
+})();
+</script>

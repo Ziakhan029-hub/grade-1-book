@@ -27693,17 +27693,7 @@ let answered = false;
 /* ════════════════════════════
    PROGRESS DOTS — one per question
    ════════════════════════════ */
-function renderDots() {
-  const dotsEl = el('dots');
-  dotsEl.innerHTML = '';
-  STEPS.forEach(function(_, i) {
-    const dot = document.createElement('div');
-    dot.className = 'dot' +
-      (i === stepIndex ? ' active' : i < stepIndex ? ' done' : '');
-    dotsEl.appendChild(dot);
-  });
-  el('scoreVal').textContent = toAr(score);
-}
+function renderDots(){var _c=el('dots');_c.innerHTML='';var _l=['moosa-chp 2-lesson 1.html', 'moosa-chp 2-lesson 2.html', 'moosa-chp 2-lesson 3.html', 'moosa-chp 2-lesson 4.html', 'moosa-chp 2-lesson 5.html', 'moosa-chp 2-lesson 6.html'];var _cur=window.location.pathname.split('/').pop();var _ci=_l.indexOf(_cur);for(var _i=0;_i<_l.length;_i++){(function(lf,i){var b=document.createElement('button');b.className='dot'+(i===_ci?' active':i<_ci?' done':'');b.textContent=i+1;b.addEventListener('click',function(){window.location.href=lf;});_c.appendChild(b);})(_l[_i],_i);}el('scoreVal').textContent=toAr(score);}
 
 /* ════════════════════════════
    RENDER — SCENE SCREEN
@@ -28005,11 +27995,11 @@ renderQuestion(STEPS[0]);
     <span></span><span></span><span></span><span></span><span></span>
   </div>
 </div>
-<script>window.__NARR_AUDIO__={"صنّف الفاكهة المتشابهة":"../audio/12fc14bb.mp3","صنّف الأحذية المتشابهة":"../audio/39a1115d.mp3","صنّف أدوات المائدة":"../audio/96eb0a49.mp3","صنّف الفاكهة المتشابهة. الخاصية: نوع الفاكهة":"../audio/911403d4.mp3","صنّف الأحذية المتشابهة. الخاصية: نوع الحذاء":"../audio/0c07bfbb.mp3","صنّف أدوات المائدة. الخاصية: نوع الإناء":"../audio/f29cbb76.mp3","صنّف حسب الشكل":"../audio/1eef0024.mp3","صنّف حسب اللون":"../audio/26423a87.mp3","صنّف حسب الشكل. الخاصية: الشكل":"../audio/af43ae0b.mp3","صنّف حسب اللون. الخاصية: اللون":"../audio/6ae4c9d5.mp3","صنِّف القمصان حسب اللون":"../audio/fa64cf44.mp3","صنِّف الجوارب حسب اللون":"../audio/b75f353c.mp3","صنِّف القبعات حسب اللون":"../audio/486853c1.mp3","صنِّف الأحذية حسب اللون":"../audio/3f27263f.mp3","صنِّف القمصان حسب اللون. الخاصية: اللون الأزرق":"../audio/76bb1571.mp3","صنِّف الجوارب حسب اللون. الخاصية: اللون البنفسجي":"../audio/e04c4a41.mp3","صنِّف القبعات حسب اللون. الخاصية: اللون البرتقالي":"../audio/2d2cc644.mp3","صنِّف الأحذية حسب اللون. الخاصية: اللون الأحمر":"../audio/d718372b.mp3","صِل كلّ عنصر بما يُسَاويه":"../audio/e231db15.mp3","عُدّ الفراشات ثم اكتب الرقم ١":"../audio/e549fdcf.mp3","عُدّ الكُرات ثم اكتب الرقم ٢":"../audio/16025ff7.mp3","عُدّ الزهور ثم اكتب الرقم ٣":"../audio/90522597.mp3","اكتب الرقم ٢ من الذاكرة":"../audio/abb683e2.mp3","اكتب الرقم ٣ من الذاكرة":"../audio/48bc5016.mp3","اعدد الدببة 🐻":"../audio/6e7fb3d7.mp3","صنّف الأعداد":"../audio/601a00e5.mp3","اعدد النحل 🐝":"../audio/b35998fb.mp3","كم عدد الضفادع؟":"../audio/91044a58.mp3","صنّف حسب الكمية":"../audio/8eec2fcc.mp3","كم عدد المناطيد؟":"../audio/a8be7208.mp3","صنّف الأعداد. العدد ٤ أم ٥؟":"../audio/2f16749a.mp3","صنّف حسب الكمية. قليل أم كثير؟":"../audio/6af0e663.mp3","عُدّ الشاحنات ثم اكتب الرقم ٤":"../audio/22a80dc5.mp3","عُدّ اللافتات ثم اكتب الرقم ٥":"../audio/e44a6799.mp3","عُدّ الخوذات ثم اكتب الرقم ٤":"../audio/1500bf34.mp3","عُدّ الشاحنات ثم اكتب الرقم ٥":"../audio/e923d3ec.mp3","عُدّ المخاريط ثم اكتب الرقم ٤":"../audio/c2484382.mp3","الآلة فارغة! اكتب الرقم صفر ٠":"../audio/af541735.mp3","عُدّ الكرات ثم اكتب الرقم ١":"../audio/0bb4540d.mp3","عُدّ الكرات ثم اكتب الرقم ٢":"../audio/7626557c.mp3","عُدّ الكرات ثم اكتب الرقم ٣":"../audio/0764a620.mp3","عُدّ الكرات ثم اكتب الرقم ٤":"../audio/654330c7.mp3","عُدّ الكرات ثم اكتب الرقم ٥":"../audio/48fbbfbd.mp3","اكتب صفر ٠ من الذاكرة":"../audio/18181245.mp3"};</script>
+<script>window.__NARR_AUDIO__={"صنّف الفاكهة المتشابهة":"../audio/12fc14bb.mp3","صنّف الأحذية المتشابهة":"../audio/39a1115d.mp3","صنّف أدوات المائدة":"../audio/96eb0a49.mp3","صنّف الفاكهة المتشابهة. الخاصية: نوع الفاكهة":"../audio/911403d4.mp3","صنّف الأحذية المتشابهة. الخاصية: نوع الحذاء":"../audio/0c07bfbb.mp3","صنّف أدوات المائدة. الخاصية: نوع الإناء":"../audio/f29cbb76.mp3","صنّف حسب الشكل":"../audio/1eef0024.mp3","صنّف حسب اللون":"../audio/26423a87.mp3","صنّف حسب الشكل. الخاصية: الشكل":"../audio/af43ae0b.mp3","صنّف حسب اللون. الخاصية: اللون":"../audio/6ae4c9d5.mp3","صنِّف القمصان حسب اللون":"../audio/fa64cf44.mp3","صنِّف الجوارب حسب اللون":"../audio/b75f353c.mp3","صنِّف القبعات حسب اللون":"../audio/486853c1.mp3","صنِّف الأحذية حسب اللون":"../audio/3f27263f.mp3","صنِّف القمصان حسب اللون. الخاصية: اللون الأزرق":"../audio/76bb1571.mp3","صنِّف الجوارب حسب اللون. الخاصية: اللون البنفسجي":"../audio/e04c4a41.mp3","صنِّف القبعات حسب اللون. الخاصية: اللون البرتقالي":"../audio/2d2cc644.mp3","صنِّف الأحذية حسب اللون. الخاصية: اللون الأحمر":"../audio/d718372b.mp3","صِل كلّ عنصر بما يُسَاويه":"../audio/e231db15.mp3","عُدّ الفراشات ثم اكتب الرقم ١":"../audio/e549fdcf.mp3","عُدّ الكُرات ثم اكتب الرقم ٢":"../audio/16025ff7.mp3","عُدّ الزهور ثم اكتب الرقم ٣":"../audio/90522597.mp3","اكتب الرقم ٢ من الذاكرة":"../audio/abb683e2.mp3","اكتب الرقم ٣ من الذاكرة":"../audio/48bc5016.mp3","اعدد الدببة 🐻":"../audio/6e7fb3d7.mp3","صنّف الأعداد":"../audio/601a00e5.mp3","اعدد النحل 🐝":"../audio/b35998fb.mp3","كم عدد الضفادع؟":"../audio/91044a58.mp3","صنّف حسب الكمية":"../audio/8eec2fcc.mp3","كم عدد المناطيد؟":"../audio/a8be7208.mp3","صنّف الأعداد. العدد ٤ أم ٥؟":"../audio/2f16749a.mp3","صنّف حسب الكمية. قليل أم كثير؟":"../audio/6af0e663.mp3","عُدّ الشاحنات ثم اكتب الرقم ٤":"../audio/22a80dc5.mp3","عُدّ اللافتات ثم اكتب الرقم ٥":"../audio/e44a6799.mp3","عُدّ الخوذات ثم اكتب الرقم ٤":"../audio/1500bf34.mp3","عُدّ الشاحنات ثم اكتب الرقم ٥":"../audio/e923d3ec.mp3","عُدّ المخاريط ثم اكتب الرقم ٤":"../audio/c2484382.mp3","الآلة فارغة! اكتب الرقم صفر ٠":"../audio/af541735.mp3","عُدّ الكرات ثم اكتب الرقم ١":"../audio/0bb4540d.mp3","عُدّ الكرات ثم اكتب الرقم ٢":"../audio/7626557c.mp3","عُدّ الكرات ثم اكتب الرقم ٣":"../audio/0764a620.mp3","عُدّ الكرات ثم اكتب الرقم ٤":"../audio/654330c7.mp3","عُدّ الكرات ثم اكتب الرقم ٥":"../audio/48fbbfbd.mp3","اكتب صفر ٠ من الذاكرة":"../audio/18181245.mp3","اُنظر جيداً إلى الصورة":"../audio/94306039.mp3","كم عدد القوارب في الحمام؟":"../audio/d4dd7697.mp3","كم عدد البطّات الصفراء؟":"../audio/bb65de16.mp3","كم عدد الأسماك البرتقاليّة؟":"../audio/7b12ed68.mp3","كم عدد الحيتان الزرقاء؟":"../audio/e3807eb8.mp3","كم عدد صناديق الفواكه؟":"../audio/b0b283af.mp3","كم عدد عبوات الحليب؟":"../audio/983b7e16.mp3","كم عدد التفاحات الحمراء؟":"../audio/05e2b952.mp3","كم عدد القمصان المعلّقة؟":"../audio/f7e070bd.mp3","كم عدد كرات القدم؟":"../audio/591682fa.mp3","كم عدد كرات السلّة؟":"../audio/480ec22b.mp3"};</script>
 <script>
 (function(){
   if(!('speechSynthesis' in window)) return;
-  var lastTxt='',debT=null,narEl=null,spoken=false,retryT=null;
+  var lastTxt='',debT=null,narEl=null,spoken=false,retryT=null,voicesDone=false;
   function getVoice(){
     var vs=speechSynthesis.getVoices().filter(function(v){return v.lang.startsWith('ar');});
     return vs.find(function(v){return /female|أنثى|hoda|salma|laila|amira|zeina|dina|zara|rana|mona|yasmin|nour/i.test(v.name);})||
@@ -28050,7 +28040,7 @@ renderQuestion(STEPS[0]);
   });
   var root=document.querySelector('.ml-widget')||document.body;
   var _lp='';
-  try{new MutationObserver(function(){clearTimeout(debT);debT=setTimeout(function(){var pEl=document.querySelector(SELS.join(','));var nt=pEl?pEl.textContent.replace(/\s+/g,' ').trim():'';if(nt&&nt!==_lp){_lp=nt;lastTxt='';spoken=false;readQ();}},400);}).observe(root,{childList:true,subtree:true,characterData:true});}catch(e){}
+  try{new MutationObserver(function(){clearTimeout(debT);debT=setTimeout(function(){var pEl=document.querySelector(SELS.join(','));var nt=pEl?pEl.textContent.replace(/\s+/g,' ').trim():'';if(nt&&nt!==_lp){_lp=nt;speak(nt);}},400);}).observe(root,{childList:true,subtree:true,characterData:true});}catch(e){}
 })();
 </script>
 <script>
@@ -28091,5 +28081,83 @@ renderQuestion(STEPS[0]);
   if(document.readyState==='loading'){window.addEventListener('load',init);}else{init();}
 })();
 </script>
-</body>
-</html>
+<style>
+/* progress number buttons */
+.dot,.ml-dot,.round-dot{
+  width:auto!important;min-width:28px!important;height:28px!important;
+  border-radius:7px!important;
+  background:rgba(61,38,16,.12)!important;
+  font-size:13px!important;font-weight:700!important;
+  color:rgba(61,38,16,.45)!important;
+  cursor:pointer!important;
+  border:2px solid transparent!important;
+  display:inline-flex!important;
+  align-items:center!important;justify-content:center!important;
+  padding:0 5px!important;
+  transform:none!important;
+}
+.dot.active,.ml-dot.active,.round-dot.active{
+  background:#F59E0B!important;color:#fff!important;
+  border-color:#B45309!important;transform:scale(1.08)!important;
+}
+.dot.done,.ml-dot.done,.round-dot.done{
+  background:#10B981!important;color:#fff!important;opacity:1!important;
+}
+.dot:hover,.ml-dot:hover,.round-dot:hover{transform:scale(1.12)!important;}
+</style>
+<style>
+/* lesson-topbar-nav */
+.top-bar{
+  padding:8px 12px!important;
+  gap:8px!important;
+  justify-content:center!important;
+}
+.top-bar .score-label,.top-bar .score-val{display:none!important;}
+.top-bar .lsn-btn{
+  min-width:32px;height:32px;
+  border-radius:8px;
+  background:rgba(255,255,255,.38);
+  color:rgba(61,38,16,.75);
+  font-size:15px;font-weight:700;font-family:inherit;
+  border:2px solid transparent;
+  cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:0 7px;
+  transition:transform .15s,background .15s;
+}
+.top-bar .lsn-btn.active{
+  background:rgba(180,83,9,.22);
+  color:#fff;
+  border-color:rgba(120,53,5,.55);
+  transform:scale(1.08);
+}
+.top-bar .lsn-btn.done{
+  background:rgba(22,163,74,.28);
+  color:#fff;
+}
+.top-bar .lsn-btn:hover{transform:scale(1.12);background:rgba(255,255,255,.55);}
+/* hide dots bar entirely */
+#ml-dots,#mlDots,.progress-dots{display:none!important;}
+</style>
+<script>
+(function(){
+  var L=['moosa-chp 2-lesson 1.html', 'moosa-chp 2-lesson 2.html', 'moosa-chp 2-lesson 3.html', 'moosa-chp 2-lesson 4.html', 'moosa-chp 2-lesson 5.html', 'moosa-chp 2-lesson 6.html'];
+  function build(){
+    var bar=document.querySelector('.top-bar');
+    if(bar){
+      bar.querySelectorAll('.lsn-btn').forEach(function(b){b.remove();});
+      var cur=decodeURIComponent(window.location.pathname.split('/').pop());
+      var ci=L.indexOf(cur);
+      L.forEach(function(lf,i){
+        var b=document.createElement('button');
+        b.className='lsn-btn'+(i===ci?' active':i<ci?' done':'');
+        b.textContent=i+1;
+        b.addEventListener('click',function(){window.location.href=lf;});
+        bar.appendChild(b);
+      });
+    }
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',build);}
+  else{build();}
+})();
+</script>

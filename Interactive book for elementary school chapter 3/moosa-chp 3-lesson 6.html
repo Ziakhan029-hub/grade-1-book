@@ -329,11 +329,7 @@ function _mlWsSpeak(t){
   try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ar-SA';if(typeof mlVoice!=='undefined'&&mlVoice)u.voice=mlVoice;u.rate=.85;u.pitch=1.05;speechSynthesis.speak(u);}catch(e){}
 }
 
-function renderDots(){
-  const d=mlEl('mlDots');d.innerHTML='';
-  ML_STEPS.forEach((_,i)=>{const s=document.createElement('span');
-    s.className='dot'+(i<mlStepIdx?' done':i===mlStepIdx?' active':'');d.appendChild(s);});
-}
+function renderDots(){var _c=mlEl('mlDots');_c.innerHTML='';var _l=['moosa-chp 3-lesson 1.html', 'moosa-chp 3-lesson 2.html', 'moosa-chp 3-lesson 3.html', 'moosa-chp 3-lesson 4.html', 'moosa-chp 3-lesson 5.html', 'moosa-chp 3-lesson 6.html'];var _cur=window.location.pathname.split('/').pop();var _ci=_l.indexOf(_cur);for(var _i=0;_i<_l.length;_i++){(function(lf,i){var b=document.createElement('button');b.className='dot'+(i===_ci?' active':i<_ci?' done':'');b.textContent=i+1;b.addEventListener('click',function(){window.location.href=lf;});_c.appendChild(b);})(_l[_i],_i);}}
 
 /* ── render ── */
 function renderStep(){
@@ -564,5 +560,85 @@ renderStep();
     },700);
   }
   if(document.readyState==='loading'){window.addEventListener('load',init);}else{init();}
+})();
+</script>
+<style>
+/* progress number buttons */
+.dot,.ml-dot,.round-dot{
+  width:auto!important;min-width:28px!important;height:28px!important;
+  border-radius:7px!important;
+  background:rgba(61,38,16,.12)!important;
+  font-size:13px!important;font-weight:700!important;
+  color:rgba(61,38,16,.45)!important;
+  cursor:pointer!important;
+  border:2px solid transparent!important;
+  display:inline-flex!important;
+  align-items:center!important;justify-content:center!important;
+  padding:0 5px!important;
+  transform:none!important;
+}
+.dot.active,.ml-dot.active,.round-dot.active{
+  background:#F59E0B!important;color:#fff!important;
+  border-color:#B45309!important;transform:scale(1.08)!important;
+}
+.dot.done,.ml-dot.done,.round-dot.done{
+  background:#10B981!important;color:#fff!important;opacity:1!important;
+}
+.dot:hover,.ml-dot:hover,.round-dot:hover{transform:scale(1.12)!important;}
+</style>
+<style>
+/* lesson-topbar-nav */
+.top-bar{
+  padding:8px 12px!important;
+  gap:8px!important;
+  justify-content:center!important;
+}
+.top-bar .score-label,.top-bar .score-val{display:none!important;}
+.top-bar .lsn-btn{
+  min-width:32px;height:32px;
+  border-radius:8px;
+  background:rgba(255,255,255,.38);
+  color:rgba(61,38,16,.75);
+  font-size:15px;font-weight:700;font-family:inherit;
+  border:2px solid transparent;
+  cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:0 7px;
+  transition:transform .15s,background .15s;
+}
+.top-bar .lsn-btn.active{
+  background:rgba(180,83,9,.22);
+  color:#fff;
+  border-color:rgba(120,53,5,.55);
+  transform:scale(1.08);
+}
+.top-bar .lsn-btn.done{
+  background:rgba(22,163,74,.28);
+  color:#fff;
+}
+.top-bar .lsn-btn:hover{transform:scale(1.12);background:rgba(255,255,255,.55);}
+/* hide dots bar entirely */
+#ml-dots,#mlDots,.progress-dots{display:none!important;}
+</style>
+<script>
+(function(){
+  var L=['moosa-chp 3-lesson 1.html', 'moosa-chp 3-lesson 2.html', 'moosa-chp 3-lesson 3.html', 'moosa-chp 3-lesson 4.html', 'moosa-chp 3-lesson 5.html', 'moosa-chp 3-lesson 6.html'];
+  function build(){
+    var bar=document.querySelector('.top-bar');
+    if(bar){
+      bar.querySelectorAll('.lsn-btn').forEach(function(b){b.remove();});
+      var cur=decodeURIComponent(window.location.pathname.split('/').pop());
+      var ci=L.indexOf(cur);
+      L.forEach(function(lf,i){
+        var b=document.createElement('button');
+        b.className='lsn-btn'+(i===ci?' active':i<ci?' done':'');
+        b.textContent=i+1;
+        b.addEventListener('click',function(){window.location.href=lf;});
+        bar.appendChild(b);
+      });
+    }
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',build);}
+  else{build();}
 })();
 </script>
