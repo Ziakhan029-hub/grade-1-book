@@ -113,6 +113,8 @@
 
   var ROOT2 = 'Interactive book for elementary school chapter 2/';
 
+  var ROOT3 = 'Interactive book for elementary school chapter 3/';
+
   var CHAPTERS = {
     ch1: {
       root: ROOT1,
@@ -138,6 +140,19 @@
       ],
       lessonsPage: ROOT1 + 'moosa-lessons.html',
       dataId: '2'
+    },
+    ch3: {
+      root: ROOT3,
+      lessons: [
+        'moosa-chp 3-lesson 1.html',
+        'moosa-chp 3-lesson 2.html',
+        'moosa-chp 3-lesson 3.html',
+        'moosa-chp 3-lesson 4.html',
+        'moosa-chp 3-lesson 5.html',
+        'moosa-chp 3-lesson 6.html'
+      ],
+      lessonsPage: ROOT3 + 'moosa-chp3-lessons.html',
+      dataId: '3'
     }
   };
 
@@ -210,7 +225,9 @@
 
     if (fname === 'moosa-lessons.html') {
       injectLessonsPage();
-    } else if (fname.match(/moosa-lesson-classify|moosa-chp 2-lesson/)) {
+    } else if (fname === 'moosa-chp3-lessons.html') {
+      injectCh3LessonsPage();
+    } else if (fname.match(/moosa-lesson-classify|moosa-chp 2-lesson|moosa-chp 3-lesson/)) {
       watchForWin();
     }
   });
@@ -222,10 +239,15 @@
 
       // Wire up lesson buttons to navigate
       var lessonMap = { '1': 'ch1', '2': 'ch2' };
+      var lessonPageMap = { '3': ROOT3 + 'moosa-chp3-lessons.html' };
       doc.querySelectorAll('.lesson').forEach(function(btn) {
         btn.addEventListener('click', function() {
           var chKey = lessonMap[btn.dataset.id];
-          if (chKey) setTimeout(function() { startChapter(chKey); }, 180);
+          if (chKey) {
+            setTimeout(function() { startChapter(chKey); }, 180);
+          } else if (lessonPageMap[btn.dataset.id]) {
+            setTimeout(function() { loadUrl(lessonPageMap[btn.dataset.id]); }, 180);
+          }
         });
       });
 
@@ -281,6 +303,25 @@
     } catch(e) { console.warn('inject error', e); }
   }
 
+  // ── Inject into ch3 lessons page ────────────────────────────────────
+  function injectCh3LessonsPage() {
+    try {
+      var doc = frame.contentDocument;
+      doc.querySelectorAll('.lesson').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(btn.dataset.id) - 1;
+          if (idx >= 0 && idx < CHAPTERS.ch3.lessons.length) {
+            setTimeout(function() {
+              currentChapter = 'ch3';
+              currentIdx = idx;
+              loadUrl(CHAPTERS.ch3.root + CHAPTERS.ch3.lessons[idx]);
+            }, 180);
+          }
+        });
+      });
+    } catch(e) { console.warn('ch3 inject error', e); }
+  }
+
   // ── Watch for win overlay inside lesson ──────────────────────────────
   function watchForWin() {
     if (!currentChapter) return;
@@ -314,11 +355,19 @@
       var idMap = { '1': 'ch1', '2': 'ch2' };
       var chKey = idMap[String(d.id)];
       if (chKey) startChapter(chKey);
+    } else if (d.action === 'openCh3Lesson') {
+      var idx = parseInt(d.id) - 1;
+      if (idx >= 0 && idx < CHAPTERS.ch3.lessons.length) {
+        currentChapter = 'ch3';
+        currentIdx = idx;
+        loadUrl(CHAPTERS.ch3.root + CHAPTERS.ch3.lessons[idx]);
+      }
     } else if (d.action === 'nextLesson') {
       goForward();
     } else if (d.action === 'goBack') {
-      // Back from lessons page → go to splash
       loadUrl(ROOT1 + 'moosa-splash.html');
+    } else if (d.action === 'goBackToChapters') {
+      loadUrl(ROOT1 + 'moosa-lessons.html');
     }
   });
 
