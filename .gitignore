@@ -1,11 +1,4 @@
 .DS_Store
 .claude/
 node_modules/
-
-# Secrets
-.env
-*-credentials.json
-*-key.json
-
-# Generated audio
 output/

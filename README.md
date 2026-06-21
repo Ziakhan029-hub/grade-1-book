@@ -2,53 +2,23 @@
 
 Arabic interactive book for Grade 1 students, built as a progressive web app.
 
----
+## Audio narration
 
-## Azure Text-to-Speech
+All question prompts are pre-generated as MP3s using the **ar-AE-FatimaNeural** (Azure, Arabic UAE female) voice and stored in `audio/`. Each lesson page plays the matching file automatically when a question loads, with the browser's Web Speech API as a silent fallback.
 
-The `tts/` module generates high-quality Arabic MP3s using the **ar-AE-FatimaNeural** (female) voice via Azure Cognitive Services Speech.
+No API keys or external services are needed to run the project.
 
-### Prerequisites
+## Adding new questions
 
-An Azure Cognitive Services Speech resource. Get your key and region from:
-**portal.azure.com → your Speech resource → Keys and Endpoint**
+If you add questions with new prompt text:
 
-### Setup
-
-```bash
-# 1. Install dependencies
-npm install
-
-# 2. Copy the env template and fill in your credentials
-cp .env.example .env
-```
-
-Edit `.env`:
-
-```
-AZURE_SPEECH_KEY=your-key-here
-AZURE_SPEECH_REGION=uaenorth
-```
-
-> **Never commit `.env` or any key files.** They are in `.gitignore`.
-
-### Usage
-
-```bash
-# Via npm script
-npm run tts "مرحبا بالعالم" output/hello.mp3
-
-# Directly
-node tts/cli.js "مرحبا بالعالم" output/hello.mp3
-```
-
-### Module API
-
-```js
-const { synthesize } = require('./tts');
-
-await synthesize('مرحبا بالعالم', 'output/hello.mp3');
-// → writes MP3 to output/hello.mp3
-```
-
-Voice: `ar-AE-FatimaNeural` (Arabic UAE, female neural), MP3 output at 16 kHz / 32 kbps.
+1. Generate the new MP3s (requires Azure credentials in `.env`):
+   ```bash
+   npm install microsoft-cognitiveservices-speech-sdk dotenv
+   node tts/generate-audio.js
+   ```
+2. Re-patch the lesson HTML files:
+   ```bash
+   node tts/patch-lessons.js
+   ```
+3. Commit the new files in `audio/` and the updated HTML files.
