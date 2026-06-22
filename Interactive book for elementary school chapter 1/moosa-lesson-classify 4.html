@@ -9,7 +9,7 @@
 html, body {
   height: 100%; margin: 0; padding: 0;
   overflow: hidden;
-  background: linear-gradient(160deg,#FEF3C7 0%,#FDE68A 100%); /* amber body per design system */
+  background: linear-gradient(160deg,#FFFFFF 0%,#F2F2F2 100%); /* amber body per design system */
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -17,9 +17,9 @@ html, body {
    MOOSA DESIGN SYSTEM v1.1 — Widget Root
    ═══════════════════════════════════════════ */
 .ml-widget {
-  --amber:      #F59E0B;
-  --amber-dark: #D97706;
-  --cream:      #FFFEF9;
+  --amber:      #1F1F1F;
+  --amber-dark: #141414;
+  --cream:      #FFFFFF;
   --ink:        #1C1917;
   --ink-soft:   #78716C;
   --green:      #22C55E;
@@ -248,7 +248,7 @@ html, body {
 /* ── Win overlay ──────────────────────────── */
 .ml-widget .win-overlay {
   position: absolute; inset: 0; z-index: 100;
-  background: rgba(120,70,10,.72);
+  background: rgba(0,0,0,.72);
   display: none; align-items: center; justify-content: center; padding: 24px;
 }
 .ml-widget .win-overlay.show { display: flex; animation: ml-fadeIn .35s ease; }
@@ -337,7 +337,7 @@ html, body {
    ═══════════════════════════════════════ */
 
 /* top-bar consistent height/padding */
-.top-bar{flex-shrink:0;background:linear-gradient(135deg,#FCD34D 0%,#F59E0B 60%,#D97706 100%) !important;padding:12px 20px !important;box-shadow:0 2px 8px rgba(180,100,0,.18);}
+.top-bar{flex-shrink:0;background:linear-gradient(135deg,#3A3A3A 0%,#1F1F1F 60%,#141414 100%) !important;padding:12px 20px !important;box-shadow:0 2px 8px rgba(0,0,0,.18);}
 
 /* win overlay — modern frosted dark */
 .ml-widget .win-overlay,.win-overlay{
@@ -475,64 +475,11 @@ html, body {
   <!-- Win overlay -->
   <div class="win-overlay" id="ml-winOverlay">
     <div class="win-card">
-      <div class="win-rays">
-        <svg class="rays" viewBox="0 0 220 220" fill="none">
-          <g transform="translate(110,110)">
-            <polygon points="0,-105 8,-55 -8,-55" fill="rgba(255,220,80,.5)"/>
-            <polygon points="0,-105 8,-55 -8,-55" fill="rgba(255,220,80,.5)" transform="rotate(30)"/>
-            <polygon points="0,-105 8,-55 -8,-55" fill="rgba(255,220,80,.5)" transform="rotate(60)"/>
-            <polygon points="0,-105 8,-55 -8,-55" fill="rgba(255,220,80,.5)" transform="rotate(90)"/>
-            <polygon points="0,-105 8,-55 -8,-55" fill="rgba(255,220,80,.5)" transform="rotate(120)"/>
-            <polygon points="0,-105 8,-55 -8,-55" fill="rgba(255,220,80,.5)" transform="rotate(150)"/>
-            <polygon points="0,-105 8,-55 -8,-55" fill="rgba(255,220,80,.5)" transform="rotate(180)"/>
-            <polygon points="0,-105 8,-55 -8,-55" fill="rgba(255,220,80,.5)" transform="rotate(210)"/>
-            <polygon points="0,-105 8,-55 -8,-55" fill="rgba(255,220,80,.5)" transform="rotate(240)"/>
-            <polygon points="0,-105 8,-55 -8,-55" fill="rgba(255,220,80,.5)" transform="rotate(270)"/>
-            <polygon points="0,-105 8,-55 -8,-55" fill="rgba(255,220,80,.5)" transform="rotate(300)"/>
-            <polygon points="0,-105 8,-55 -8,-55" fill="rgba(255,220,80,.5)" transform="rotate(330)"/>
-          </g>
-        </svg>
-        <style>
-/* ── Female Narrator indicator ── */
-.f-narrator{
-  position:fixed!important;bottom:18px!important;right:12px!important;
-  top:auto!important;left:auto!important;
-  z-index:9999;
-  display:flex;align-items:center;gap:8px;
-  background:linear-gradient(135deg,#FCD34D,#F59E0B);
-  border:3px solid #fff;border-radius:999px;
-  padding:8px 14px 8px 10px;
-  box-shadow:0 4px 0 #B45309,0 6px 18px rgba(180,100,0,.28);
-  direction:rtl;
-  transition:opacity .3s;
-}
-.f-narrator-icon{font-size:20px;line-height:1;}
-.f-narrator-waves{display:flex;align-items:center;gap:3px;height:18px;}
-.f-narrator-waves span{
-  display:inline-block;width:3px;border-radius:3px;
-  background:#fff;opacity:.5;
-  animation:fnWave 1.2s ease-in-out infinite;
-}
-.f-narrator-waves span:nth-child(1){height:6px;animation-delay:0s}
-.f-narrator-waves span:nth-child(2){height:12px;animation-delay:.15s}
-.f-narrator-waves span:nth-child(3){height:18px;animation-delay:.3s}
-.f-narrator-waves span:nth-child(4){height:12px;animation-delay:.45s}
-.f-narrator-waves span:nth-child(5){height:6px;animation-delay:.6s}
-.f-narrator.speaking .f-narrator-waves span{opacity:1;background:#fff;}
-@keyframes fnWave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.4)}}
-/* ── Animated guide hand ── */
-#mlGuideHand{position:absolute;z-index:9990;pointer-events:none;font-size:38px;opacity:0;transform-origin:bottom center;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));will-change:left,top,opacity,transform;}
-#mlGuideHand.appear{animation:guideAppear .4s ease forwards;}
-@keyframes guideAppear{0%{opacity:0;transform:scale(.4) rotate(-30deg)}100%{opacity:1;transform:scale(1.2) rotate(-20deg)}}
-</style>
-      </div>
+      <div class="win-rays"><svg class="rays" viewBox="0 0 200 200" fill="none"><g transform="translate(100,100)"><polygon points="0,-90 7,-48 -7,-48" fill="rgba(255,220,80,.5)"/><polygon points="0,-90 7,-48 -7,-48" fill="rgba(255,220,80,.5)" transform="rotate(30)"/><polygon points="0,-90 7,-48 -7,-48" fill="rgba(255,220,80,.5)" transform="rotate(60)"/><polygon points="0,-90 7,-48 -7,-48" fill="rgba(255,220,80,.5)" transform="rotate(90)"/><polygon points="0,-90 7,-48 -7,-48" fill="rgba(255,220,80,.5)" transform="rotate(120)"/><polygon points="0,-90 7,-48 -7,-48" fill="rgba(255,220,80,.5)" transform="rotate(150)"/><polygon points="0,-90 7,-48 -7,-48" fill="rgba(255,220,80,.5)" transform="rotate(180)"/><polygon points="0,-90 7,-48 -7,-48" fill="rgba(255,220,80,.5)" transform="rotate(210)"/><polygon points="0,-90 7,-48 -7,-48" fill="rgba(255,220,80,.5)" transform="rotate(240)"/><polygon points="0,-90 7,-48 -7,-48" fill="rgba(255,220,80,.5)" transform="rotate(270)"/><polygon points="0,-90 7,-48 -7,-48" fill="rgba(255,220,80,.5)" transform="rotate(300)"/><polygon points="0,-90 7,-48 -7,-48" fill="rgba(255,220,80,.5)" transform="rotate(330)"/></g></svg></div>
       <img class="win-unified-mascot" src="../mascot.png" alt="موسى">
       <div class="win-title">أحسنت! 🎉</div>
       <div class="win-stars"><span>⭐</span><span>⭐</span><span>⭐</span></div>
-      <div class="win-score-row">
-        <span class="win-score-label">النقاط</span>
-        <span class="win-score-val" id="ml-winScoreVal">٠</span>
-      </div>
+      <div class="win-score-row"><span class="win-score-label">النقاط</span><span class="win-score-val" id="ml-winScoreVal">٠</span></div>
       <div class="win-btns">
         <button class="btn-win btn-win-next" onclick="mlHandleWinNext()">التالي ›</button>
         <button class="btn-win btn-win-repeat" onclick="mlHandleWinContinue()">إعادة 🔄</button>
@@ -1015,7 +962,7 @@ renderQuestion();
   window.addEventListener('load',function(){
     narEl=document.getElementById('fNarrator');
     if(narEl){narEl.remove();narEl=null;}
-    (function(){var s=document.createElement('button');s.id='mlSpeakerBtn';s.textContent='🔊';s.setAttribute('aria-label','استمع مجدداً');s.style.cssText='position:absolute;bottom:20px;right:16px;z-index:9999;background:linear-gradient(135deg,#FCD34D,#F59E0B);border:none;border-radius:50%;width:48px;height:48px;font-size:24px;cursor:pointer;box-shadow:0 4px 0 #B45309,0 6px 16px rgba(180,100,0,.28);display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:transform .12s;';s.addEventListener('click',function(){lastTxt='';spoken=false;readQ();});s.addEventListener('mouseenter',function(){s.style.transform='scale(1.08)';});s.addEventListener('mouseleave',function(){s.style.transform='';});(document.querySelector('.ml-widget')||document.body).appendChild(s);})();
+    (function(){var s=document.createElement('button');s.id='mlSpeakerBtn';s.textContent='🔊';s.setAttribute('aria-label','استمع مجدداً');s.style.cssText='position:absolute;bottom:20px;right:16px;z-index:9999;background:linear-gradient(135deg,#3A3A3A,#1F1F1F);border:none;border-radius:50%;width:48px;height:48px;font-size:24px;cursor:pointer;box-shadow:0 4px 0 #0A0A0A,0 6px 16px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:transform .12s;';s.addEventListener('click',function(){lastTxt='';spoken=false;readQ();});s.addEventListener('mouseenter',function(){s.style.transform='scale(1.08)';});s.addEventListener('mouseleave',function(){s.style.transform='';});(document.querySelector('.ml-widget')||document.body).appendChild(s);})();
     if(speechSynthesis.getVoices().length) readQ();
     setTimeout(readQ,300);setTimeout(readQ,800);setTimeout(readQ,2000);
     retryT=setInterval(function(){if(spoken){clearInterval(retryT);return;}lastTxt='';readQ();},1200);
@@ -1088,9 +1035,9 @@ renderQuestion();
   -webkit-tap-highlight-color:transparent;
 }
 .top-bar .lsn-btn.active{
-  background:rgba(180,83,9,.22);
+  background:rgba(0,0,0,.22);
   color:#fff;
-  border-color:rgba(120,53,5,.55);
+  border-color:rgba(0,0,0,.55);
   transform:scale(1.08);
 }
 .top-bar .lsn-btn.done{
@@ -1127,7 +1074,7 @@ renderQuestion();
 /* -- question progress dots -- */
 .ml-widget .progress-dots,#ml-dots,#mlDots,.round-row{display:flex!important;flex-shrink:0;justify-content:center;align-items:center;gap:7px;padding:6px 0 2px;}
 .ml-widget .qdot{display:inline-block;width:9px;height:9px;border-radius:50%;background:rgba(61,38,16,.18);transition:all .3s;pointer-events:none;flex-shrink:0;}
-.ml-widget .qdot.active{background:var(--amber,#F59E0B);transform:scale(1.4);}
+.ml-widget .qdot.active{background:var(--amber,#1F1F1F);transform:scale(1.4);}
 .ml-widget .qdot.done{background:var(--green,#22C55E);}
 </style>
 <script>
@@ -1162,5 +1109,61 @@ renderQuestion();
   }
   obs.observe(c,{childList:true});
   setInterval(render,500);render();
+})();
+</script>
+
+<style>
+/* == canonical win screen == */
+.win-overlay{position:absolute;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(15,8,0,.82)!important;backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important;}
+.win-overlay.show{display:flex!important;animation:ml-fadeIn .35s ease;}
+.win-card{text-align:center;display:flex!important;flex-direction:column!important;align-items:center!important;background:rgba(255,255,255,.10)!important;border:2px solid rgba(255,255,255,.22)!important;border-radius:28px!important;padding:24px 32px 28px!important;box-shadow:0 8px 32px rgba(0,0,0,.3)!important;gap:0!important;animation:ml-winPop .5s cubic-bezier(.34,1.56,.64,1) both;}
+.win-card .win-mascot,.win-card .mascot,.win-card .mascot-img,.win-card .win-scene,.win-card .win-emoji,.win-card .win-sub{display:none!important;}
+.win-unified-mascot{width:150px!important;height:150px!important;object-fit:contain;display:block!important;margin:0 auto 4px!important;animation:ml-bob 1.8s ease-in-out infinite;filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));}
+.win-rays{position:relative!important;width:190px!important;height:190px!important;display:flex!important;align-items:center;justify-content:center;margin-bottom:-155px!important;}
+.win-rays svg{position:absolute;inset:0;width:100%;height:100%;animation:ml-spin 8s linear infinite;}
+.win-title{font-family:'Baloo Bhaijaan 2','Tajawal',sans-serif!important;font-size:30px!important;font-weight:800!important;color:#fff!important;text-shadow:0 2px 6px rgba(0,0,0,.3)!important;margin:8px 0 4px!important;}
+.win-stars{display:flex!important;gap:6px!important;justify-content:center!important;margin:6px 0 10px!important;font-size:32px!important;}
+.win-stars span{display:inline-block;animation:ml-starPop .45s cubic-bezier(.34,1.56,.64,1) both;opacity:0;}
+.win-stars span:nth-child(1){animation-delay:.3s}.win-stars span:nth-child(2){animation-delay:.48s}.win-stars span:nth-child(3){animation-delay:.66s}
+.win-score-row{display:flex!important;align-items:baseline;gap:8px;margin:4px 0 12px!important;font-family:'Baloo Bhaijaan 2','Tajawal',sans-serif;justify-content:center;}
+.win-score-label{font-size:13px;font-weight:600;color:rgba(255,255,255,.75);}
+.win-score-val{font-size:28px;font-weight:800;color:#fff;}
+.win-btns{display:flex!important;gap:10px!important;margin-top:14px!important;width:100%;}
+.win-btns .btn-win,.btn-win{flex:1;min-width:0;margin-top:0!important;padding:14px 0!important;border:3px solid rgba(255,255,255,.9)!important;border-radius:20px!important;font-family:'Baloo Bhaijaan 2','Tajawal',sans-serif!important;font-size:17px!important;font-weight:800!important;color:#fff!important;text-shadow:0 1px 2px rgba(0,0,0,.2)!important;background:linear-gradient(135deg,#4ADE80 0%,#22C55E 55%,#16A34A 100%)!important;box-shadow:0 6px 0 #15803D,0 8px 20px rgba(22,163,74,.28)!important;cursor:pointer;transition:transform 150ms cubic-bezier(.34,1.56,.64,1),box-shadow 150ms ease;-webkit-tap-highlight-color:transparent;}
+.btn-win:active{transform:translateY(4px)!important;box-shadow:0 1px 0 #15803D,0 3px 8px rgba(22,163,74,.2)!important;}
+.btn-win-next{background:linear-gradient(135deg,#60A5FA 0%,#3B82F6 55%,#2563EB 100%)!important;box-shadow:0 6px 0 #1D4ED8,0 8px 20px rgba(37,99,235,.28)!important;}
+.btn-win-next:active{box-shadow:0 1px 0 #1D4ED8,0 3px 8px rgba(37,99,235,.2)!important;}
+@keyframes ml-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes ml-spin{to{transform:rotate(360deg)}}
+@keyframes ml-fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes ml-winPop{0%{transform:scale(.55);opacity:0}70%{transform:scale(1.04)}100%{transform:scale(1);opacity:1}}
+@keyframes ml-starPop{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+</style>
+
+<script>
+/* == lesson progress nav == */
+(function(){
+  var fn=decodeURIComponent((location.pathname.split('/').pop()||'').split('?')[0]);
+  var ch=null,idx=0,total=0,nextFile=null,m;
+  var LP_HERE='moosa-lessons.html';
+  var LP_OTHER='../Interactive book for elementary school chapter 1/moosa-lessons.html';
+  var LP=LP_HERE;
+  if((m=fn.match(/^moosa-lesson-classify (\d+)\.html$/))){ch='ch1';idx=+m[1]-1;total=5;nextFile='moosa-lesson-classify '+(+m[1]+1)+'.html';}
+  else if((m=fn.match(/^moosa-chp 2-lesson (\d+)\.html$/))){ch='ch2';idx=+m[1]-1;total=6;nextFile='moosa-chp 2-lesson '+(+m[1]+1)+'.html';LP=LP_OTHER;}
+  else if((m=fn.match(/^moosa-chp 3-lesson (\d+)\.html$/))){ch='ch3';idx=+m[1]-1;total=6;nextFile='moosa-chp 3-lesson '+(+m[1]+1)+'.html';LP=LP_OTHER;}
+  else if((m=fn.match(/^moosa-chp 4-lesson (\d+)\.html$/))){ch='ch4';idx=+m[1]-1;total=3;nextFile='moosa-chp 4-lesson '+(+m[1]+1)+'.html';LP=LP_OTHER;}
+  if(!ch)return;
+  var isLast=idx>=total-1;
+  function saveDone(){try{var k='moosa_'+ch,p=JSON.parse(localStorage.getItem(k)||'[]');if(p.indexOf(idx)===-1){p.push(idx);localStorage.setItem(k,JSON.stringify(p));}}catch(e){}}
+  var ov=document.querySelector('.win-overlay');
+  if(ov){
+    try{new MutationObserver(function(){if(ov.classList.contains('show'))saveDone();}).observe(ov,{attributes:true,attributeFilter:['class']});}catch(e){}
+    if(ov.classList.contains('show'))saveDone();
+  }
+  window.mlHandleWinNext=function(){
+    saveDone();
+    if(window.parent&&window.parent!==window){window.parent.postMessage({action:'nextLesson'},'*');return;}
+    location.href=isLast?LP:nextFile;
+  };
 })();
 </script>
