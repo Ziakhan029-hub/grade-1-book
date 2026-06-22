@@ -51,7 +51,7 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
 .screen.active{display:flex;}
 
 /* ── DRAG ── */
-.boxes{display:flex;gap:10px;flex-shrink:0;height:140px;}
+.boxes{display:flex;gap:10px;flex-shrink:0;height:160px;}
 .box{
   flex:1;border-radius:18px;border:3px dashed var(--tile);
   display:flex;flex-direction:column;
@@ -88,25 +88,25 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
 .tray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;flex:1;align-content:center;}
 
 .item{
-  width:76px;height:76px;border-radius:18px;
+  width:88px;height:88px;border-radius:18px;
   background:#FFFDF6;border:3px solid rgba(245,158,11,.3);
   display:flex;align-items:center;justify-content:center;
   cursor:grab;touch-action:none;
-  font-family:var(--font-d);font-size:30px;font-weight:800;color:var(--ink);
+  font-family:var(--font-d);font-size:36px;font-weight:800;color:var(--ink);
   box-shadow:0 4px 0 rgba(180,120,0,.18);
   transition:transform .1s;animation:ml-pop .38s var(--ease-b) both;
   flex-shrink:0;user-select:none;
 }
 .item:active{cursor:grabbing;}
 .item.dragging{opacity:.25;}
-.item.placed{cursor:default;animation:none;width:50px;height:50px;border-radius:12px;font-size:20px;box-shadow:none;}
+.item.placed{cursor:default;animation:none;width:56px;height:56px;border-radius:12px;font-size:22px;box-shadow:none;}
 .ml-ghost{
-  position:fixed;z-index:9999;width:76px;height:76px;border-radius:18px;
+  position:fixed;z-index:9999;width:88px;height:88px;border-radius:18px;
   background:#FFFDF6;border:3px solid rgba(245,158,11,.5);
   pointer-events:none;display:flex;align-items:center;justify-content:center;
   box-shadow:0 8px 20px rgba(80,50,10,.3);
   transform:translate(-50%,-50%) scale(1.12) rotate(-4deg);
-  font-family:var(--font-d);font-size:30px;font-weight:800;color:var(--ink);
+  font-family:var(--font-d);font-size:36px;font-weight:800;color:var(--ink);
 }
 
 /* ── COUNT ── */
@@ -116,18 +116,29 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
 .count-num.bump{animation:ml-bump .22s var(--ease-b);}
 @keyframes ml-bump{0%,100%{transform:scale(1)}50%{transform:scale(1.32)}}
 .count-word{font-family:var(--font-d);font-size:20px;font-weight:700;color:var(--ink-soft);}
-.count-grid{display:grid;gap:12px;justify-content:center;align-content:center;padding:8px;flex-shrink:0;}
+.count-grid{display:grid;gap:10px;justify-content:center;align-content:center;padding:4px 12px;flex-shrink:0;}
 .count-item{
-  width:72px;height:72px;border-radius:18px;
+  width:110px;height:110px;border-radius:22px;
   background:#FFFDF6;border:3px solid rgba(245,158,11,.25);
-  display:flex;align-items:center;justify-content:center;font-size:40px;
+  display:flex;align-items:center;justify-content:center;font-size:66px;
   cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
   animation:ml-pop .38s var(--ease-b) both;
   box-shadow:0 4px 0 rgba(180,120,0,.15);
-  transition:transform .1s;user-select:none;
+  transition:transform .1s;user-select:none;position:relative;
 }
 .count-item:active{transform:scale(.9);}
 .count-item.tapped{background:rgba(34,197,94,.15);border-color:var(--green);transform:scale(.95);box-shadow:none;cursor:default;}
+.count-badge{
+  position:absolute;top:-10px;right:-10px;
+  width:30px;height:30px;border-radius:50%;
+  background:var(--amber);color:#fff;
+  font-family:var(--font-d);font-size:15px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 6px rgba(0,0,0,.22);
+  animation:badgePop .28s var(--ease-b) both;
+  pointer-events:none;
+}
+@keyframes badgePop{0%{transform:scale(0) rotate(-20deg)}100%{transform:scale(1) rotate(0deg)}}
 
 /* ── MATCH ── */
 .match-area{flex:1;display:flex;flex-direction:column;gap:14px;min-height:0;justify-content:center;}
@@ -137,13 +148,13 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
   background:rgba(245,158,11,.08);border-radius:20px;
   padding:16px 12px;border:2px solid rgba(245,158,11,.2);
 }
-.match-icon{font-size:50px;animation:ml-pop .38s var(--ease-b) both;line-height:1;}
+.match-icon{font-size:64px;animation:ml-pop .38s var(--ease-b) both;line-height:1;}
 .match-options{display:flex;gap:12px;justify-content:center;flex-shrink:0;}
 .match-opt{
-  width:68px;height:68px;border-radius:18px;
+  width:80px;height:80px;border-radius:18px;
   background:#FFFDF6;border:3px solid rgba(245,158,11,.3);
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-d);font-size:28px;font-weight:800;color:var(--ink);
+  font-family:var(--font-d);font-size:32px;font-weight:800;color:var(--ink);
   cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
   animation:ml-pop .38s var(--ease-b) both;
   box-shadow:0 4px 0 rgba(180,120,0,.18);
@@ -156,7 +167,7 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
 /* ── Countdown ── */
 .next-wrap{padding:0 12px 10px;flex-shrink:0;}
 .countdown-bar{position:relative;display:flex;align-items:center;justify-content:center;height:44px;border-radius:14px;overflow:hidden;background:rgba(0,0,0,.06);}
-.countdown-fill{position:absolute;inset:0;background:linear-gradient(135deg,#22C55E,#4ADE80);border-radius:14px;transform-origin:left center;}
+.countdown-fill{position:absolute;inset:0;background:linear-gradient(135deg,#22C55E,#4ADE80);border-radius:14px;transform-origin:right center;}
 .countdown-txt{position:relative;z-index:1;font-family:var(--font-d);font-size:22px;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);}
 @keyframes mlCountdownShrink{0%{transform:scaleX(1)}100%{transform:scaleX(0)}}
 
@@ -210,12 +221,13 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
 .btn-win-repeat:active{box-shadow:0 1px 0 var(--green-dark);}
 
 /* ── Confetti ── */
-.ml-confetti{position:fixed;pointer-events:none;z-index:9998;opacity:0;}
-@keyframes ml-confettiFall{0%{transform:translateY(-20px)rotate(0deg);opacity:1}100%{transform:translateY(100vh)rotate(720deg);opacity:0}}
+.ml-confetti{position:absolute;pointer-events:none;z-index:9998;opacity:0;}
+#ml-confettiContainer{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:9998;}
+@keyframes ml-confettiFall{0%{transform:translateY(-20px)rotate(0deg);opacity:1}100%{transform:translateY(900px)rotate(720deg);opacity:0}}
 
 /* ── Animated guide hand ── */
 #mlGuideHand {
-  position: fixed; z-index: 9990; pointer-events: none;
+  position: absolute; z-index: 9990; pointer-events: none;
   font-size: 38px; opacity: 0; transform-origin: bottom center;
   filter: drop-shadow(0 3px 6px rgba(0,0,0,.35));
   will-change: left, top, opacity, transform;
@@ -327,11 +339,11 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
   <div id="ml-confettiContainer"></div>
 
   <!-- Speaker button -->
-  <button id="mlSpeakerBtn" onclick="mlSpeak()" aria-label="استمع مجدداً" style="position:fixed;bottom:20px;right:16px;z-index:9999;background:linear-gradient(135deg,#FCD34D,#F59E0B);border:none;border-radius:50%;width:48px;height:48px;font-size:24px;cursor:pointer;box-shadow:0 4px 0 #B45309,0 6px 16px rgba(180,100,0,.28);display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:transform .12s;">🔊</button>
+  <button id="mlSpeakerBtn" onclick="mlSpeak()" aria-label="استمع مجدداً" style="position:absolute;bottom:20px;right:16px;z-index:9999;background:linear-gradient(135deg,#FCD34D,#F59E0B);border:none;border-radius:50%;width:48px;height:48px;font-size:24px;cursor:pointer;box-shadow:0 4px 0 #B45309,0 6px 16px rgba(180,100,0,.28);display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:transform .12s;">🔊</button>
 
 </div>
 
-<script>window.__NARR_AUDIO__={"صنّف الفاكهة المتشابهة":"../audio/12fc14bb.mp3","صنّف الأحذية المتشابهة":"../audio/39a1115d.mp3","صنّف أدوات المائدة":"../audio/96eb0a49.mp3","صنّف الفاكهة المتشابهة. الخاصية: نوع الفاكهة":"../audio/911403d4.mp3","صنّف الأحذية المتشابهة. الخاصية: نوع الحذاء":"../audio/0c07bfbb.mp3","صنّف أدوات المائدة. الخاصية: نوع الإناء":"../audio/f29cbb76.mp3","صنّف حسب الشكل":"../audio/1eef0024.mp3","صنّف حسب اللون":"../audio/26423a87.mp3","صنّف حسب الشكل. الخاصية: الشكل":"../audio/af43ae0b.mp3","صنّف حسب اللون. الخاصية: اللون":"../audio/6ae4c9d5.mp3","صنِّف القمصان حسب اللون":"../audio/fa64cf44.mp3","صنِّف الجوارب حسب اللون":"../audio/b75f353c.mp3","صنِّف القبعات حسب اللون":"../audio/486853c1.mp3","صنِّف الأحذية حسب اللون":"../audio/3f27263f.mp3","صنِّف القمصان حسب اللون. الخاصية: اللون الأزرق":"../audio/76bb1571.mp3","صنِّف الجوارب حسب اللون. الخاصية: اللون البنفسجي":"../audio/e04c4a41.mp3","صنِّف القبعات حسب اللون. الخاصية: اللون البرتقالي":"../audio/2d2cc644.mp3","صنِّف الأحذية حسب اللون. الخاصية: اللون الأحمر":"../audio/d718372b.mp3","صِل كلّ عنصر بما يُسَاويه":"../audio/e231db15.mp3","عُدّ الفراشات ثم اكتب الرقم ١":"../audio/e549fdcf.mp3","عُدّ الكُرات ثم اكتب الرقم ٢":"../audio/16025ff7.mp3","عُدّ الزهور ثم اكتب الرقم ٣":"../audio/90522597.mp3","اكتب الرقم ٢ من الذاكرة":"../audio/abb683e2.mp3","اكتب الرقم ٣ من الذاكرة":"../audio/48bc5016.mp3","اعدد الدببة 🐻":"../audio/6e7fb3d7.mp3","صنّف الأعداد":"../audio/601a00e5.mp3","اعدد النحل 🐝":"../audio/b35998fb.mp3","كم عدد الضفادع؟":"../audio/91044a58.mp3","صنّف حسب الكمية":"../audio/8eec2fcc.mp3","كم عدد المناطيد؟":"../audio/a8be7208.mp3","صنّف الأعداد. العدد ٤ أم ٥؟":"../audio/2f16749a.mp3","صنّف حسب الكمية. قليل أم كثير؟":"../audio/6af0e663.mp3","عُدّ الشاحنات ثم اكتب الرقم ٤":"../audio/22a80dc5.mp3","عُدّ اللافتات ثم اكتب الرقم ٥":"../audio/e44a6799.mp3","عُدّ الخوذات ثم اكتب الرقم ٤":"../audio/1500bf34.mp3","عُدّ الشاحنات ثم اكتب الرقم ٥":"../audio/e923d3ec.mp3","عُدّ المخاريط ثم اكتب الرقم ٤":"../audio/c2484382.mp3","الآلة فارغة! اكتب الرقم صفر ٠":"../audio/af541735.mp3","عُدّ الكرات ثم اكتب الرقم ١":"../audio/0bb4540d.mp3","عُدّ الكرات ثم اكتب الرقم ٢":"../audio/7626557c.mp3","عُدّ الكرات ثم اكتب الرقم ٣":"../audio/0764a620.mp3","عُدّ الكرات ثم اكتب الرقم ٤":"../audio/654330c7.mp3","عُدّ الكرات ثم اكتب الرقم ٥":"../audio/48fbbfbd.mp3","اكتب صفر ٠ من الذاكرة":"../audio/18181245.mp3"};</script>
+<script>window.__NARR_AUDIO__={"صنّف الفاكهة المتشابهة":"../audio/12fc14bb.mp3","صنّف الأحذية المتشابهة":"../audio/39a1115d.mp3","صنّف أدوات المائدة":"../audio/96eb0a49.mp3","صنّف الفاكهة المتشابهة. الخاصية: نوع الفاكهة":"../audio/911403d4.mp3","صنّف الأحذية المتشابهة. الخاصية: نوع الحذاء":"../audio/0c07bfbb.mp3","صنّف أدوات المائدة. الخاصية: نوع الإناء":"../audio/f29cbb76.mp3","صنّف حسب الشكل":"../audio/1eef0024.mp3","صنّف حسب اللون":"../audio/26423a87.mp3","صنّف حسب الشكل. الخاصية: الشكل":"../audio/af43ae0b.mp3","صنّف حسب اللون. الخاصية: اللون":"../audio/6ae4c9d5.mp3","صنِّف القمصان حسب اللون":"../audio/fa64cf44.mp3","صنِّف الجوارب حسب اللون":"../audio/b75f353c.mp3","صنِّف القبعات حسب اللون":"../audio/486853c1.mp3","صنِّف الأحذية حسب اللون":"../audio/3f27263f.mp3","صنِّف القمصان حسب اللون. الخاصية: اللون الأزرق":"../audio/76bb1571.mp3","صنِّف الجوارب حسب اللون. الخاصية: اللون البنفسجي":"../audio/e04c4a41.mp3","صنِّف القبعات حسب اللون. الخاصية: اللون البرتقالي":"../audio/2d2cc644.mp3","صنِّف الأحذية حسب اللون. الخاصية: اللون الأحمر":"../audio/d718372b.mp3","صِل كلّ عنصر بما يُسَاويه":"../audio/e231db15.mp3","عُدّ الفراشات ثم اكتب الرقم ١":"../audio/e549fdcf.mp3","عُدّ الكُرات ثم اكتب الرقم ٢":"../audio/16025ff7.mp3","عُدّ الزهور ثم اكتب الرقم ٣":"../audio/90522597.mp3","اكتب الرقم ٢ من الذاكرة":"../audio/abb683e2.mp3","اكتب الرقم ٣ من الذاكرة":"../audio/48bc5016.mp3","اعدد الدببة 🐻":"../audio/6e7fb3d7.mp3","صنّف الأعداد":"../audio/601a00e5.mp3","اعدد النحل 🐝":"../audio/b35998fb.mp3","كم عدد الضفادع؟":"../audio/91044a58.mp3","صنّف حسب الكمية":"../audio/8eec2fcc.mp3","كم عدد المناطيد؟":"../audio/a8be7208.mp3","صنّف الأعداد. العدد ٤ أم ٥؟":"../audio/2f16749a.mp3","صنّف حسب الكمية. قليل أم كثير؟":"../audio/6af0e663.mp3","عُدّ الشاحنات ثم اكتب الرقم ٤":"../audio/22a80dc5.mp3","عُدّ اللافتات ثم اكتب الرقم ٥":"../audio/e44a6799.mp3","عُدّ الخوذات ثم اكتب الرقم ٤":"../audio/1500bf34.mp3","عُدّ الشاحنات ثم اكتب الرقم ٥":"../audio/e923d3ec.mp3","عُدّ المخاريط ثم اكتب الرقم ٤":"../audio/c2484382.mp3","الآلة فارغة! اكتب الرقم صفر ٠":"../audio/af541735.mp3","عُدّ الكرات ثم اكتب الرقم ١":"../audio/0bb4540d.mp3","عُدّ الكرات ثم اكتب الرقم ٢":"../audio/7626557c.mp3","عُدّ الكرات ثم اكتب الرقم ٣":"../audio/0764a620.mp3","عُدّ الكرات ثم اكتب الرقم ٤":"../audio/654330c7.mp3","عُدّ الكرات ثم اكتب الرقم ٥":"../audio/48fbbfbd.mp3","اكتب صفر ٠ من الذاكرة":"../audio/18181245.mp3","واحد":"../audio/b72cd1b4.mp3","اثنان":"../audio/656d784b.mp3","ثلاثة":"../audio/b82a9429.mp3","أربعة":"../audio/555e79ec.mp3","خمسة":"../audio/c3624b9e.mp3","ستة":"../audio/f2c2013b.mp3","سبعة":"../audio/082a36d9.mp3","ثمانية":"../audio/355990d0.mp3","تسعة":"../audio/e5f1340b.mp3"};</script>
 <script>
 // ── Helpers ───────────────────────────────────────────────
 const ARABIC_NUMS  = '٠١٢٣٤٥٦٧٨٩';
@@ -386,7 +398,7 @@ function launchConfetti() {
     const p = document.createElement('div');
     p.className = 'ml-confetti';
     const sz = 7 + Math.random() * 7;
-    p.style.cssText = 'position:fixed;left:' + (Math.random()*100) + 'vw;top:-20px;width:' + sz + 'px;height:' + sz + 'px;'
+    p.style.cssText = 'position:absolute;left:' + (Math.random()*100) + '%;top:-20px;width:' + sz + 'px;height:' + sz + 'px;'
       + 'background:' + cols[~~(Math.random()*cols.length)] + ';'
       + 'border-radius:' + (Math.random()>.5?'50%':'2px') + ';'
       + 'animation:ml-confettiFall ' + (1.4+Math.random()*2) + 's ease-in ' + (Math.random()*1.2) + 's both;opacity:0';
@@ -432,14 +444,40 @@ function _mlWsSpeak(txt) {
     _mlSpeakRetry = setInterval(function(){
       if (_mlSpeakSpoken) { clearInterval(_mlSpeakRetry); return; }
       _doSpeak();
-    }, 400);
-    setTimeout(function(){ clearInterval(_mlSpeakRetry); }, 8000);
+    }, 1200);
+    setTimeout(function(){ clearInterval(_mlSpeakRetry); }, 4800);
   }
   speechSynthesis.onvoiceschanged = function(){ if(!_mlSpeakSpoken) _doSpeak(); };
 }
 
+// ── Count-tap number audio ─────────────────────────────────
+var _countVoiceCache = null;
+function _getCountVoice() {
+  if (_countVoiceCache) return _countVoiceCache;
+  if (!window.speechSynthesis) return null;
+  var vs = window.speechSynthesis.getVoices().filter(function(v){ return v.lang.startsWith('ar'); });
+  if (!vs.length) return null;
+  _countVoiceCache = vs.find(function(v){ return /female|woman|فاطمة|Fatima|Layla|hoda|salma|laila|amira|zeina|dina|zara|rana|mona|yasmin|nour/i.test(v.name); }) ||
+    vs.find(function(v){ return !/male|ذكر|naayf|majed|omar|maged|tarik|nizar/i.test(v.name); }) ||
+    vs[0];
+  return _countVoiceCache;
+}
+var COUNT_WORDS_AR = ['','واحد','اثنان','ثلاثة','أربعة','خمسة','ستة','سبعة','ثمانية','تسعة'];
+function speakNum(n) {
+  var txt = COUNT_WORDS_AR[n]; if (!txt) return;
+  var _src = (window.__NARR_AUDIO__ || {})[txt];
+  if (_src) { var _a = new Audio(_src); _a.play().catch(function(){}); return; }
+  if (!window.speechSynthesis) return;
+  var v = _getCountVoice(); if (!v) return;
+  window.speechSynthesis.cancel();
+  var u = new SpeechSynthesisUtterance(txt);
+  u.lang = 'ar-SA'; u.rate = 0.85; u.pitch = 1.3; u.voice = v;
+  window.speechSynthesis.speak(u);
+}
+if (window.speechSynthesis) { speechSynthesis.onvoiceschanged = function(){ _countVoiceCache = null; _getCountVoice(); }; }
+
 // ── Progress dots ─────────────────────────────────────────
-function renderDots(){var _c=el('dots');_c.innerHTML='';var _l=['moosa-chp 2-lesson 1.html', 'moosa-chp 2-lesson 2.html', 'moosa-chp 2-lesson 3.html', 'moosa-chp 2-lesson 4.html', 'moosa-chp 2-lesson 5.html', 'moosa-chp 2-lesson 6.html'];var _cur=window.location.pathname.split('/').pop();var _ci=_l.indexOf(_cur);for(var _i=0;_i<_l.length;_i++){(function(lf,i){var b=document.createElement('button');b.className='dot'+(i===_ci?' active':i<_ci?' done':'');b.textContent=i+1;b.addEventListener('click',function(){window.location.href=lf;});_c.appendChild(b);})(_l[_i],_i);}}
+function renderDots(){var _c=el('dots');_c.innerHTML='';var _l=['moosa-chp 2-lesson 1.html', 'moosa-chp 2-lesson 2.html', 'moosa-chp 2-lesson 3.html', 'moosa-chp 2-lesson 4.html', 'moosa-chp 2-lesson 5.html', 'moosa-chp 2-lesson 6.html'];var _cur=window.location.pathname.split('/').pop();var _ci=_l.indexOf(_cur);for(var _i=0;_i<_l.length;_i++){(function(lf,i){var b=document.createElement('button');b.className='dot'+(i===_ci?' active':i<_ci?' done':'');b.textContent='٠١٢٣٤٥٦٧٨٩'[i+1];b.addEventListener('click',function(){window.location.href=lf;});_c.appendChild(b);})(_l[_i],_i);}}
 
 // ── Countdown ─────────────────────────────────────────────
 var mlCountdownTimer = null;
@@ -586,7 +624,7 @@ function renderCount(q) {
 
   var grid = el('countGrid');
   var cols = q.items.length <= 3 ? q.items.length : Math.ceil(Math.sqrt(q.items.length));
-  grid.style.gridTemplateColumns = 'repeat(' + cols + ', 72px)';
+  grid.style.gridTemplateColumns = 'repeat(' + cols + ', 110px)';
   grid.innerHTML = '';
 
   q.items.forEach(function(emoji, i) {
@@ -599,6 +637,11 @@ function renderCount(q) {
       if (div.classList.contains('tapped')) return;
       div.classList.add('tapped');
       countVal++;
+      var badge = document.createElement('span');
+      badge.className = 'count-badge';
+      badge.textContent = toAr(countVal);
+      div.appendChild(badge);
+      speakNum(countVal);
       mlAudio.chime(400 + countVal * 60);
       flash('ok');
       var d = el('countDisplay');
@@ -751,7 +794,7 @@ function mlHandleWinContinue() {
 function mlHandleWinNext() {
   if (window.parent && window.parent !== window) {
     window.parent.postMessage({ action: 'nextLesson' }, '*');
-  }
+  } else { window.location.href = 'moosa-chp 2-lesson 4.html'; }
 }
 
 // ── Init ──────────────────────────────────────────────────
@@ -767,8 +810,8 @@ renderQuestion();
   function init() {
     hand = document.createElement('div');
     hand.id = 'mlGuideHand';
-    hand.textContent = '👆';
-    document.body.appendChild(hand);
+    hand.textContent = '👇';
+    var _hw = document.querySelector('.ml-widget'); (_hw || document.body).appendChild(hand);
     scheduleGuide(2500);
     document.addEventListener('pointerdown', onAction, { passive: true });
     var qEl = document.getElementById('ml-qPrompt');
@@ -796,6 +839,8 @@ renderQuestion();
 
   function runGuide() {
     if (!hand) return;
+    var _wEl = document.querySelector('.ml-widget');
+    var wR = _wEl ? _wEl.getBoundingClientRect() : {left:0, top:0};
 
     // ── DRAG screen ──────────────────────────────────────
     var dragScreen = document.getElementById('ml-screenDrag');
@@ -809,15 +854,15 @@ renderQuestion();
       var bR = box.getBoundingClientRect();
 
       hand.style.transition = 'none';
-      hand.style.left = (iR.left + iR.width/2 - 19) + 'px';
-      hand.style.top  = (iR.top  - 14) + 'px';
+      hand.style.left = (iR.left - wR.left + iR.width/2 - 19) + 'px';
+      hand.style.top  = (iR.top  - wR.top - 14) + 'px';
       hand.style.opacity = '0';
       hand.classList.add('appear');
 
       animT = setTimeout(function() {
         hand.style.transition = 'left .75s cubic-bezier(.4,0,.2,1), top .75s cubic-bezier(.4,0,.2,1), transform .75s, opacity .3s';
-        hand.style.left = (bR.left + bR.width/2 - 19) + 'px';
-        hand.style.top  = (bR.top  + bR.height/2 - 19) + 'px';
+        hand.style.left = (bR.left - wR.left + bR.width/2 - 19) + 'px';
+        hand.style.top  = (bR.top  - wR.top + bR.height/2 - 19) + 'px';
         hand.style.transform = 'scale(.9) rotate(0deg)';
         hand.style.opacity = '1';
         animT = setTimeout(function() { hideHand(); animT = setTimeout(runGuide, 1800); }, 900);
@@ -834,8 +879,8 @@ renderQuestion();
       var tR = tile.getBoundingClientRect();
 
       hand.style.transition = 'none';
-      hand.style.left = (tR.left + tR.width/2 - 19) + 'px';
-      hand.style.top  = (tR.top  - 14) + 'px';
+      hand.style.left = (tR.left - wR.left + tR.width/2 - 19) + 'px';
+      hand.style.top  = (tR.top  - wR.top - 14) + 'px';
       hand.style.opacity = '0';
       hand.classList.add('appear');
 
@@ -857,12 +902,17 @@ renderQuestion();
     if (matchScreen && matchScreen.classList.contains('active')) {
       var opts = document.querySelectorAll('#ml-matchOptions .match-opt:not([style*="opacity"])');
       if (!opts.length) return;
-      var opt = opts[~~(Math.random() * opts.length)];
+      var correctTxt = toAr(QUESTIONS[qIndex].answer);
+      var opt = null;
+      for (var _i = 0; _i < opts.length; _i++) {
+        if (opts[_i].textContent === correctTxt) { opt = opts[_i]; break; }
+      }
+      if (!opt) opt = opts[0];
       var oR  = opt.getBoundingClientRect();
 
       hand.style.transition = 'none';
-      hand.style.left = (oR.left + oR.width/2 - 19) + 'px';
-      hand.style.top  = (oR.top  - 14) + 'px';
+      hand.style.left = (oR.left - wR.left + oR.width/2 - 19) + 'px';
+      hand.style.top  = (oR.top  - wR.top - 14) + 'px';
       hand.style.opacity = '0';
       hand.classList.add('appear');
 
@@ -915,10 +965,10 @@ renderQuestion();
   gap:8px!important;
   justify-content:center!important;
 }
-.top-bar .score-label,.top-bar .score-val{display:none!important;}
+.top-bar .score-label,.top-bar .score-val{}
 .top-bar .lsn-btn{
-  min-width:32px;height:32px;
-  border-radius:8px;
+  min-width:44px;height:44px;
+  border-radius:10px;
   background:rgba(255,255,255,.38);
   color:rgba(61,38,16,.75);
   font-size:15px;font-weight:700;font-family:inherit;
@@ -927,6 +977,7 @@ renderQuestion();
   display:inline-flex;align-items:center;justify-content:center;
   padding:0 7px;
   transition:transform .15s,background .15s;
+  -webkit-tap-highlight-color:transparent;
 }
 .top-bar .lsn-btn.active{
   background:rgba(180,83,9,.22);
@@ -935,12 +986,11 @@ renderQuestion();
   transform:scale(1.08);
 }
 .top-bar .lsn-btn.done{
-  background:rgba(22,163,74,.28);
+  background:#16A34A;
   color:#fff;
 }
 .top-bar .lsn-btn:hover{transform:scale(1.12);background:rgba(255,255,255,.55);}
-/* hide dots bar entirely */
-#ml-dots,#mlDots,.progress-dots{display:none!important;}
+
 </style>
 <script>
 (function(){
@@ -954,7 +1004,7 @@ renderQuestion();
       L.forEach(function(lf,i){
         var b=document.createElement('button');
         b.className='lsn-btn'+(i===ci?' active':i<ci?' done':'');
-        b.textContent=i+1;
+        b.textContent='٠١٢٣٤٥٦٧٨٩'[i+1];
         b.addEventListener('click',function(){window.location.href=lf;});
         bar.appendChild(b);
       });
@@ -962,5 +1012,47 @@ renderQuestion();
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',build);}
   else{build();}
+})();
+</script>
+
+<style>
+/* -- question progress dots -- */
+.ml-widget .progress-dots,#ml-dots,#mlDots,.round-row{display:flex!important;flex-shrink:0;justify-content:center;align-items:center;gap:7px;padding:6px 0 2px;}
+.ml-widget .qdot{display:inline-block;width:9px;height:9px;border-radius:50%;background:rgba(61,38,16,.18);transition:all .3s;pointer-events:none;flex-shrink:0;}
+.ml-widget .qdot.active{background:var(--amber,#F59E0B);transform:scale(1.4);}
+.ml-widget .qdot.done{background:var(--green,#22C55E);}
+</style>
+<script>
+(function(){
+  var c=document.getElementById('ml-dots')||document.getElementById('mlDots')||document.getElementById('roundRow');
+  if(!c){
+    var tb=document.querySelector('.ml-widget .top-bar');
+    if(!tb)return;
+    c=document.createElement('div');c.className='progress-dots';c.id='mlDots';
+    tb.insertAdjacentElement('afterend',c);
+  }
+  function getIdx(){try{if(typeof qIndex!=='undefined')return qIndex;}catch(e){}try{if(typeof stepIndex!=='undefined')return stepIndex;}catch(e){}try{if(typeof stepIdx!=='undefined')return stepIdx;}catch(e){}try{if(typeof mlStepIdx!=='undefined')return mlStepIdx;}catch(e){}return 0;}
+  function getTotal(){try{if(typeof QUESTIONS!=='undefined'&&QUESTIONS.length)return QUESTIONS.length;}catch(e){}try{if(typeof STEPS!=='undefined'&&STEPS.length)return STEPS.length;}catch(e){}try{if(typeof ML_STEPS!=='undefined'&&ML_STEPS.length)return ML_STEPS.length;}catch(e){}try{if(typeof ML_TOTAL==='number')return ML_TOTAL;}catch(e){}return 0;}
+  var _busy=false;
+  var obs=new MutationObserver(function(){if(!_busy)render();});
+  function render(){
+    if(_busy)return;
+    var total=getTotal();if(!total)return;
+    var idx=getIdx(),key=idx+'/'+total;
+    if(c._qk===key)return;
+    c._qk=key;_busy=true;obs.disconnect();
+    c.innerHTML='';
+    for(var i=0;i<total;i++){var d=document.createElement('span');d.className='qdot'+(i===idx?' active':i<idx?' done':'');c.appendChild(d);}
+    _busy=false;obs.observe(c,{childList:true});
+  }
+  if(typeof renderDots!=='undefined'){
+    window.renderDots=function(){
+      var sv=document.getElementById('ml-scoreVal')||document.getElementById('mlScoreVal');
+      if(sv){try{var sc=typeof score!=='undefined'?score:typeof mlScore!=='undefined'?mlScore:null;if(sc!==null)sv.textContent=String(sc).replace(/[0-9]/g,function(d){return'٠١٢٣٤٥٦٧٨٩'[+d];});}catch(e){}}
+      render();
+    };
+  }
+  obs.observe(c,{childList:true});
+  setInterval(render,500);render();
 })();
 </script>

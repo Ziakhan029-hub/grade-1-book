@@ -694,8 +694,8 @@ renderStep();
 }
 .top-bar .score-label,.top-bar .score-val{display:none!important;}
 .top-bar .lsn-btn{
-  min-width:32px;height:32px;
-  border-radius:8px;
+  min-width:44px;height:44px;
+  border-radius:10px;
   background:rgba(255,255,255,.38);
   color:rgba(61,38,16,.75);
   font-size:15px;font-weight:700;font-family:inherit;
@@ -704,6 +704,7 @@ renderStep();
   display:inline-flex;align-items:center;justify-content:center;
   padding:0 7px;
   transition:transform .15s,background .15s;
+  -webkit-tap-highlight-color:transparent;
 }
 .top-bar .lsn-btn.active{
   background:rgba(180,83,9,.22);
@@ -712,12 +713,11 @@ renderStep();
   transform:scale(1.08);
 }
 .top-bar .lsn-btn.done{
-  background:rgba(22,163,74,.28);
+  background:#16A34A;
   color:#fff;
 }
 .top-bar .lsn-btn:hover{transform:scale(1.12);background:rgba(255,255,255,.55);}
-/* hide dots bar entirely */
-#ml-dots,#mlDots,.progress-dots{display:none!important;}
+
 </style>
 <script>
 (function(){
@@ -739,5 +739,47 @@ renderStep();
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',build);}
   else{build();}
+})();
+</script>
+
+<style>
+/* -- question progress dots -- */
+.ml-widget .progress-dots,#ml-dots,#mlDots,.round-row{display:flex!important;flex-shrink:0;justify-content:center;align-items:center;gap:7px;padding:6px 0 2px;}
+.ml-widget .qdot{display:inline-block;width:9px;height:9px;border-radius:50%;background:rgba(61,38,16,.18);transition:all .3s;pointer-events:none;flex-shrink:0;}
+.ml-widget .qdot.active{background:var(--amber,#F59E0B);transform:scale(1.4);}
+.ml-widget .qdot.done{background:var(--green,#22C55E);}
+</style>
+<script>
+(function(){
+  var c=document.getElementById('ml-dots')||document.getElementById('mlDots')||document.getElementById('roundRow');
+  if(!c){
+    var tb=document.querySelector('.ml-widget .top-bar');
+    if(!tb)return;
+    c=document.createElement('div');c.className='progress-dots';c.id='mlDots';
+    tb.insertAdjacentElement('afterend',c);
+  }
+  function getIdx(){try{if(typeof qIndex!=='undefined')return qIndex;}catch(e){}try{if(typeof stepIndex!=='undefined')return stepIndex;}catch(e){}try{if(typeof stepIdx!=='undefined')return stepIdx;}catch(e){}try{if(typeof mlStepIdx!=='undefined')return mlStepIdx;}catch(e){}return 0;}
+  function getTotal(){try{if(typeof QUESTIONS!=='undefined'&&QUESTIONS.length)return QUESTIONS.length;}catch(e){}try{if(typeof STEPS!=='undefined'&&STEPS.length)return STEPS.length;}catch(e){}try{if(typeof ML_STEPS!=='undefined'&&ML_STEPS.length)return ML_STEPS.length;}catch(e){}try{if(typeof ML_TOTAL==='number')return ML_TOTAL;}catch(e){}return 0;}
+  var _busy=false;
+  var obs=new MutationObserver(function(){if(!_busy)render();});
+  function render(){
+    if(_busy)return;
+    var total=getTotal();if(!total)return;
+    var idx=getIdx(),key=idx+'/'+total;
+    if(c._qk===key)return;
+    c._qk=key;_busy=true;obs.disconnect();
+    c.innerHTML='';
+    for(var i=0;i<total;i++){var d=document.createElement('span');d.className='qdot'+(i===idx?' active':i<idx?' done':'');c.appendChild(d);}
+    _busy=false;obs.observe(c,{childList:true});
+  }
+  if(typeof renderDots!=='undefined'){
+    window.renderDots=function(){
+      var sv=document.getElementById('ml-scoreVal')||document.getElementById('mlScoreVal');
+      if(sv){try{var sc=typeof score!=='undefined'?score:typeof mlScore!=='undefined'?mlScore:null;if(sc!==null)sv.textContent=String(sc).replace(/[0-9]/g,function(d){return'٠١٢٣٤٥٦٧٨٩'[+d];});}catch(e){}}
+      render();
+    };
+  }
+  obs.observe(c,{childList:true});
+  setInterval(render,500);render();
 })();
 </script>
