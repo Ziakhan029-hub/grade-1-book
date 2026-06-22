@@ -1069,6 +1069,25 @@ renderQuestion(STEPS[0]);
   try{new MutationObserver(function(){clearTimeout(debT);debT=setTimeout(function(){var pEl=document.querySelector(SELS.join(','));var nt=pEl?pEl.textContent.replace(/\s+/g,' ').trim():'';if(nt&&nt!==_lp){_lp=nt;speak(nt);}},400);}).observe(root,{childList:true,subtree:true,characterData:true});}catch(e){}
 })();
 </script>
+<style>
+#mlGuideHand {
+  position: absolute;
+  z-index: 9990;
+  pointer-events: none;
+  font-size: 38px;
+  opacity: 0;
+  transform-origin: bottom center;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,.35));
+  will-change: left, top, opacity, transform;
+}
+#mlGuideHand.appear {
+  animation: guideAppear .4s ease forwards;
+}
+@keyframes guideAppear {
+  0%   { opacity:0; transform: scale(.4) rotate(-30deg); }
+  100% { opacity:1; transform: scale(1.2) rotate(-20deg); }
+}
+</style>
 <script>
 (function(){
   var hand=null,idleT=null,animT=null,IDLE=2000;
