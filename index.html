@@ -168,6 +168,9 @@
     }
   };
 
+  // standalone mini-games (not chapter-based) keyed by lessons-page unit id
+  var GAMES = { '6': 'Interactive book for elementary school chapter 6/goal-kick-math/index.html' };
+
   // ── State ────────────────────────────────────────────────────────────
   var currentChapter = null;
   var currentIdx     = 0;
@@ -253,6 +256,7 @@
         btn.addEventListener('click', function() {
           var chKey = lessonMap[btn.dataset.id];
           if (chKey) setTimeout(function() { startChapter(chKey); }, 180);
+          else if (GAMES[btn.dataset.id]) setTimeout(function() { currentChapter = null; loadUrl(GAMES[btn.dataset.id]); }, 180);
         });
       });
 
@@ -339,6 +343,7 @@
       var idMap = { '1': 'ch1', '2': 'ch2', '3': 'ch3', '4': 'ch4' };
       var chKey = idMap[String(d.id)];
       if (chKey) startChapter(chKey);
+      else if (GAMES[String(d.id)]) { currentChapter = null; loadUrl(GAMES[String(d.id)]); }
     } else if (d.action === 'nextLesson') {
       goForward();
     } else if (d.action === 'navigateLesson') {

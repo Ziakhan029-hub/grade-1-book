@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>قفزة الضفادع — جمع الخضراء والبنية</title>
+<meta name="description" content="تقفز الضفادع الخضراء والبنية إلى البركة — عُدّها واختر المجموع!" />
+<script src="confetti.browser.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body { font-family: "Baloo 2", "Comic Sans MS", "Trebuchet MS", system-ui, sans-serif; overflow: hidden; user-select: none; }
+  #app {
+    position: relative; height: 100vh; height: 100svh; width: 100vw; overflow: hidden;
+    background: url("Background.png") center / cover no-repeat; background-color: #aee3f5;
+  }
+
+  /* ---------- HUD ---------- */
+  .hud { position: absolute; top: 0; left: 0; right: 0; z-index: 40;
+    display: flex; align-items: center; justify-content: space-between; padding: 14px; }
+  .hud-group { display: flex; align-items: center; gap: 8px; }
+  .chip { border: 3px solid #fff; border-radius: 999px; padding: 6px 16px;
+    font-size: clamp(16px, 3.6vw, 24px); font-weight: 900; color: #fff;
+    text-shadow: 0 2px 0 rgba(0,0,0,0.25); box-shadow: 0 6px 16px rgba(0,0,0,0.2); white-space: nowrap; }
+  .chip.lvl { background: linear-gradient(180deg, #22c55e, #15803d); }
+  .chip.score { background: linear-gradient(180deg, #facc15, #f97316); }
+  .hud-btn { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; border: 3px solid #fff;
+    color: #fff; font-size: 21px; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    display: flex; align-items: center; justify-content: center; transition: transform .12s ease; }
+  .hud-btn:active { transform: scale(.9); }
+  .hud-btn.back { background: linear-gradient(180deg, #f59e0b, #d97706); }
+  .hud-btn.next { background: linear-gradient(180deg, #a855f7, #7e22ce); }
+  .hud-btn.say  { background: linear-gradient(180deg, #1cb0f6, #0a84c2); }
+
+  /* ---------- Message banner ---------- */
+  .topstack { position: absolute; left: 0; right: 0; top: 70px; z-index: 30; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 0 6px; pointer-events: none; }
+  .msg { position: relative;
+    border: 5px solid #fff; border-radius: 24px; background: linear-gradient(180deg, #16a34a, #065f46);
+    padding: 10px 24px; text-align: center; direction: rtl;
+    font-size: clamp(17px, 4.2vw, 28px); font-weight: 900; color: #fff;
+    text-shadow: 0 3px 0 rgba(0,0,0,0.3); box-shadow: 0 12px 26px rgba(0,0,0,0.3); max-width: 92%;
+    animation: dropIn .35s ease both; }
+  @keyframes dropIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  /* ---------- Frog zone ---------- */
+  .banner { position: relative;
+    display: flex; align-items: center; gap: 10px;
+    border: 4px solid #fff; border-radius: 22px;
+    background: linear-gradient(180deg, #22c55e, #15803d);
+    padding: 8px 20px; box-shadow: 0 12px 26px rgba(0,0,0,.3); }
+  .banner .digit { font-size: clamp(32px, 8vw, 52px); font-weight: 900; color: #fff; text-shadow: 0 4px 0 rgba(0,0,0,0.3); }
+  .banner .op { font-size: clamp(26px, 6.5vw, 44px); font-weight: 900; color: #ffd60a; text-shadow: 0 3px 0 rgba(0,0,0,0.3); }
+  .banner .qmark { font-size: clamp(32px, 8vw, 52px); font-weight: 900; color: #ffd60a; text-shadow: 0 4px 0 rgba(0,0,0,0.3);
+    display: inline-block; animation: wobble 1.4s ease-in-out infinite; }
+  @keyframes wobble { 0%,100% { transform: rotate(-6deg);} 50% { transform: rotate(6deg);} }
+  .frog-zone { position: absolute; left: 0; right: 0; top: 60%; transform: translateY(-50%); z-index: 10;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 16px; padding: 0 12px; }
+  .frog { width: clamp(86px, 21vw, 150px); height: auto; flex-shrink: 0;
+    filter: drop-shadow(0 8px 8px rgba(0,0,0,.4)); animation: frogJump .6s cubic-bezier(.34,1.56,.64,1) both; }
+  @keyframes frogJump {
+    0%   { transform: translateY(170%) scale(.35); opacity: 0; }
+    55%  { transform: translateY(-12%) scale(1.08); opacity: 1; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
+  .frog-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+  .cnum { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: inherit; font-weight: 900; font-size: clamp(34px, 8vw, 56px); color: #fde047; -webkit-text-stroke: 4px #14532d; paint-order: stroke fill; opacity: 0; transform: scale(.4); pointer-events: none; }
+  .cnum.show { animation: cnumpop .35s cubic-bezier(.34,1.56,.64,1) forwards; }
+  @keyframes cnumpop { 0% { opacity: 0; transform: scale(.4);} 60% { opacity: 1; transform: scale(1.3);} 100% { opacity: 1; transform: scale(1);} }
+  .frog-wrap.pulse { animation: frogPulse .42s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes frogPulse { 0% { transform: scale(1);} 50% { transform: scale(1.12);} 100% { transform: scale(1);} }
+
+  /* ---------- Choices ---------- */
+  .choices { position: absolute; left: 50%; bottom: 22px; z-index: 30; transform: translateX(-50%); display: flex; gap: 18px; }
+  .choice { height: clamp(80px, 18vw, 112px); width: clamp(80px, 18vw, 112px);
+    border: 5px solid #fff; border-radius: 999px; background: linear-gradient(180deg, #4ade80, #15803d);
+    font-family: inherit; font-weight: 900; color: #fff; cursor: pointer; font-size: clamp(38px, 9vw, 56px);
+    text-shadow: 0 3px 0 rgba(0,0,0,0.35); box-shadow: 0 10px 0 rgba(0,0,0,0.2); transition: transform .12s ease; animation: rise .4s ease both; }
+  @keyframes rise { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .choice:not(:disabled):hover { transform: translateY(-6px) scale(1.1); }
+  .choice:not(:disabled):active { transform: scale(.9); }
+  .choice:disabled { cursor: default; }
+  .choice.shake { animation: shake .5s; }
+  @keyframes shake { 0%,100% { transform: translateX(0);} 20%,60% { transform: translateX(-10px);} 40%,80% { transform: translateX(10px);} }
+  .hidden-el { display: none !important; }
+  @keyframes bob { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-10px);} }
+  @keyframes spin { to { transform: rotate(360deg);} }
+  @keyframes fadeIn { from { opacity: 0;} to { opacity: 1;} }
+
+  /* ---------- Completion overlay ---------- */
+  .gk-win { position: absolute; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; padding: 24px;
+    background: rgba(6,40,52,0.82); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .gk-win.show { display: flex; animation: fadeIn .35s ease; }
+  .gk-win-card { text-align: center; display: flex; flex-direction: column; align-items: center;
+    background: rgba(255,255,255,0.10); border: 2px solid rgba(255,255,255,0.22); border-radius: 28px;
+    padding: 22px 30px 26px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); animation: gkWinPop .5s cubic-bezier(.34,1.56,.64,1) both; }
+  @keyframes gkWinPop { 0% { transform: scale(.5); opacity: 0; } 70% { transform: scale(1.06); } 100% { transform: scale(1); opacity: 1; } }
+  .gk-rays { position: relative; width: 180px; height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: -150px; }
+  .gk-rays svg { position: absolute; inset: 0; width: 100%; height: 100%; animation: spin 8s linear infinite; }
+  .gk-mascot { width: 140px; height: 140px; object-fit: contain; position: relative; z-index: 2;
+    animation: bob 1.8s ease-in-out infinite; filter: drop-shadow(0 6px 14px rgba(0,0,0,.35)); }
+  .gk-win-title { font-size: clamp(30px,8vw,40px); font-weight: 900; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,.3); margin-top: 6px; }
+  .gk-win-sub { font-size: clamp(17px,4.6vw,22px); font-weight: 800; color: #ffe08a; margin-top: 2px; direction: rtl; }
+  .gk-stars { font-size: 38px; letter-spacing: 6px; margin: 8px 0 2px; }
+  .gk-stars span { display: inline-block; opacity: 0; animation: gkStarPop .45s cubic-bezier(.34,1.56,.64,1) forwards; }
+  .gk-stars span:nth-child(1) { animation-delay: .3s; }
+  .gk-stars span:nth-child(2) { animation-delay: .48s; }
+  .gk-stars span:nth-child(3) { animation-delay: .66s; }
+  @keyframes gkStarPop { 0% { transform: scale(0) rotate(-30deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+  .gk-score { font-size: clamp(18px,5vw,24px); font-weight: 800; color: #fff; margin: 6px 0 14px; direction: rtl; }
+  .gk-win-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .gk-btn { border: 3px solid #fff; border-radius: 18px; padding: 12px 24px; font-family: inherit;
+    font-size: clamp(17px,4.6vw,20px); font-weight: 900; color: #fff; cursor: pointer; box-shadow: 0 6px 0 rgba(0,0,0,.25); direction: rtl; }
+  .gk-btn-replay { background: linear-gradient(180deg,#4ade80,#16a34a); }
+  .gk-btn-menu { background: linear-gradient(180deg,#1cb0f6,#0a84c2); }
+  .gk-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,.25); }
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- HUD -->
+  <div class="hud" id="hud">
+    <div class="hud-group">
+      <button class="hud-btn back" id="backBtn" aria-label="العودة للقائمة">🏠</button>
+      <button class="hud-btn next" id="nextGameBtn" aria-label="اللعبة التالية">⏭️</button>
+      <div class="chip lvl">🐸 المستوى <span id="lvl">١</span> / ٥</div>
+    </div>
+    <div class="hud-group">
+      <div class="chip score">⭐ <span id="score">٠</span></div>
+      <button class="hud-btn say" id="sayBtn" aria-label="استمع للسؤال">🔊</button>
+    </div>
+  </div>
+
+  <div class="topstack">
+    <div class="msg" id="msg">عُدّ الضفادع الخضراء والبنية!</div>
+    <div class="banner" id="banner">
+      <span class="digit" id="a">١</span>
+      <span class="op">+</span>
+      <span class="digit" id="b">١</span>
+      <span class="op">=</span>
+      <span class="qmark">؟</span>
+    </div>
+  </div>
+  <div class="frog-zone" id="frogZone"></div>
+  <div class="choices hidden-el" id="choices"></div>
+
+  <!-- completion overlay (after all 5 levels) -->
+  <div class="gk-win" id="gkWin">
+    <div class="gk-win-card">
+      <div class="gk-rays"><svg viewBox="-95 -95 190 190">
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(0)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(30)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(60)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(90)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(120)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(150)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(180)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(210)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(240)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(270)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(300)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(330)"/>
+      </svg></div>
+      <img class="gk-mascot" src="../../mascot.png" alt="موسى" />
+      <div class="gk-win-title">أحسنت! 🎉</div>
+      <div class="gk-win-sub">أكملت جميع المستويات!</div>
+      <div class="gk-stars"><span>⭐</span><span>⭐</span><span>⭐</span></div>
+      <div class="gk-score">النقاط: <span id="winScore">٠</span></div>
+      <div class="gk-win-btns">
+        <button class="gk-btn gk-btn-replay" id="gkReplay">العب مجدداً 🔄</button>
+        <button class="gk-btn gk-btn-menu" id="gkMenu">القائمة 📋</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- Sound ----------
+let actx = null;
+function getCtx() { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); return actx; }
+function tone(freq, duration, type = "sine", gain = 0.15, startOffset = 0) {
+  const c = getCtx(); if (!c) return;
+  const t0 = c.currentTime + startOffset;
+  const osc = c.createOscillator(); const g = c.createGain();
+  osc.type = type; osc.frequency.setValueAtTime(freq, t0);
+  g.gain.setValueAtTime(0, t0);
+  g.gain.linearRampToValueAtTime(gain, t0 + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+  osc.connect(g).connect(c.destination);
+  osc.start(t0); osc.stop(t0 + duration + 0.05);
+}
+const sfx = {
+  hop: () => tone(420, 0.10, "triangle", 0.12),
+  correct: () => [659, 784, 988, 1319].forEach((f, i) => tone(f, 0.16, "triangle", 0.18, i * 0.07)),
+  wrong: () => { tone(300, 0.15, "sine", 0.15, 0); tone(220, 0.2, "sine", 0.15, 0.12); },
+  win: () => [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, 0.22, "triangle", 0.2, i * 0.1)),
+  count: (i) => tone(523 + i * 70, 0.13, "triangle", 0.16),
+};
+function fireConfetti() {
+  const colors = ["#22c55e", "#a16207", "#facc15", "#1cb0f6", "#ef4444"];
+  confetti({ particleCount: 160, spread: 110, origin: { y: 0.4 }, colors, scalar: 1.3 });
+}
+
+// ---------- Female Arabic narrator (FatimaNeural) ----------
+const NARR = { q:'../../audio/e17aa827.mp3', done:'../../audio/3cc9305a.mp3', ok:{2:'../../audio/f5e9e114.mp3',3:'../../audio/0c37ca14.mp3',4:'../../audio/a1a12c18.mp3',5:'../../audio/4e78f73d.mp3',6:'../../audio/8e324ddc.mp3',7:'../../audio/bdbedd36.mp3',8:'../../audio/41d25895.mp3',9:'../../audio/5d4c1d98.mp3',10:'../../audio/607f653c.mp3'} };
+let _narrAu = null;
+function narrate(url){ if(!url) return; try{ if(_narrAu){ _narrAu.pause(); } _narrAu = new Audio(url); _narrAu.play().catch(()=>{}); }catch(e){} }
+function askQuestion(){ narrate(NARR.q); }
+
+// ---------- Helpers ----------
+const AR = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+const toArabic = (n) => String(n).replace(/\d/g, (d) => AR[d]);
+const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+// Difficulty curve: 5 levels, 3 rounds each = 15, basic -> advanced (total 2..10).
+const ROUNDS_PER_LEVEL = 3;
+const FINAL_LEVEL = 5;
+const TOTAL_ROUNDS = FINAL_LEVEL * ROUNDS_PER_LEVEL; // 15
+const LEVEL_TOTAL = { 1:[2,4], 2:[3,5], 3:[4,6], 4:[5,7], 5:[6,8] };
+
+function makeChoices(answer) {
+  const set = new Set([answer]);
+  while (set.size < 3) {
+    const d = (Math.random() < 0.5 ? -1 : 1) * rand(1, 2);
+    set.add(Math.max(2, Math.min(12, answer + d)));
+  }
+  return [...set].sort(() => Math.random() - 0.5);
+}
+
+// total = green + brown (each >= 1), capped 5 per colour for the layout.
+function makeFrogs(level) {
+  const range = LEVEL_TOTAL[level] || [2, 8];
+  const total = rand(range[0], range[1]);
+  let green = rand(1, Math.min(5, total - 1));
+  let brown = total - green;
+  if (brown > 5) { brown = 5; green = total - 5; }
+  return { total, green, brown };
+}
+
+const state = { phase: "play", level: 1, score: 0, solved: 0, total: 0, green: 0, brown: 0, choices: [], locked: false };
+
+const el = {
+  app: document.getElementById("app"),
+  lvl: document.getElementById("lvl"),
+  score: document.getElementById("score"),
+  msg: document.getElementById("msg"),
+  a: document.getElementById("a"),
+  b: document.getElementById("b"),
+  frogZone: document.getElementById("frogZone"),
+  choices: document.getElementById("choices"),
+};
+
+function setMsg(text) { el.msg.textContent = text; el.msg.style.animation = "none"; void el.msg.offsetWidth; el.msg.style.animation = ""; }
+
+let _countSeq = 0;
+function renderFrogs() {
+  el.frogZone.innerHTML = "";
+  const seq = ++_countSeq;
+  const srcs = [];
+  for (let g = 0; g < state.green; g++) srcs.push("frog-green.png");
+  for (let b = 0; b < state.brown; b++) srcs.push("frog-brown.png");
+  srcs.forEach((src, idx) => {
+    const wrap = document.createElement("div");
+    wrap.className = "frog-wrap";
+    const img = document.createElement("img");
+    img.className = "frog"; img.src = src; img.alt = "";
+    img.style.animationDelay = (idx * 0.45) + "s"; // sequential jump-in
+    const num = document.createElement("span"); num.className = "cnum";
+    wrap.appendChild(img); wrap.appendChild(num);
+    el.frogZone.appendChild(wrap);
+    setTimeout(() => {                       // number pops on as each frog lands
+      if (seq !== _countSeq) return;
+      num.textContent = toArabic(idx + 1);
+      num.classList.add("show");
+      wrap.classList.add("pulse");
+      try { sfx.count(idx); } catch (e) {}
+      setTimeout(() => wrap.classList.remove("pulse"), 420);
+    }, idx * 450 + 600);
+  });
+}
+
+function renderChoices() {
+  el.choices.innerHTML = state.choices.map((c) => `<button class="choice" data-val="${c}">${toArabic(c)}</button>`).join("");
+  el.choices.querySelectorAll(".choice").forEach((btn) => {
+    btn.addEventListener("click", () => pick(parseInt(btn.dataset.val, 10), btn));
+  });
+}
+
+function newRound() {
+  state.level = Math.min(FINAL_LEVEL, Math.floor(state.solved / ROUNDS_PER_LEVEL) + 1);
+  const f = makeFrogs(state.level);
+  state.total = f.total; state.green = f.green; state.brown = f.brown;
+  el.a.textContent = toArabic(state.green); el.b.textContent = toArabic(state.brown);
+  state.choices = makeChoices(state.total);
+  state.locked = false;
+  state.phase = "hopping";
+  el.lvl.textContent = toArabic(state.level);
+  el.choices.classList.add("hidden-el");
+  setMsg("شاهد الضفادع تقفز…");
+  renderFrogs();
+  const hopTime = state.total * 450 + 800;
+  setTimeout(() => {
+    state.phase = "question";
+    setMsg("كم عدد الضفادع الخضراء والبنية؟");
+    renderChoices();
+    el.choices.classList.remove("hidden-el");
+    askQuestion();
+  }, hopTime);
+}
+
+function pick(n, btn) {
+  if (state.phase !== "question" || state.locked) return;
+  if (n === state.total) {
+    state.locked = true;
+    sfx.correct(); fireConfetti();
+    narrate(NARR.ok[state.total]);
+    state.solved += 1; state.score += 10;
+    el.score.textContent = toArabic(state.score);
+    setMsg(`أحسنت! ${toArabic(state.green)} + ${toArabic(state.brown)} = ${toArabic(state.total)} 🐸`);
+    state.phase = "celebrate";
+    el.choices.querySelectorAll(".choice").forEach((b) => (b.disabled = true));
+    setTimeout(() => { if (state.solved >= TOTAL_ROUNDS) showWinScreen(); else newRound(); }, 2300);
+  } else {
+    sfx.wrong();
+    setMsg("ليس بعد — عُدّها واحدة تلو الأخرى!");
+    btn.classList.add("shake");
+    setTimeout(() => btn.classList.remove("shake"), 700);
+  }
+}
+
+// ---------- Completion ----------
+function showWinScreen() {
+  state.phase = "done";
+  document.getElementById("winScore").textContent = toArabic(state.score);
+  document.getElementById("gkWin").classList.add("show");
+  sfx.win(); fireConfetti();
+  narrate(NARR.done);
+}
+function restartGame() {
+  document.getElementById("gkWin").classList.remove("show");
+  state.level = 1; state.score = 0; state.solved = 0;
+  el.lvl.textContent = toArabic(1); el.score.textContent = toArabic(0);
+  newRound();
+}
+
+// ---------- Start directly ----------
+el.lvl.textContent = toArabic(state.level);
+el.score.textContent = toArabic(state.score);
+newRound();
+
+document.getElementById("backBtn").addEventListener("click", function(){ window.location.href = "../../Interactive book for elementary school chapter 1/moosa-lessons.html"; });
+document.getElementById("nextGameBtn").addEventListener("click", function(){ window.location.href = "../Deer/index.html"; });
+document.getElementById("sayBtn").addEventListener("click", askQuestion);
+document.getElementById("gkReplay").addEventListener("click", restartGame);
+document.getElementById("gkMenu").addEventListener("click", function(){ window.location.href = "../../Interactive book for elementary school chapter 1/moosa-lessons.html"; });
+
+// Autoplay gated until first gesture — ask the question on first touch
+let _firstGesture = false;
+el.app.addEventListener("pointerdown", () => {
+  if (state.phase !== "title") sfx.hop();
+  if (!_firstGesture) { _firstGesture = true; askQuestion(); }
+}, { passive: true });
+</script>
+</body>
+</html>
