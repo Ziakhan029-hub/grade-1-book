@@ -175,6 +175,12 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
 /* ═══════════════════════════════
    MOOSA NARRATOR GUIDE — FEMALE
    ═══════════════════════════════ */
+/* ── countdown bar ── */
+.next-wrap{padding:0 0 10px;flex-shrink:0;}
+.countdown-bar{position:relative;display:flex;align-items:center;justify-content:center;height:44px;border-radius:14px;overflow:hidden;background:rgba(0,0,0,.06);}
+.countdown-fill{position:absolute;inset:0;background:linear-gradient(135deg,#22C55E,#4ADE80);border-radius:14px;transform-origin:right center;animation:mlCountdownShrink 5s linear forwards;}
+@keyframes mlCountdownShrink{0%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+.countdown-txt{position:relative;z-index:1;font-family:var(--font-d),'Baloo Bhaijaan 2',sans-serif;font-size:22px;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);}
 </style>
 </head>
 <body>
