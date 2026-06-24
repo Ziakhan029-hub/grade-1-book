@@ -472,6 +472,15 @@ html, body {
 @keyframes mlCountdownShrink{0%{transform:scaleX(1)}100%{transform:scaleX(0)}}
 .countdown-txt{position:relative;z-index:1;font-family:var(--font-d),'Baloo Bhaijaan 2',sans-serif;font-size:22px;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);}
 </style>
+<style id="ch-parity-flashfix">
+/* top-bar load-flash fix (parity with ch1): reserve final height (no jump),
+   never paint loose pre-reorg lesson buttons, hold transient hidden until the
+   bar is reorganised (2s CSS safety-reveal). */
+.top-bar{ min-height:107px; }
+.top-bar > .lsn-btn{ display:none !important; }
+.top-bar:not(:has(.tb-top)) > *{ visibility:hidden; animation:mlTbReveal 0s linear 2s forwards; }
+@keyframes mlTbReveal{ to{ visibility:visible; } }
+</style>
 </head>
 <body>
 
@@ -1064,7 +1073,7 @@ renderQuestion(STEPS[0]);
   speechSynthesis.onvoiceschanged=function(){setTimeout(readQ,200);};
   window.addEventListener('load',function(){
     narEl=document.getElementById('fNarrator');
-    (function(){var s=document.createElement('button');s.id='mlSpeakerBtn';s.textContent='🔊';s.setAttribute('aria-label','استمع مجدداً');s.style.cssText='position:absolute;bottom:20px;right:16px;z-index:9999;background:linear-gradient(135deg,#3A3A3A,#1F1F1F);border:none;border-radius:50%;width:48px;height:48px;font-size:24px;cursor:pointer;box-shadow:0 4px 0 #0A0A0A,0 6px 16px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:transform .12s;';s.addEventListener('click',function(){lastTxt='';spoken=false;readQ();});s.addEventListener('mouseenter',function(){s.style.transform='scale(1.08)';});s.addEventListener('mouseleave',function(){s.style.transform='';});(document.querySelector('.ml-widget')||document.body).appendChild(s);})();
+    (function(){var s=document.createElement('button');s.id='mlSpeakerBtn';s.textContent='🔊';s.setAttribute('aria-label','استمع مجدداً');s.style.cssText='position:absolute;bottom:20px;right:16px;z-index:9999;background:linear-gradient(135deg,#38bdf8,#0284c7);border:none;border-radius:50%;width:48px;height:48px;font-size:24px;cursor:pointer;box-shadow:0 4px 0 #0A0A0A,0 6px 16px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:transform .12s;';s.addEventListener('click',function(){lastTxt='';spoken=false;readQ();});s.addEventListener('mouseenter',function(){s.style.transform='scale(1.08)';});s.addEventListener('mouseleave',function(){s.style.transform='';});(document.querySelector('.ml-widget')||document.body).appendChild(s);})();
     if(speechSynthesis.getVoices().length) readQ();
     setTimeout(readQ,300);setTimeout(readQ,800);setTimeout(readQ,2000);
     retryT=setInterval(function(){if(spoken){clearInterval(retryT);return;}lastTxt='';readQ();},1200);
@@ -1310,5 +1319,83 @@ renderQuestion(STEPS[0]);
     if(window.parent&&window.parent!==window){window.parent.postMessage({action:'nextLesson'},'*');return;}
     location.href=isLast?LP:nextFile;
   };
+})();
+</script>
+
+<style id="ch-parity-skin">
+/* ===== Chapter colour (from lessons page) ===== */
+.ml-widget, .app{ background:#F0F9FF !important; }
+.ml-widget::after, .app::after{ content:''; position:absolute; inset:0; pointer-events:none; z-index:35; border:4px solid #0ea5e9; border-top:none; }
+.top-bar{ background:linear-gradient(135deg,#38bdf8 0%,#0284c7 100%) !important; }
+#mlSpeakerBtn, #mlSayBtn, .say-btn, .f-narrator, .ml-widget .f-narrator{ background:linear-gradient(135deg,#38bdf8,#0284c7) !important; box-shadow:0 4px 0 #0369a1,0 6px 16px rgba(0,0,0,.22) !important; }
+/* ===== 2-row nav header (parity with ch1): lesson numbers on top, score+dots below ===== */
+.top-bar{ flex-direction:column !important; align-items:stretch !important; justify-content:center !important; gap:9px !important; padding:13px 16px 11px !important; }
+.top-bar .tb-top{ display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; }
+.top-bar .tb-bot{ position:relative; display:flex; align-items:center; justify-content:center; min-height:30px; padding:0 4px; }
+.top-bar .tb-score{ position:absolute; left:6px; top:50%; transform:translateY(-50%); display:flex; align-items:center; gap:6px; background:linear-gradient(180deg,#facc15,#f97316); border:3px solid #fff; border-radius:999px; padding:4px 13px 5px; box-shadow:0 4px 10px rgba(0,0,0,.22); }
+.top-bar .tb-score::before{ content:'⭐'; font-size:16px; line-height:1; }
+.top-bar .tb-score .score-label{ display:none !important; }
+.top-bar .tb-score .score-val{ display:inline-block !important; color:#fff !important; font-weight:900; font-size:20px; line-height:1; text-shadow:0 2px 0 rgba(0,0,0,.22); }
+.top-bar .tb-bot .progress-dots, .top-bar .tb-bot #ml-dots, .top-bar .tb-bot #mlDots{ justify-content:center !important; padding:0 !important; gap:10px !important; }
+.top-bar .qdot, .top-bar .ml-qdot, .top-bar .ml-dot, .top-bar .dot{ width:11px !important; height:11px !important; border-radius:50% !important; margin:0 !important; flex:0 0 auto !important; background:rgba(255,255,255,.55) !important; box-shadow:none !important; transition:transform .25s, background .25s !important; }
+.top-bar .qdot.active, .top-bar .ml-qdot.active, .top-bar .ml-dot.active, .top-bar .dot.active{ background:#fff !important; transform:scale(1.4) !important; box-shadow:0 0 0 3px rgba(255,255,255,.28) !important; }
+.top-bar .qdot.done, .top-bar .ml-qdot.done, .top-bar .ml-dot.done, .top-bar .dot.done{ background:#facc15 !important; transform:none !important; }
+.top-bar .lsn-btn{ min-width:40px; height:40px; border-radius:10px; background:rgba(255,255,255,.32); color:#fff; font-size:15px; font-weight:800; border:2px solid transparent; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:0 7px; transition:transform .15s, background .15s; -webkit-tap-highlight-color:transparent; }
+.top-bar .lsn-btn.active{ background:rgba(0,0,0,.22) !important; border-color:rgba(255,255,255,.85) !important; transform:scale(1.08); }
+.top-bar .lsn-btn.done{ background:rgba(255,255,255,.92) !important; color:#0284c7 !important; }
+</style>
+<script id="ch-parity-reorg">
+(function(){
+  function toAr(n){return String(n).replace(/[0-9]/g,function(d){return'٠١٢٣٤٥٦٧٨٩'[+d];});}
+  function getScore(){try{if(typeof score!=='undefined'&&score!=null)return score;}catch(e){}try{if(typeof mlScore!=='undefined'&&mlScore!=null)return mlScore;}catch(e){}return null;}
+  function reorg(){
+    var bar=document.querySelector('.ml-widget .top-bar')||document.querySelector('.app .top-bar')||document.querySelector('.top-bar');
+    if(!bar||bar._reorg)return false;
+    var navs=[].slice.call(bar.querySelectorAll('.lsn-btn'));
+    var dots=document.getElementById('ml-dots')||document.getElementById('mlDots')||document.getElementById('roundRow');
+    if(!navs.length||!dots)return false;
+    var sl=bar.querySelector('.score-label'), sv=bar.querySelector('.score-val');
+    if(!sv){ sv=document.createElement('span'); sv.className='score-val'; sv.id='mlScoreVal'; var s0=getScore(); sv.textContent=toAr(s0==null?0:s0); }
+    bar._reorg=true;
+    var top=document.createElement('div'); top.className='tb-top';
+    navs.forEach(function(b){ top.appendChild(b); });
+    var bot=document.createElement('div'); bot.className='tb-bot';
+    var sc=document.createElement('div'); sc.className='tb-score';
+    if(sl) sc.appendChild(sl); sc.appendChild(sv);
+    bot.appendChild(sc); bot.appendChild(dots);
+    bar.innerHTML=''; bar.appendChild(top); bar.appendChild(bot);
+    setInterval(function(){var s=getScore(); if(s!=null) sv.textContent=toAr(s);},300);
+    return true;
+  }
+  var n=0, iv=setInterval(function(){ n++; if(reorg()||n>60){clearInterval(iv);} },80);
+})();
+</script>
+
+<style id="tb-back-btn">
+/* Back-to-lessons button (bottom row of the top bar, mirrors the score pill) */
+.top-bar{ position:relative; }
+.tb-back{ position:absolute; right:6px; top:50%; transform:translateY(-50%); width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,.30); border:2px solid rgba(255,255,255,.65); display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; box-shadow:0 3px 8px rgba(0,0,0,.22); -webkit-tap-highlight-color:transparent; transition:transform .12s, background .15s; z-index:40; }
+.tb-back:hover{ background:rgba(255,255,255,.46); }
+.tb-back:active{ transform:translateY(-50%) scale(.88); }
+.tb-back svg{ width:21px; height:21px; display:block; }
+</style>
+<script id="tb-back-js">
+(function(){
+  var inCh1=/moosa-lesson-classify/.test(decodeURIComponent(location.pathname||''));
+  var LP=inCh1?'moosa-lessons.html':'../Interactive book for elementary school chapter 1/moosa-lessons.html';
+  function go(){ try{ if(window.parent&&window.parent!==window){ window.parent.postMessage({action:'exitToLessons'},'*'); return; } }catch(e){} location.href=LP; }
+  function make(){
+    var host=document.querySelector('.tb-bot')||document.querySelector('.ml-widget .top-bar')||document.querySelector('.app .top-bar')||document.querySelector('.top-bar');
+    if(!host) return false;
+    if(host.querySelector('.tb-back')) return true;
+    var b=document.createElement('button'); b.className='tb-back'; b.type='button';
+    b.setAttribute('aria-label','العودة إلى قائمة الألعاب');
+    b.title='الألعاب';
+    b.innerHTML='<svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2.2"/><rect x="13" y="3" width="8" height="8" rx="2.2"/><rect x="3" y="13" width="8" height="8" rx="2.2"/><rect x="13" y="13" width="8" height="8" rx="2.2"/></svg>';
+    b.addEventListener('click',function(e){ e.stopPropagation(); e.preventDefault(); go(); });
+    host.appendChild(b);
+    return true;
+  }
+  var n=0, iv=setInterval(function(){ n++; if(make()||n>80){ clearInterval(iv); } },80);
 })();
 </script>

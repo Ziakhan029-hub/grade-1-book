@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>التحدي الأخير — اجمع واكتب الناتج</title>
+<meta name="description" content="اجمع المعادلة ثم تتبّع الناتج بإصبعك!" />
+<script src="confetti.browser.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body { font-family: "Baloo 2", "Tajawal", "Comic Sans MS", system-ui, sans-serif; overflow: hidden; user-select: none;
+    background: linear-gradient(180deg, #a6e6dd 0%, #bfe8c6 55%, #d8edae 100%);
+    display: flex; align-items: center; justify-content: center; }
+  #stage { position: relative; aspect-ratio: 1536 / 2750; height: 100svh; max-width: 100vw;
+    background: url("Background.png") center / contain no-repeat; container-type: size; overflow: hidden; }
+
+  .fs-btn { position: absolute; z-index: 20; width: 11cqw; height: 11cqw; max-width: 52px; max-height: 52px;
+    border-radius: 50%; border: 0.8cqw solid #fff; color: #fff; cursor: pointer; font-size: 5cqw;
+    display: flex; align-items: center; justify-content: center; box-shadow: 0 1.2cqw 3cqw rgba(0,0,0,0.25); transition: transform .12s ease; }
+  .fs-btn:active { transform: scale(.9); }
+  .fs-home { top: 2.5%; left: 3.5%; background: linear-gradient(180deg, #f59e0b, #d97706); }
+  .fs-say  { top: 2.5%; right: 3.5%; background: linear-gradient(180deg, #1cb0f6, #0a84c2); }
+
+  .fs-question { position: absolute; top: 11%; left: 50%; transform: translateX(-50%); z-index: 8;
+    text-align: center; direction: rtl; max-width: 74%;
+    padding: 2.6cqw 6cqw; border: 1cqw solid #fff; border-radius: 6cqw;
+    background: linear-gradient(180deg, #16a34a, #065f46);
+    font-family: "Baloo 2", "Tajawal", "Comic Sans MS", system-ui, sans-serif; font-weight: 900;
+    font-size: 5cqw; line-height: 1.18; color: #fff;
+    text-shadow: 0 0.5cqw 0 rgba(0,0,0,0.3); box-shadow: 0 2cqw 5cqw rgba(0,0,0,0.3); }
+
+  .fs-equation { position: absolute; left: 20%; top: 29.2%; width: 60%; height: 21.2%; z-index: 8;
+    display: flex; align-items: center; justify-content: center; gap: 2.6cqw; direction: ltr;
+    font-weight: 900; font-size: 9.5cqw; color: #fdfdfd; text-shadow: 0 0.6cqw 0 rgba(0,0,0,0.3); }
+  .fs-equation .op { color: #ffd60a; }
+  .fs-equation #ans { color: #ffd60a; min-width: 1.1em; display: inline-block; text-align: center; transition: color .3s; }
+  .fs-equation #ans.done { color: #86efac; }
+
+  .fs-panel { position: absolute; left: 7%; right: 7%; top: 53.5%; bottom: 3.5%; z-index: 6;
+    background: rgba(255,255,255,0.93); border: 1cqw solid #fff; border-radius: 6cqw;
+    box-shadow: 0 2.4cqw 5cqw rgba(0,0,0,0.28); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 2.6cqw; gap: 1.8cqw; }
+  .fs-dots { display: flex; align-items: center; justify-content: center; gap: 1.5cqw; flex-wrap: nowrap; }
+  .fs-dots .dot { width: 3cqw; height: 3cqw; max-width: 15px; max-height: 15px; border-radius: 50%; box-sizing: border-box;
+    background: rgba(0,0,0,0.12); border: 0.5cqw solid rgba(120,140,120,0.5); transition: transform .2s, background .2s, box-shadow .2s; }
+  .fs-dots .dot.on { background: #22c55e; border-color: #16a34a; box-shadow: 0 0 1.5cqw rgba(34,197,94,.7); transform: scale(1.18); }
+  .trace-wrap { position: relative; height: 58%; aspect-ratio: 1; flex-shrink: 0;
+    background: #ffffff; border-radius: 4cqw; box-shadow: inset 0 0 0 0.5cqw rgba(120,120,120,.2); overflow: visible; }
+  .dot-path { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+  .trace-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; touch-action: none; cursor: crosshair; border-radius: 4cqw; }
+  .guide-hand { position: absolute; z-index: 4; font-size: 8cqw; pointer-events: none; transform: translate(-50%,-108%);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,.3)); animation: handBob 1s ease-in-out infinite; }
+  .guide-hand.hide { display: none; }
+  @keyframes handBob { 0%,100% { transform: translate(-50%,-108%);} 50% { transform: translate(-50%,-130%);} }
+  /* auto-advance countdown bar (ch1/2/3 style) */
+  .countdown-bar { position: absolute; left: 5%; right: 5%; bottom: 2.6cqw; height: 10cqw; max-height: 50px; z-index: 9;
+    border-radius: 3cqw; overflow: hidden; background: rgba(0,0,0,0.08); display: none; align-items: center; justify-content: center; }
+  .countdown-bar.show { display: flex; }
+  .countdown-fill { position: absolute; inset: 0; background: linear-gradient(135deg,#22C55E,#4ADE80); border-radius: 3cqw; transform-origin: right center; }
+  .countdown-fill.run { animation: cdShrink 3s linear forwards; }
+  @keyframes cdShrink { 0% { transform: scaleX(1);} 100% { transform: scaleX(0);} }
+  .countdown-txt { position: relative; z-index: 1; font-size: 4.6cqw; font-weight: 900; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.3); direction: rtl; }
+  @keyframes ml-startPulse { 0%,100% { transform: scale(1); opacity: .85;} 50% { transform: scale(1.5); opacity: .35;} }
+
+  .fs-progress { width: 78%; height: 3.2cqw; max-height: 16px; background: rgba(0,0,0,0.10); border-radius: 999px; overflow: hidden; }
+  .fs-progress .fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4ade80, #16a34a); border-radius: 999px; transition: width .12s ease; }
+  .fs-controls { display: flex; gap: 4cqw; }
+  .fs-ctrl { width: 10.5cqw; height: 10.5cqw; max-width: 48px; max-height: 48px; border-radius: 50%; border: 0.7cqw solid #fff;
+    cursor: pointer; font-size: 4.4cqw; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 1cqw 2.4cqw rgba(0,0,0,0.2); color: #fff; transition: transform .12s ease; }
+  .fs-ctrl:active { transform: scale(.9); }
+  .fs-hint { background: linear-gradient(180deg, #a78bfa, #7c3aed); }
+  .fs-hint.off { filter: grayscale(.6) brightness(.9); }
+  .fs-clear { background: linear-gradient(180deg, #fb7185, #e11d48); }
+
+  .fs-win { position: absolute; inset: 0; z-index: 40; display: none; align-items: center; justify-content: center; }
+  .fs-win.show { display: flex; animation: fadeIn .3s ease; }
+  .fs-win-card { background: rgba(255,255,255,0.96); border: 1cqw solid #fff; border-radius: 6cqw; padding: 6cqw 7cqw; text-align: center;
+    box-shadow: 0 3cqw 7cqw rgba(0,0,0,0.3); animation: pop .5s cubic-bezier(.34,1.56,.64,1) both; }
+  @keyframes pop { 0%{transform:scale(.5);opacity:0;} 70%{transform:scale(1.06);} 100%{transform:scale(1);opacity:1;} }
+  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+  .fs-win-title { font-size: 8cqw; font-weight: 900; color: #16a34a; }
+  .fs-win-sub { font-size: 5cqw; font-weight: 900; color: #444; margin: 1.5cqw 0 4cqw; direction: rtl; }
+  .fs-win-btns { display: flex; gap: 3cqw; justify-content: center; flex-wrap: wrap; }
+  .fs-win-btn { border: 0.8cqw solid #fff; border-radius: 4cqw; padding: 3cqw 5cqw; font-family: inherit; font-size: 4.6cqw; font-weight: 900;
+    color: #fff; cursor: pointer; box-shadow: 0 1.4cqw 0 rgba(0,0,0,.2); direction: rtl; }
+  .fs-win-btn.next { background: linear-gradient(180deg,#4ade80,#16a34a); }
+  .fs-win-btn.menu { background: linear-gradient(180deg,#1cb0f6,#0a84c2); }
+  .fs-win-btn:active { transform: translateY(0.6cqw); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <button class="fs-btn fs-home" id="homeBtn" aria-label="العودة للقائمة">🏠</button>
+  <button class="fs-btn fs-say" id="sayBtn" aria-label="استمع للسؤال">🔊</button>
+
+  <div class="fs-question" id="question">اجمعْ واكتبِ الناتج</div>
+
+  <div class="fs-equation" id="equation">
+    <span id="eqA">٢</span><span class="op">+</span><span id="eqB">١</span><span class="op">=</span><span id="ans">؟</span>
+  </div>
+
+  <div class="fs-panel">
+    <div class="fs-dots" id="qdots"></div>
+    <div class="trace-wrap" id="traceWrap">
+      <svg class="dot-path" id="dotSvg" viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet"></svg>
+      <canvas class="trace-canvas" id="canvas" width="300" height="300"></canvas>
+      <div class="guide-hand hide" id="hand">👇</div>
+    </div>
+    <div class="fs-progress"><div class="fill" id="progressFill"></div></div>
+    <div class="fs-controls">
+      <button class="fs-ctrl fs-clear" id="clearBtn" aria-label="مسح">🧽</button>
+      <button class="fs-ctrl fs-hint" id="hintBtn" aria-label="إظهار المسار">👁️</button>
+    </div>
+    <div class="countdown-bar" id="cdBar"><div class="countdown-fill" id="cdFill"></div><span class="countdown-txt" id="cdTxt">٣</span></div>
+  </div>
+
+  <div class="fs-win" id="winOverlay">
+    <div class="fs-win-card">
+      <div class="fs-win-title">أحسنت! 🎉</div>
+      <div class="fs-win-sub">أكملتَ التحدّي!</div>
+      <div class="fs-win-btns">
+        <button class="fs-win-btn next" id="replayBtn">العب مجدداً 🔄</button>
+        <button class="fs-win-btn menu" id="menuBtn">القائمة 📋</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var AC=(function(){var ctx=null;function gc(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume();return ctx;}function t(f,s,d,ty,v){var c=gc(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=ty||'sine';o.frequency.setValueAtTime(f,s);g.gain.setValueAtTime(v||0.28,s);g.gain.exponentialRampToValueAtTime(0.001,s+d);o.start(s);o.stop(s+d+.01);}return{stroke:function(){try{var c=gc(),n=c.currentTime;t(380+Math.random()*80,n,.10,'triangle',.12);}catch(e){}},complete:function(){try{var c=gc(),n=c.currentTime;[[392,0],[523,.11],[659,.22],[784,.35],[1047,.5]].forEach(function(p){t(p[0],n+p[1],.38,'triangle',.28);});}catch(e){}}};})();
+var NARR={q:'../../audio/091f5478.mp3',done:'../../audio/3cc9305a.mp3',ok:{2:'../../audio/f5e9e114.mp3',3:'../../audio/0c37ca14.mp3',4:'../../audio/a1a12c18.mp3',5:'../../audio/4e78f73d.mp3',6:'../../audio/8e324ddc.mp3',7:'../../audio/bdbedd36.mp3',8:'../../audio/41d25895.mp3',9:'../../audio/5d4c1d98.mp3',10:'../../audio/607f653c.mp3'}};
+var _na=null;function narrate(u){if(!u)return;try{if(_na){_na.pause();}_na=new Audio(u);_na.play().catch(function(){});}catch(e){}}
+function askQuestion(){narrate(NARR.q);}
+function g(id){return document.getElementById(id);}
+var AR=['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];function toAr(n){return String(n).replace(/[0-9]/g,function(d){return AR[+d];});}
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+
+var NUMBERS = {
+  0: {label:'٠',name:'صِفر',strokePath:"M 150.0,120.0 C 151.9,120.4 158.0,120.8 161.5,122.3 C 165.0,123.8 168.5,126.1 171.2,128.8 C 173.9,131.5 176.2,135.0 177.7,138.5 C 179.2,142.0 180.0,146.2 180.0,150.0 C 180.0,153.8 179.2,158.0 177.7,161.5 C 176.2,165.0 173.9,168.5 171.2,171.2 C 168.5,173.9 165.0,176.2 161.5,177.7 C 158.0,179.2 153.8,180.0 150.0,180.0 C 146.2,180.0 142.0,179.2 138.5,177.7 C 135.0,176.2 131.5,173.9 128.8,171.2 C 126.1,168.5 123.8,165.0 122.3,161.5 C 120.8,158.0 120.0,153.8 120.0,150.0 C 120.0,146.2 120.8,142.0 122.3,138.5 C 123.8,135.0 126.1,131.5 128.8,128.8 C 131.5,126.1 135.0,123.8 138.5,122.3 C 142.0,120.8 148.1,120.4 150.0,120.0",guideDots:[[150.0, 120.0], [161.5, 122.3], [171.2, 128.8], [177.7, 138.5], [180.0, 150.0], [177.7, 161.5], [171.2, 171.2], [161.5, 177.7], [150.0, 180.0], [138.5, 177.7], [128.8, 171.2], [122.3, 161.5], [120.0, 150.0], [122.3, 138.5], [128.8, 128.8], [138.5, 122.3]],arrows:[[180.0, 150.0, 180.0], [120.0, 150.0, 0.0]],startDot:[150.0, 120.0],startLabel:'ابدأ'},
+  1: {label:'١',name:'واحِد',strokePath:"M 150,72 C 150.0,75.8 150.0,87.0 150,95 C 150.0,103.0 150.0,111.7 150,120 C 150.0,128.3 150.0,136.7 150,145 C 150.0,153.3 150.0,161.7 150,170 C 150.0,178.3 150.0,186.3 150,195 C 150.0,203.7 150.0,217.5 150,222",guideDots:[[150, 72], [150, 95], [150, 120], [150, 145], [150, 170], [150, 195], [150, 222]],arrows:[[150, 145, 180.0]],startDot:[150, 72],startLabel:'ابدأ'},
+  2: {label:'٢',name:'اثنان',strokePath:"M 200,88 C 196.0,86.7 184.3,81.3 176,80 C 167.7,78.7 159.0,78.7 150,80 C 141.0,81.3 128.3,83.3 122,88 C 115.7,92.7 115.0,99.3 112,108 C 109.0,116.7 106.3,129.3 104,140 C 101.7,150.7 100.0,161.3 98,172 C 96.0,182.7 94.3,193.3 92,204 C 89.7,214.7 86.3,227.0 84,236 C 81.7,245.0 79.0,254.3 78,258",guideDots:[[200, 88], [176, 80], [150, 80], [122, 88], [112, 108], [104, 140], [98, 172], [92, 204], [84, 236], [78, 258]],arrows:[[150, 80, 261.6], [98, 172, 190.6]],startDot:[200, 88],startLabel:'ابدأ'},
+  3: {label:'٣',name:'ثلاثة',strokePath:"M 214,68 C 211.7,71.7 204.7,84.0 200,90 C 195.3,96.0 190.7,101.7 186,104 C 181.3,106.3 176.3,106.3 172,104 C 167.7,101.7 163.7,96.0 160,90 C 156.3,84.0 153.3,68.0 150,68 C 146.7,68.0 143.7,84.0 140,90 C 136.3,96.0 132.3,101.7 128,104 C 123.7,106.3 118.3,106.3 114,104 C 109.7,101.7 105.3,95.7 102,90 C 98.7,84.3 94.7,67.7 94,70 C 93.3,72.3 97.0,92.3 98,104 C 99.0,115.7 100.0,128.3 100,140 C 100.0,151.7 99.3,162.7 98,174 C 96.7,185.3 94.3,197.0 92,208 C 89.7,219.0 86.0,231.0 84,240 C 82.0,249.0 80.7,258.3 80,262",guideDots:[[214, 68], [200, 90], [186, 104], [172, 104], [160, 90], [150, 68], [140, 90], [128, 104], [114, 104], [102, 90], [94, 70], [98, 104], [100, 140], [98, 174], [92, 208], [84, 240], [80, 262]],arrows:[[150, 68, 270.0], [94, 70, 195.9], [98, 174, 186.7]],startDot:[214, 68],startLabel:'ابدأ'},
+  4: {label:'٤',name:'أربعة',strokePath:"M 212,72 C 207.5,71.2 195.3,68.2 185,67 C 174.7,65.8 161.2,64.3 150,65 C 138.8,65.7 127.5,67.5 118,71 C 108.5,74.5 99.7,79.8 93,86 C 86.3,92.2 80.2,100.5 78,108 C 75.8,115.5 76.7,124.7 80,131 C 83.3,137.3 90.3,142.8 98,146 C 105.7,149.2 116.0,149.7 126,150 C 136.0,150.3 149.3,148.0 158,148 C 166.7,148.0 177.7,148.0 178,150 C 178.3,152.0 168.3,157.7 160,160 C 151.7,162.3 138.3,162.0 128,164 C 117.7,166.0 106.0,167.0 98,172 C 90.0,177.0 83.7,186.0 80,194 C 76.3,202.0 74.7,212.3 76,220 C 77.3,227.7 81.7,235.0 88,240 C 94.3,245.0 104.0,248.3 114,250 C 124.0,251.7 136.7,251.3 148,250 C 159.3,248.7 171.3,245.7 182,242 C 192.7,238.3 203.3,230.3 212,228 C 220.7,225.7 230.3,228.0 234,228",guideDots:[[212, 72], [185, 67], [150, 65], [118, 71], [93, 86], [78, 108], [80, 131], [98, 146], [126, 150], [158, 148], [178, 150], [160, 160], [128, 164], [98, 172], [80, 194], [76, 220], [88, 240], [114, 250], [148, 250], [182, 242], [212, 228], [234, 228]],arrows:[[150, 65, 266.6], [98, 146, 112.4], [128, 164, 259.0], [114, 250, 99.5]],startDot:[212, 72],startLabel:'ابدأ'},
+  5: {label:'٥',name:'خمسة',strokePath:"M 151,69 C 150.3,69.3 149.7,69.0 147,71 C 144.3,73.0 138.7,78.0 135,81 C 131.3,84.0 128.0,86.2 125,89 C 122.0,91.8 119.2,95.5 117,98 C 114.8,100.5 113.8,101.5 112,104 C 110.2,106.5 108.0,110.0 106,113 C 104.0,116.0 101.5,119.2 100,122 C 98.5,124.8 98.2,126.7 97,130 C 95.8,133.3 94.2,137.7 93,142 C 91.8,146.3 90.8,151.3 90,156 C 89.2,160.7 88.3,166.0 88,170 C 87.7,174.0 87.7,176.8 88,180 C 88.3,183.2 89.2,185.8 90,189 C 90.8,192.2 91.8,195.8 93,199 C 94.2,202.2 95.5,205.7 97,208 C 98.5,210.3 100.3,211.3 102,213 C 103.7,214.7 105.5,216.7 107,218 C 108.5,219.3 108.8,219.7 111,221 C 113.2,222.3 117.5,224.8 120,226 C 122.5,227.2 123.2,227.3 126,228 C 128.8,228.7 132.8,229.5 137,230 C 141.2,230.5 146.3,231.0 151,231 C 155.7,231.0 161.2,230.5 165,230 C 168.8,229.5 171.2,228.7 174,228 C 176.8,227.3 179.7,227.0 182,226 C 184.3,225.0 186.0,223.3 188,222 C 190.0,220.7 192.2,219.7 194,218 C 195.8,216.3 197.5,214.0 199,212 C 200.5,210.0 201.5,208.3 203,206 C 204.5,203.7 206.8,200.8 208,198 C 209.2,195.2 209.3,191.8 210,189 C 210.7,186.2 211.7,184.2 212,181 C 212.3,177.8 212.2,174.0 212,170 C 211.8,166.0 211.8,161.8 211,157 C 210.2,152.2 208.2,145.5 207,141 C 205.8,136.5 205.2,133.3 204,130 C 202.8,126.7 201.5,123.7 200,121 C 198.5,118.3 196.8,116.7 195,114 C 193.2,111.3 191.2,108.0 189,105 C 186.8,102.0 184.2,98.7 182,96 C 179.8,93.3 178.7,91.7 176,89 C 173.3,86.3 169.5,82.8 166,80 C 162.5,77.2 157.5,73.8 155,72 C 152.5,70.2 151.7,69.5 151,69",guideDots:[[151, 69], [147, 71], [135, 81], [125, 89], [117, 98], [112, 104], [106, 113], [100, 122], [97, 130], [93, 142], [90, 156], [88, 170], [88, 180], [90, 189], [93, 199], [97, 208], [102, 213], [107, 218], [111, 221], [120, 226], [126, 228], [137, 230], [151, 231], [165, 230], [174, 228], [182, 226], [188, 222], [194, 218], [199, 212], [203, 206], [208, 198], [210, 189], [212, 181], [212, 170], [211, 157], [207, 141], [204, 130], [200, 121], [195, 114], [189, 105], [182, 96], [176, 89], [166, 80], [155, 72]],arrows:[[112, 104, 216.3], [93, 199, 159.8], [151, 231, 90.0], [212, 170, -2.4], [176, 89, -45.0]],startDot:[151, 69],startLabel:'ابدأ'},
+  6: {label:'٦',name:'ستة',strokePath:'M 104,71 L 110,84 L 119,91 L 131,94 L 144,93 L 157,92 L 165,85 L 161,92 L 164,105 L 164,118 L 166,131 L 168,142 L 170,153 L 173,165 L 178,178 L 183,190 L 189,201 L 189,214',guideDots:[[104, 71], [110, 84], [119, 91], [131, 94], [144, 93], [157, 92], [165, 85], [161, 92], [164, 105], [164, 118], [166, 131], [168, 142], [170, 153], [173, 165], [178, 178], [183, 190], [189, 201], [189, 214]],arrows:[[144, 93, 85.6], [166, 131, 169.7]],startDot:[104, 71],startLabel:'ابدأ'},
+  7: {label:'٧',name:'سبعة',strokePath:'M 112,77 L 112,93 L 120,109 L 125,120 L 132,136 L 139,152 L 143,165 L 148,180 L 154,193 L 154,209 L 161,178 L 166,162 L 171,148 L 177,133 L 184,118 L 189,106 L 198,91 L 203,77',guideDots:[[112, 77], [112, 93], [120, 109], [125, 120], [132, 136], [139, 152], [143, 165], [148, 180], [154, 193], [154, 209], [161, 178], [166, 162], [171, 148], [177, 133], [184, 118], [189, 106], [198, 91], [203, 77]],arrows:[[132, 136, 156.4], [161, 178, 17.4]],startDot:[112, 77],startLabel:'ابدأ'},
+  8: {label:'٨',name:'ثمانية',strokePath:'M 192,211 L 192,195 L 185,182 L 180,171 L 173,155 L 167,138 L 162,125 L 156,109 L 151,95 L 151,79 L 143,111 L 138,126 L 133,141 L 128,155 L 121,170 L 115,182 L 106,197 L 101,212',guideDots:[[192, 211], [192, 195], [185, 182], [180, 171], [173, 155], [167, 138], [162, 125], [156, 109], [151, 95], [151, 79], [143, 111], [138, 126], [133, 141], [128, 155], [121, 170], [115, 182], [106, 197], [101, 212]],arrows:[[173, 155, -19.4], [143, 111, -161.6]],startDot:[192, 211],startLabel:'ابدأ'},
+  9: {label:'٩',name:'تسعة',strokePath:'M 185,215 L 184,201 L 179,188 L 174,176 L 170,162 L 166,147 L 163,133 L 160,120 L 159,105 L 154,91 L 142,85 L 129,90 L 121,100 L 117,113 L 120,126 L 131,132 L 146,129 L 159,124',guideDots:[[185, 215], [184, 201], [179, 188], [174, 176], [170, 162], [166, 147], [163, 133], [160, 120], [159, 105], [154, 91], [142, 85], [129, 90], [121, 100], [117, 113], [120, 126], [131, 132], [146, 129], [159, 124]],arrows:[[170, 162, -14.9], [142, 85, -111.0]],startDot:[185, 215],startLabel:'ابدأ'}
+};
+
+
+var QTOTAL=10,qIndex=0,solved=0,eqA=2,eqB=1,answer=3,STEPS=[3],stepIdx=0;
+var canvas,ctx2d,isDrawing=false,coveredDots=[],passed=false,nextDot=0,hintVisible=true,idleT=null,cdT=null;
+var LOOKAHEAD=3,COVER_R=28,PASS_THRESH=1.0,currentColour='#1F1F1F',strokeW=14,_mask=null;
+function curNum(){return NUMBERS[STEPS[stepIdx]];}
+
+function drawGuide(){
+  var nd=curNum(),svg=g('dotSvg');svg.innerHTML='';var ns='http://www.w3.org/2000/svg';
+  if(hintVisible){
+    var p=document.createElementNS(ns,'path');p.setAttribute('d',nd.strokePath);p.setAttribute('stroke','rgba(61,38,16,.15)');p.setAttribute('stroke-width','24');p.setAttribute('stroke-linecap','round');p.setAttribute('stroke-linejoin','round');p.setAttribute('fill','none');svg.appendChild(p);
+    var dh=document.createElementNS(ns,'path');dh.setAttribute('d',nd.strokePath);dh.setAttribute('stroke','rgba(61,38,16,.30)');dh.setAttribute('stroke-width','3');dh.setAttribute('stroke-linecap','round');dh.setAttribute('stroke-dasharray','2 12');dh.setAttribute('fill','none');svg.appendChild(dh);
+    nd.arrows.forEach(function(a){var gr=document.createElementNS(ns,'g');gr.setAttribute('transform','translate('+a[0]+','+a[1]+') rotate('+a[2]+')');var po=document.createElementNS(ns,'polygon');po.setAttribute('points','0,-10 7,5 -7,5');po.setAttribute('fill','rgba(232,160,32,.85)');gr.appendChild(po);svg.appendChild(gr);});
+    var tg=nd.guideDots[Math.min(nextDot,nd.guideDots.length-1)];
+    var sc=document.createElementNS(ns,'circle');sc.setAttribute('cx',tg[0]);sc.setAttribute('cy',tg[1]);sc.setAttribute('r','9');sc.setAttribute('fill','rgba(90,176,48,.85)');sc.style.animation='ml-startPulse 1.4s ease-in-out infinite';svg.appendChild(sc);
+    if(nextDot===0){var st=document.createElementNS(ns,'text');st.setAttribute('x',nd.startDot[0]);st.setAttribute('y',nd.startDot[1]-16);st.setAttribute('text-anchor','middle');st.setAttribute('font-size','13');st.setAttribute('font-family','Tajawal,sans-serif');st.setAttribute('fill','rgba(42,88,8,.95)');st.setAttribute('font-weight','700');st.textContent=nd.startLabel;svg.appendChild(st);}
+  }
+  nd.guideDots.forEach(function(pt,i){var c=document.createElementNS(ns,'circle');c.setAttribute('cx',pt[0]);c.setAttribute('cy',pt[1]);c.setAttribute('r',coveredDots[i]?'6':'4.5');c.setAttribute('fill',coveredDots[i]?'rgba(90,176,48,.85)':'rgba(61,38,16,.22)');svg.appendChild(c);});
+}
+function updateCoverage(x,y){if(passed)return;var nd=curNum(),changed=false,lim=Math.min(nextDot+LOOKAHEAD,nd.guideDots.length-1),hit=-1;for(var i=nextDot;i<=lim;i++){var dx=nd.guideDots[i][0]-x,dy=nd.guideDots[i][1]-y;if(dx*dx+dy*dy<COVER_R*COVER_R)hit=i;}if(hit>=0){for(var k=nextDot;k<=hit;k++){if(!coveredDots[k]){coveredDots[k]=true;changed=true;}}nextDot=hit+1;}if(changed){redrawInk();if(Math.random()<0.2)AC.stroke();var n=coveredDots.filter(Boolean).length,pct=n/nd.guideDots.length;g('progressFill').style.width=Math.round(pct*100)+'%';drawGuide();if(pct>=PASS_THRESH&&!passed){passed=true;setTimeout(onStepPassed,250);}}}
+function buildMask(){if(!_mask){_mask=document.createElement('canvas');_mask.width=300;_mask.height=300;}var mc=_mask.getContext('2d');mc.clearRect(0,0,300,300);mc.lineWidth=28;mc.lineCap='round';mc.lineJoin='round';mc.strokeStyle='#000';mc.stroke(new Path2D(curNum().strokePath));}
+function applyMask(){if(!_mask)return;ctx2d.globalCompositeOperation='destination-in';ctx2d.drawImage(_mask,0,0);ctx2d.globalCompositeOperation='source-over';}
+function redrawInk(){ctx2d.clearRect(0,0,300,300);var pts=curNum().guideDots.slice(0,nextDot);if(!pts.length)return;if(pts.length===1){ctx2d.beginPath();ctx2d.arc(pts[0][0],pts[0][1],strokeW/2,0,Math.PI*2);ctx2d.fillStyle=currentColour+'ee';ctx2d.fill();applyMask();return;}ctx2d.beginPath();ctx2d.moveTo(pts[0][0],pts[0][1]);for(var i=1;i<pts.length-1;i++){var xc=(pts[i][0]+pts[i+1][0])/2,yc=(pts[i][1]+pts[i+1][1])/2;ctx2d.quadraticCurveTo(pts[i][0],pts[i][1],xc,yc);}ctx2d.quadraticCurveTo(pts[pts.length-1][0],pts[pts.length-1][1],pts[pts.length-1][0],pts[pts.length-1][1]);ctx2d.strokeStyle=currentColour+'ee';ctx2d.lineWidth=strokeW;ctx2d.lineCap='round';ctx2d.lineJoin='round';ctx2d.stroke();applyMask();}
+function getPos(e){var r=canvas.getBoundingClientRect(),sx=300/r.width,sy=300/r.height,s=e.touches?e.touches[0]:e;return{x:(s.clientX-r.left)*sx,y:(s.clientY-r.top)*sy};}
+function startDraw(e){e.preventDefault();isDrawing=true;hideHand();resetIdle();var p=getPos(e);updateCoverage(p.x,p.y);}
+function moveDraw(e){e.preventDefault();if(!isDrawing)return;resetIdle();var p=getPos(e);updateCoverage(p.x,p.y);}
+function endDraw(e){if(e&&e.preventDefault)e.preventDefault();isDrawing=false;}
+
+function showHand(){var nd=curNum(),h=g('hand');h.style.left=(nd.startDot[0]/3)+'%';h.style.top=(nd.startDot[1]/3)+'%';h.classList.remove('hide');}
+function hideHand(){g('hand').classList.add('hide');}
+function resetIdle(){clearTimeout(idleT);idleT=setTimeout(function(){if(!passed)showHand();},2600);}
+
+function loadStep(){var nd=curNum();coveredDots=new Array(nd.guideDots.length).fill(false);passed=false;nextDot=0;ctx2d.clearRect(0,0,300,300);g('progressFill').style.width='0%';buildMask();drawGuide();showHand();resetIdle();}
+function buildQuestion(){answer=rand(2,9);eqA=rand(1,answer-1);eqB=answer-eqA;STEPS=[answer];stepIdx=0;g('eqA').textContent=toAr(eqA);g('eqB').textContent=toAr(eqB);g('ans').textContent='؟';g('ans').classList.remove('done');renderDots();loadStep();}
+function onStepPassed(){AC.complete();if(stepIdx<STEPS.length-1){stepIdx++;setTimeout(loadStep,650);}else{questionComplete();}}
+function questionComplete(){clearTimeout(idleT);hideHand();g('ans').textContent=toAr(answer);g('ans').classList.add('done');solved++;renderDots();narrate(NARR.ok[answer]);fireConfetti();startCountdown();}
+function startCountdown(){var s=3,bar=g('cdBar'),fill=g('cdFill'),txt=g('cdTxt');bar.classList.add('show');fill.classList.remove('run');void fill.offsetWidth;fill.classList.add('run');txt.textContent=toAr(s);clearInterval(cdT);cdT=setInterval(function(){s--;if(s<=0){clearInterval(cdT);bar.classList.remove('show');fill.classList.remove('run');nextQuestion();}else{txt.textContent=toAr(s);}},1000);}
+function nextQuestion(){qIndex++;if(qIndex>=QTOTAL){showWin();}else{buildQuestion();}}
+function showWin(){g('winOverlay').classList.add('show');fireConfetti();narrate(NARR.done);}
+function replay(){g('winOverlay').classList.remove('show');qIndex=0;solved=0;buildQuestion();}
+function clearStep(){loadStep();}
+function toggleHint(){hintVisible=!hintVisible;g('hintBtn').classList.toggle('off',!hintVisible);drawGuide();}
+function fireConfetti(){try{confetti({particleCount:170,spread:115,origin:{y:0.5},colors:['#f97316','#22c55e','#1cb0f6','#a3e635','#facc15','#ef4444'],scalar:1.3});}catch(e){}}
+
+function renderDots(){var cc=g('qdots');if(cc.children.length!==QTOTAL){cc.innerHTML='';for(var i=0;i<QTOTAL;i++){var d=document.createElement('i');d.className='dot';cc.appendChild(d);}}for(var j=0;j<QTOTAL;j++){cc.children[j].classList.toggle('on',j<solved);}}
+canvas=g('canvas');ctx2d=canvas.getContext('2d');
+canvas.addEventListener('mousedown',startDraw);canvas.addEventListener('mousemove',moveDraw);document.addEventListener('mouseup',endDraw);
+canvas.addEventListener('touchstart',startDraw,{passive:false});canvas.addEventListener('touchmove',moveDraw,{passive:false});canvas.addEventListener('touchend',endDraw,{passive:false});
+g('clearBtn').addEventListener('click',clearStep);
+g('hintBtn').addEventListener('click',toggleHint);
+g('sayBtn').addEventListener('click',askQuestion);
+g('replayBtn').addEventListener('click',replay);
+function goMenu(){window.location.href='../../Interactive book for elementary school chapter 1/moosa-lessons.html';}
+g('homeBtn').addEventListener('click',goMenu);g('menuBtn').addEventListener('click',goMenu);
+buildQuestion();
+var _fg=false;document.addEventListener('pointerdown',function(){if(!_fg){_fg=true;askQuestion();}},{passive:true});
+</script>
+</body>
+</html>

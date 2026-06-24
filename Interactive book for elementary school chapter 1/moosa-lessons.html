@@ -3,428 +3,201 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>موسى التعليمي — اختيار الدرس</title>
+<title>موسى التعليمي — اختر لعبة</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#1f2937; --font-d:'Baloo Bhaijaan 2','Tajawal',sans-serif; --font-b:'Tajawal',sans-serif;
+  --ease-b:cubic-bezier(.34,1.56,.64,1); --ease-s:cubic-bezier(.25,.8,.3,1);
+}
+html,body{width:100%;height:100%;overflow-x:hidden}
+body{font-family:var(--font-b);display:flex;align-items:center;justify-content:center;min-height:100dvh;
+  background:linear-gradient(160deg,#e0f2fe 0%,#ede9fe 50%,#fce7f3 100%);}
+.phone{position:relative;z-index:1;width:100%;max-width:480px;min-height:100dvh;height:100dvh;
+  background:linear-gradient(180deg,#f8fbff 0%,#eef4ff 100%);
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,0,0,.05),0 24px 64px rgba(0,0,0,.12);}
 
-:root {
-  /* Brand palette */
-  --amber:        #1F1F1F;
-  --amber-light:  #3A3A3A;
-  --amber-dark:   #141414;
-  --amber-shadow: #0A0A0A;
-  --green:        #22C55E;
-  --green-dark:   #16A34A;
-  --green-shadow: #15803D;
-  --bg-top:       #FFFFFF;
-  --bg-bot:       #F2F2F2;
-  --card-bg:      #FFFFFF;
-  --card-border:  rgba(0,0,0,0.08);
-  --ink:          #1C1917;
-  --ink-soft:     #78716C;
-  --tile-1:       #F0F0F0; --tile-1-icon: #3A3A3A;
-  --tile-2:       #E8E8E8; --tile-2-icon: #4A4A4A;
-  --tile-3:       #EDEDED; --tile-3-icon: #2E2E2E;
-  --tile-4:       #E5E5E5; --tile-4-icon: #444444;
-  --tile-5:       #EBEBEB; --tile-5-icon: #383838;
-  --tile-6:       #E2E2E2; --tile-6-icon: #4E4E4E;
-  --font-d: 'Baloo Bhaijaan 2', 'Tajawal', sans-serif;
-  --font-b: 'Tajawal', sans-serif;
-  --ease-b: cubic-bezier(.34,1.56,.64,1);
-  --ease-s: cubic-bezier(.25,.46,.45,.94);
-  --radius: 20px;
-}
+/* ── Header ── */
+.header{background:linear-gradient(135deg,#7c3aed 0%,#db2777 100%);
+  padding:14px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;
+  box-shadow:0 6px 18px rgba(124,58,237,.35);position:relative;z-index:3;}
+.header-mascot{width:48px;height:48px;flex-shrink:0;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(0,0,0,.25));
+  animation:bob 2.4s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-5px) rotate(3deg)}}
+.header-text{flex:1;min-width:0}
+.header-title{font-family:var(--font-d);font-size:22px;font-weight:800;color:#fff;line-height:1;text-shadow:0 2px 4px rgba(0,0,0,.2)}
+.header-sub{font-size:13px;font-weight:600;color:rgba(255,255,255,.92);margin-top:4px}
+.hdr-say{flex-shrink:0;width:46px;height:46px;border:3px solid rgba(255,255,255,.9);border-radius:50%;
+  background:rgba(255,255,255,.22);color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 0 rgba(0,0,0,.18);transition:transform .12s var(--ease-b);-webkit-tap-highlight-color:transparent;}
+.hdr-say:active{transform:scale(.9) translateY(2px)}
 
-html,body {
-  width:100%; height:100%; overflow-x:hidden;
-}
+/* ── Cards ── */
+.lessons{display:flex;flex-direction:column;gap:11px;flex:1;padding:14px 16px;overflow-y:auto;-webkit-overflow-scrolling:touch;align-content:center;}
+.lesson{display:flex;align-items:center;gap:13px;width:100%;padding:13px 15px;border:4px solid #fff;border-radius:24px;
+  background:linear-gradient(135deg,var(--c1),var(--c2));cursor:pointer;position:relative;overflow:hidden;
+  box-shadow:0 7px 0 var(--c2),0 10px 22px rgba(0,0,0,.14);
+  transition:transform .14s var(--ease-b),box-shadow .14s var(--ease-s),filter .14s;
+  -webkit-tap-highlight-color:transparent;user-select:none;outline:none;flex-shrink:0;
+  animation:cardIn .5s var(--ease-b) both;}
+.lesson:nth-child(1){animation-delay:.04s} .lesson:nth-child(2){animation-delay:.10s}
+.lesson:nth-child(3){animation-delay:.16s} .lesson:nth-child(4){animation-delay:.22s}
+.lesson:nth-child(5){animation-delay:.28s} .lesson:nth-child(6){animation-delay:.34s}
+@keyframes cardIn{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
+.lesson:active{transform:scale(.97) translateY(3px);box-shadow:0 2px 0 var(--c2),0 4px 10px rgba(0,0,0,.12)}
+.lesson.selected{animation:cardIn .5s var(--ease-b) both, pulseSel 1.6s ease-in-out 1s infinite;}
+@keyframes pulseSel{0%,100%{box-shadow:0 7px 0 var(--c2),0 10px 22px rgba(0,0,0,.14),0 0 0 0 rgba(255,255,255,.7)}50%{box-shadow:0 7px 0 var(--c2),0 10px 22px rgba(0,0,0,.14),0 0 0 6px rgba(255,255,255,.55)}}
+.lesson:focus-visible{outline:4px solid #1d4ed8;outline-offset:3px}
+.lesson.shake{animation:shake .4s linear}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 
-body {
-  background: linear-gradient(160deg, var(--bg-top) 0%, var(--bg-bot) 100%);
-  font-family: var(--font-b);
-  display: flex; align-items: center; justify-content: center;
-  min-height: 100dvh;
-}
+.tile{flex-shrink:0;width:60px;height:60px;border-radius:18px;background:rgba(255,255,255,.95);
+  display:flex;align-items:center;justify-content:center;font-size:34px;
+  box-shadow:inset 0 -3px 6px rgba(0,0,0,.08),0 3px 6px rgba(0,0,0,.12);}
+.lesson-label{flex:1;min-width:0;font-family:var(--font-d);font-size:20px;font-weight:800;color:#fff;
+  text-shadow:0 2px 3px rgba(0,0,0,.28);line-height:1.2;}
+.say-name{flex-shrink:0;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.9);
+  display:flex;align-items:center;justify-content:center;font-size:21px;cursor:pointer;
+  box-shadow:0 3px 0 rgba(0,0,0,.18);transition:transform .12s var(--ease-b);}
+.say-name:active{transform:scale(.85)}
 
-/* subtle dot pattern */
-body::before {
-  content:''; position:fixed; inset:0; pointer-events:none;
-  background-image: radial-gradient(circle, rgba(0,0,0,.05) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
+/* locked unit */
+.lesson.locked{filter:saturate(.5) brightness(.96);cursor:default;box-shadow:0 6px 0 #94a3b8,0 8px 16px rgba(0,0,0,.12)}
+.lesson.locked .lesson-label{opacity:.85}
+.lock-ico{flex-shrink:0;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.85);
+  display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 3px 0 rgba(0,0,0,.18);}
+.soon-ribbon{position:absolute;top:8px;left:-26px;transform:rotate(-45deg);background:#ef4444;color:#fff;
+  font-family:var(--font-d);font-size:11px;font-weight:800;padding:3px 28px;box-shadow:0 2px 6px rgba(0,0,0,.25);z-index:6;}
 
-.phone {
-  position: relative; z-index: 1;
-  width: 100%; max-width: 480px; min-height: 100dvh;
-  background: #FFFFFF;
-  display: flex; flex-direction: column;
-  padding: 0 0 max(32px, env(safe-area-inset-bottom, 16px)); overflow: hidden;
-  box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 24px 64px rgba(0,0,0,.10);
-}
+/* completion star (shell/standalone inject .ch-done-badge) */
+.ch-done-badge{animation:badgePop .45s var(--ease-b) both;}
+@keyframes badgePop{0%{transform:scale(0) rotate(-30deg)}100%{transform:scale(1) rotate(0)}}
 
-/* ── Header bar ── */
-.header {
-  background: linear-gradient(135deg, var(--amber) 0%, var(--amber-dark) 100%);
-  padding: 20px 20px 16px;
-  display: flex; align-items: center; gap: 12px;
-  flex-shrink: 0;
-}
-.header-icon {
-  width: 40px; height: 40px; border-radius: 12px;
-  background: rgba(255,255,255,.2);
-  border: 2px solid rgba(255,255,255,.4);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.header-icon svg { width:20px; height:20px; stroke:#fff; fill:none; }
-.header-text { flex:1; }
-.header-title {
-  font-family: var(--font-d); font-size: 20px; font-weight: 800;
-  color: #fff; line-height: 1;
-  text-shadow: 0 1px 3px rgba(0,0,0,.2);
-}
-.header-sub {
-  font-size: 12px; font-weight: 500;
-  color: rgba(255,255,255,.75); margin-top: 3px;
-}
-
-/* chapter badge */
-.chapter-badge {
-  margin: 16px 16px 8px;
-  display: inline-flex; align-items: center; gap: 8px;
-  background: linear-gradient(135deg, var(--amber-light), var(--amber));
-  border: 3px solid rgba(255,255,255,.9);
-  border-radius: 999px; padding: 6px 16px 6px 10px;
-  box-shadow: 0 4px 0 var(--amber-shadow), 0 6px 16px rgba(0,0,0,.12);
-  align-self: flex-start;
-}
-.chapter-badge-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: rgba(255,255,255,.9);
-}
-.chapter-badge-text {
-  font-family: var(--font-d); font-size: 13px; font-weight: 700;
-  color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.2);
-}
-
-/* ── Lesson list ── */
-.lessons {
-  display: flex; flex-direction: column;
-  gap: 10px; flex-grow: 1;
-  padding: 8px 16px 16px;
-  overflow-y: auto; -webkit-overflow-scrolling: touch;
-}
-
-.lesson {
-  display: flex; align-items: center; gap: 14px;
-  width: 100%; padding: 12px 14px;
-  background: var(--card-bg);
-  border: 3px solid var(--card-border);
-  border-radius: var(--radius);
-  cursor: pointer; position: relative;
-  box-shadow:
-    0 6px 0 rgba(0,0,0,.10),
-    0 8px 20px rgba(0,0,0,.06),
-    inset 0 2px 0 rgba(255,255,255,.9);
-  transition: transform 150ms var(--ease-b), box-shadow 150ms var(--ease-s), filter 150ms;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-  outline: none;
-}
-.lesson:hover {
-  transform: translateY(-1px);
-  box-shadow:
-    0 8px 0 rgba(0,0,0,.12),
-    0 12px 24px rgba(0,0,0,.08),
-    inset 0 2px 0 rgba(255,255,255,.9);
-  filter: brightness(1.02);
-}
-.lesson:active {
-  transform: scale(.98) translateY(4px);
-  box-shadow:
-    0 2px 0 rgba(0,0,0,.10),
-    0 4px 8px rgba(0,0,0,.06),
-    inset 0 2px 0 rgba(255,255,255,.9);
-  filter: brightness(.98);
-}
-.lesson:focus-visible {
-  outline: 3px solid var(--amber);
-  outline-offset: 2px;
-}
-
-/* tile per lesson — coloured */
-.tile {
-  flex-shrink: 0; width: 52px; height: 52px; border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 24px;
-  border: 2px solid rgba(255,255,255,.8);
-  box-shadow: inset 0 -2px 4px rgba(0,0,0,.06), 0 2px 6px rgba(0,0,0,.06);
-}
-.lesson:nth-child(1) .tile { background:var(--tile-1); }
-.lesson:nth-child(2) .tile { background:var(--tile-2); }
-.lesson:nth-child(3) .tile { background:var(--tile-3); }
-.lesson:nth-child(4) .tile { background:var(--tile-4); }
-.lesson:nth-child(5) .tile { background:var(--tile-5); }
-.lesson:nth-child(6) .tile { background:var(--tile-6); }
-
-.lesson-info { flex: 1; min-width: 0; }
-.lesson-label {
-  font-family: var(--font-d); font-size: 17px; font-weight: 800;
-  color: var(--ink); letter-spacing: .2px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.lesson-num {
-  font-size: 12px; font-weight: 500; color: var(--ink-soft);
-  margin-top: 2px;
-}
-
-/* chevron arrow */
-.lesson-arrow {
-  flex-shrink: 0; width: 28px; height: 28px; border-radius: 8px;
-  background: rgba(0,0,0,.04);
-  display: flex; align-items: center; justify-content: center;
-  transition: background 150ms;
-}
-.lesson-arrow svg { width:14px; height:14px; stroke:var(--ink-soft); fill:none; }
-.lesson:hover .lesson-arrow { background: rgba(0,0,0,.08); }
-.lesson:hover .lesson-arrow svg { stroke: var(--amber-dark); }
-
-/* ── Selected state ── */
-.lesson.selected {
-  background: linear-gradient(135deg, var(--amber-light) 0%, var(--amber) 100%);
-  border-color: rgba(255,255,255,.95);
-  box-shadow:
-    0 6px 0 var(--amber-shadow),
-    0 8px 24px rgba(0,0,0,.18),
-    inset 0 2px 0 rgba(255,255,255,.55);
-}
-.lesson.selected .lesson-label { color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.2); }
-.lesson.selected .lesson-num  { color: rgba(255,255,255,.75); }
-.lesson.selected .lesson-arrow { background: rgba(255,255,255,.25); }
-.lesson.selected .lesson-arrow svg { stroke: #fff; }
-.lesson.selected .tile {
-  opacity: .85;
-  border-color: rgba(255,255,255,.6);
-}
-.lesson.selected:hover {
-  filter: brightness(1.04);
-  transform: translateY(-1px);
-  box-shadow:
-    0 8px 0 var(--amber-shadow),
-    0 12px 28px rgba(0,0,0,.22),
-    inset 0 2px 0 rgba(255,255,255,.55);
-}
-
-/* ── Bottom row ── */
-.bottom {
-  display: flex; gap: 12px; align-items: stretch;
-  padding: 0 16px;
-  animation: slideUp .5s var(--ease-b) .45s both;
-}
-
-.btn-back {
-  flex-shrink: 0; width: 60px;
-  background: #F0F0F0;
-  border: none; border-radius: var(--radius);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  box-shadow: none;
-  transition: transform 150ms var(--ease-b), box-shadow 150ms var(--ease-s);
-  -webkit-tap-highlight-color: transparent;
-  outline: none;
-}
-.btn-back svg { width:22px; height:22px; stroke:var(--ink-soft); fill:none; }
-.btn-back:hover { filter: brightness(.97); }
-.btn-back:active {
-  transform: scale(.97) translateY(3px);
-  box-shadow: 0 1px 0 rgba(0,0,0,.18), 0 3px 6px rgba(0,0,0,.06), inset 0 2px 0 rgba(255,255,255,.9);
-}
-.btn-back:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
-
-.btn-continue {
-  flex-grow: 1;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  background: linear-gradient(135deg, #4ADE80 0%, var(--green) 50%, var(--green-dark) 100%);
-  border: none; border-radius: var(--radius);
-  font-family: var(--font-d); font-size: 22px; font-weight: 800;
-  color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.2);
-  cursor: pointer; padding: 16px;
-  box-shadow: none;
-  position: relative; overflow: hidden;
-  transition: transform 150ms var(--ease-b), box-shadow 150ms var(--ease-s), filter 150ms;
-  -webkit-tap-highlight-color: transparent;
-  outline: none;
-}
-.btn-continue::after {
-  content:''; position:absolute; top:4px; inset-inline: 20px;
-  height:6px; border-radius:6px;
-  background: rgba(255,255,255,.35); pointer-events:none;
-}
-.btn-continue:hover { filter: brightness(1.06); }
-.btn-continue:active {
-  transform: scale(.98) translateY(4px);
-  box-shadow: 0 1px 0 var(--green-shadow), 0 3px 8px rgba(22,163,74,.2), inset 0 2px 0 rgba(255,255,255,.4);
-}
-.btn-continue:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
-
-/* ── Entrance animations ── */
-.header { animation: slideDown .5s var(--ease-b) both; }
-.chapter-badge { animation: popIn .45s var(--ease-b) .1s both; }
-.lesson { animation: slideIn .45s var(--ease-b) both; }
-.lesson:nth-child(1){ animation-delay:.08s }
-.lesson:nth-child(2){ animation-delay:.14s }
-.lesson:nth-child(3){ animation-delay:.20s }
-.lesson:nth-child(4){ animation-delay:.26s }
-.lesson:nth-child(5){ animation-delay:.32s }
-.lesson:nth-child(6){ animation-delay:.38s }
-
-@keyframes slideDown { 0%{transform:translateY(-32px);opacity:0} 100%{transform:translateY(0);opacity:1} }
-@keyframes slideIn   { 0%{transform:translateX(32px);opacity:0} 100%{transform:translateX(0);opacity:1} }
-@keyframes slideUp   { 0%{transform:translateY(32px);opacity:0} 100%{transform:translateY(0);opacity:1} }
-@keyframes popIn     { 0%{transform:scale(.7);opacity:0} 100%{transform:scale(1);opacity:1} }
-
-@media (prefers-reduced-motion: reduce) {
-  *,*::before,*::after { animation-duration:.01ms !important; transition-duration:.01ms !important; }
-}
+/* ── Bottom ── */
+.bottom{flex-shrink:0;padding:12px 16px max(16px,env(safe-area-inset-bottom,12px));display:flex;justify-content:center;}
+.btn-home{display:inline-flex;align-items:center;gap:9px;border:4px solid #fff;border-radius:20px;padding:11px 26px;
+  background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;font-family:var(--font-d);font-size:18px;font-weight:800;
+  cursor:pointer;box-shadow:0 6px 0 #0369a1,0 8px 18px rgba(2,132,199,.3);text-shadow:0 1px 2px rgba(0,0,0,.2);
+  transition:transform .12s var(--ease-b);-webkit-tap-highlight-color:transparent;}
+.btn-home:active{transform:translateY(3px);box-shadow:0 3px 0 #0369a1}
+.btn-home .ico{font-size:22px;line-height:1}
 </style>
 </head>
 <body>
 <div class="phone">
 
-  <!-- Header -->
   <div class="header">
-    <div class="header-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-      </svg>
-    </div>
+    <img class="header-mascot" src="../mascot.png" alt="موسى">
     <div class="header-text">
-      <div class="header-title">موسى التعليمي</div>
-      <div class="header-sub">اختر الدرس</div>
+      <div class="header-title">موسى</div>
+      <div class="header-sub">اختر لعبة لتلعب بها!</div>
     </div>
+    <button class="hdr-say" id="hdrSay" aria-label="استمع">🔊</button>
   </div>
 
-  <!-- Chapter label -->
-  <div class="chapter-badge">
-    <span class="chapter-badge-dot"></span>
-    <span class="chapter-badge-text">الفصل الأول</span>
-  </div>
+  <div class="lessons" id="lessons" aria-label="قائمة الألعاب">
 
-  <!-- Lesson cards -->
-  <div class="lessons" id="lessons" aria-label="قائمة الدروس">
-
-    <button class="lesson selected" data-id="1">
+    <button class="lesson selected" data-id="1" style="--c1:#fb923c;--c2:#ea580c">
       <span class="tile" aria-hidden="true">⚖️</span>
-      <span class="lesson-info">
-        <span class="lesson-label">المقارنة والتصنيف</span>
-        <span class="lesson-num">الدرس ١</span>
-      </span>
-      <span class="lesson-arrow" aria-hidden="true">
-        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"/>
-        </svg>
-      </span>
+      <span class="lesson-label">المقارنة والتصنيف</span>
+      <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
     </button>
 
-    <button class="lesson" data-id="2">
+    <button class="lesson" data-id="2" style="--c1:#38bdf8;--c2:#0284c7">
       <span class="tile" aria-hidden="true">🔢</span>
-      <span class="lesson-info">
-        <span class="lesson-label">الأعداد حتى ٥</span>
-        <span class="lesson-num">الدرس ٢</span>
-      </span>
-      <span class="lesson-arrow" aria-hidden="true">
-        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"/>
-        </svg>
-      </span>
+      <span class="lesson-label">الأعداد حتى ٥</span>
+      <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
     </button>
 
-    <button class="lesson" data-id="3">
+    <button class="lesson" data-id="3" style="--c1:#a78bfa;--c2:#7c3aed">
       <span class="tile" aria-hidden="true">🧩</span>
-      <span class="lesson-info">
-        <span class="lesson-label">الموقع والنمط</span>
-        <span class="lesson-num">الدرس ٣</span>
-      </span>
-      <span class="lesson-arrow" aria-hidden="true">
-        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"/>
-        </svg>
-      </span>
+      <span class="lesson-label">الموقع والنمط</span>
+      <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
     </button>
 
-    <button class="lesson" data-id="4">
+    <button class="lesson" data-id="4" style="--c1:#4ade80;--c2:#16a34a">
       <span class="tile" aria-hidden="true">🔟</span>
-      <span class="lesson-info">
-        <span class="lesson-label">الأعداد حتى ١٠</span>
-        <span class="lesson-num">الدرس ٤</span>
-      </span>
-      <span class="lesson-arrow" aria-hidden="true">
-        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"/>
-        </svg>
-      </span>
+      <span class="lesson-label">الأعداد حتى ١٠</span>
+      <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
     </button>
 
-    <button class="lesson" data-id="5">
-      <span class="tile" aria-hidden="true">🔣</span>
-      <span class="lesson-info">
-        <span class="lesson-label">الأعداد حتى ٢٠</span>
-        <span class="lesson-num">الدرس ٥</span>
-      </span>
-      <span class="lesson-arrow" aria-hidden="true">
-        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"/>
-        </svg>
-      </span>
+    <button class="lesson locked" data-id="5" style="--c1:#cbd5e1;--c2:#94a3b8">
+      <span class="tile" aria-hidden="true">🔢</span>
+      <span class="lesson-label">الأعداد حتى ٢٠</span>
+      <span class="soon-ribbon">قريباً</span>
+      <span class="lock-ico" aria-hidden="true">🔒</span>
     </button>
 
-    <button class="lesson" data-id="6">
+    <button class="lesson" data-id="6" style="--c1:#f472b6;--c2:#db2777">
       <span class="tile" aria-hidden="true">➕</span>
-      <span class="lesson-info">
-        <span class="lesson-label">الجمع</span>
-        <span class="lesson-num">الدرس ٦</span>
-      </span>
-      <span class="lesson-arrow" aria-hidden="true">
-        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"/>
-        </svg>
-      </span>
+      <span class="lesson-label">الجمع</span>
+      <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
     </button>
 
   </div>
 
-  <!-- Bottom actions -->
   <div class="bottom">
-    <button class="btn-back" onclick="handleBack()" aria-label="رجوع">
-      <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="9 18 15 12 9 6"/>
-      </svg>
-    </button>
-    <button class="btn-continue" onclick="handleContinue()">
-      متابعة
-      <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
+    <button class="btn-home" onclick="handleBack()"><span class="ico">🏠</span> الصفحة الرئيسية</button>
   </div>
 
 </div>
 
 <script>
-const lessons = document.getElementById('lessons');
-let selectedId = '1';
+var lessons = document.getElementById('lessons');
+var selectedId = '1';
+var embedded = !!(window.parent && window.parent !== window);
 
-lessons.querySelectorAll('.lesson').forEach(function(el) {
-  el.addEventListener('click', function() {
-    lessons.querySelectorAll('.lesson').forEach(function(l) {
-      l.classList.remove('selected');
-    });
-    el.classList.add('selected');
-    selectedId = el.dataset.id;
+/* ── narrator (FatimaNeural) + soft sfx ── */
+var NAV = {
+  welcome:'../audio/84b12e63.mp3', soon:'../audio/1986216a.mp3',
+  names:{ '1':'../audio/36a7db03.mp3','2':'../audio/54b0b96d.mp3','3':'../audio/1c885f45.mp3',
+          '4':'../audio/c98970ea.mp3','5':'../audio/f1a21c40.mp3','6':'../audio/42a34ab4.mp3' }
+};
+var _na=null;
+function say(url){ if(!url)return; try{ if(_na)_na.pause(); _na=new Audio(url); _na.play().catch(function(){}); }catch(e){} }
+var AC=(function(){var c=null;function g(){if(!c)c=new(window.AudioContext||window.webkitAudioContext)();return c;}
+  function t(f1,f2,type,vol,d){try{var a=g(),o=a.createOscillator(),gn=a.createGain();o.type=type;
+    o.frequency.setValueAtTime(f1,a.currentTime);o.frequency.exponentialRampToValueAtTime(f2,a.currentTime+d);
+    gn.gain.setValueAtTime(vol,a.currentTime);gn.gain.exponentialRampToValueAtTime(.001,a.currentTime+d+.02);
+    o.connect(gn);gn.connect(a.destination);o.start();o.stop(a.currentTime+d+.05);}catch(e){}}
+  return{pop:function(){t(523,880,'triangle',.18,.12);},buzz:function(){t(220,150,'sawtooth',.12,.22);}};})();
+
+var _welcomed=false;
+function welcome(){ if(_welcomed)return; try{ if(_na)_na.pause(); _na=new Audio(NAV.welcome); _na.play().then(function(){_welcomed=true;}).catch(function(){}); }catch(e){} }
+
+/* ── wire cards ── */
+lessons.querySelectorAll('.lesson').forEach(function(el){
+  var sp=el.querySelector('.say-name');
+  if(sp){
+    sp.addEventListener('click',function(ev){ ev.stopPropagation(); say(NAV.names[el.dataset.id]); });
+    sp.addEventListener('keydown',function(ev){ if(ev.key==='Enter'||ev.key===' '){ev.stopPropagation();ev.preventDefault();say(NAV.names[el.dataset.id]);} });
+  }
+  el.addEventListener('click',function(){
+    if(el.classList.contains('locked')){
+      AC.buzz(); say(NAV.soon);
+      el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+      return;
+    }
+    AC.pop();
+    lessons.querySelectorAll('.lesson').forEach(function(l){ l.classList.remove('selected'); l.setAttribute('aria-selected','false'); });
+    el.classList.add('selected'); el.setAttribute('aria-selected','true'); selectedId=el.dataset.id;
+    var _id=el.dataset.id;
+    setTimeout(function(){
+      if(embedded){ window.parent.postMessage({ action:'openLesson', id:_id }, '*'); }
+      else { var u=window.__UNIT_FIRST__[_id]; if(u) window.location.href=u; }
+    }, 150);
   });
 });
 
-// unit (data-id) -> first lesson file of its chapter (standalone navigation)
+document.getElementById('hdrSay').addEventListener('click',function(){ say(NAV.welcome); });
+
+/* welcome narration — try on load, fall back to first touch (autoplay gate) */
+window.addEventListener('load',function(){ setTimeout(welcome,350); });
+document.addEventListener('pointerdown',function(){ welcome(); },{once:true,passive:true});
+
+/* unit (data-id) -> first lesson file (standalone navigation) */
 window.__UNIT_FIRST__ = {
   '1':'moosa-lesson-classify 1.html',
   '2':'../Interactive book for elementary school chapter 2/moosa-chp 2-lesson 1.html',
@@ -433,26 +206,15 @@ window.__UNIT_FIRST__ = {
   '6':'../Interactive book for elementary school chapter 6/goal-kick-math/index.html'
 };
 
-function handleContinue() {
-  if (window.parent && window.parent !== window) {
-    window.parent.postMessage({ action: 'openLesson', id: selectedId }, '*');
-  } else {
-    var url = window.__UNIT_FIRST__[selectedId];
-    if (url) window.location.href = url;
-  }
-}
-function handleBack() {
-  if (window.parent && window.parent !== window) {
-    window.parent.postMessage({ action: 'goBack' }, '*');
-  } else {
-    window.location.href = 'moosa-splash.html';
-  }
+function handleBack(){
+  if (embedded) { window.parent.postMessage({ action: 'goBack' }, '*'); }
+  else { window.location.href = 'moosa-splash.html'; }
 }
 
-// ── Standalone progress: green tick on completed units + highlight next ──
-// (When embedded in index.html, the shell injects this instead.)
+/* ── Progress: star on completed units + highlight the next one ──
+   Runs in both embedded and standalone (reads shared localStorage), so it
+   works even when the shell can't cross-frame inject (e.g. file://). */
 (function(){
-  if (window.parent && window.parent !== window) return;
   var TOTAL={ch1:5,ch2:6,ch3:6,ch4:3}, U2C={'1':'ch1','2':'ch2','3':'ch3','4':'ch4'};
   function chDone(ch){try{return (JSON.parse(localStorage.getItem('moosa_'+ch)||'[]')).length>=TOTAL[ch];}catch(e){return false;}}
   var nextBtn=null;
@@ -461,11 +223,11 @@ function handleBack() {
     var ch=U2C[btn.dataset.id];
     if(ch && chDone(ch)){
       if(!btn.querySelector('.ch-done-badge')){
-        var b=document.createElement('span'); b.className='ch-done-badge'; b.textContent='✓';
-        b.style.cssText='position:absolute;top:8px;left:8px;width:26px;height:26px;background:#22C55E;color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;box-shadow:0 2px 6px rgba(0,0,0,.2);z-index:9';
-        btn.style.position='relative'; btn.appendChild(b);
+        var b=document.createElement('span'); b.className='ch-done-badge'; b.textContent='⭐';
+        b.style.cssText='position:absolute;top:7px;left:7px;width:34px;height:34px;background:#facc15;color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;box-shadow:0 3px 8px rgba(0,0,0,.25);z-index:7';
+        btn.appendChild(b);
       }
-    } else if(ch && !nextBtn){ nextBtn=btn; }
+    } else if(ch && !nextBtn && !btn.classList.contains('locked')){ nextBtn=btn; }
   });
   if(!nextBtn) nextBtn=lessons.querySelector('.lesson[data-id="1"]');
   if(nextBtn){ nextBtn.classList.add('selected'); nextBtn.setAttribute('aria-selected','true'); selectedId=nextBtn.dataset.id; }

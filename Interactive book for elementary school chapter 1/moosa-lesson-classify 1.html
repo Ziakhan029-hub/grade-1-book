@@ -326,7 +326,7 @@ html, body { height:100%; margin:0; padding:0; overflow:hidden; background:linea
    ═══════════════════════════════════════ */
 
 /* top-bar consistent height/padding */
-.top-bar{flex-shrink:0;background:linear-gradient(135deg,#3A3A3A 0%,#1F1F1F 60%,#141414 100%) !important;padding:12px 20px !important;box-shadow:0 2px 8px rgba(0,0,0,.18);}
+.top-bar{flex-shrink:0;background:linear-gradient(135deg,#fb923c 0%,#ea580c 100%) !important;padding:12px 20px !important;box-shadow:0 2px 8px rgba(0,0,0,.18);}
 
 /* win overlay — modern frosted dark */
 .ml-widget .win-overlay,.win-overlay{
@@ -465,6 +465,17 @@ html, body { height:100%; margin:0; padding:0; overflow:hidden; background:linea
   0%   { opacity:0; transform: scale(.4) rotate(-30deg); }
   100% { opacity:1; transform: scale(1.2) rotate(-20deg); }
 }
+</style>
+<style>
+/* Fix: eliminate top-bar load flash — reserve the final bar height (so the
+   play area never jumps), never paint the loose pre-reorg lesson-number
+   buttons, and hold the transient bar content hidden until it is reorganized
+   (2s CSS safety-reveal so the score can never stick hidden). Kept in <head>
+   so it is render-blocking and applies on the very first paint. */
+.ml-widget .top-bar{ min-height:107px; }
+.ml-widget .top-bar > .lsn-btn{ display:none !important; }
+.ml-widget .top-bar:not(:has(.tb-top)) > *{ visibility:hidden; animation:mlTbReveal 0s linear 2s forwards; }
+@keyframes mlTbReveal{ to{ visibility:visible; } }
 </style>
 </head>
 <body>
@@ -1328,6 +1339,90 @@ renderQuestion();
     if(window.parent&&window.parent!==window){window.parent.postMessage({action:'nextLesson'},'*');return;}
     location.href=isLast?LP:nextFile;
   };
+})();
+</script>
+<style>
+/* ── bigger 2-row header: lesson numbers on top, score(left)+progress dots below ── */
+.ml-widget .top-bar{ flex-direction:column !important; align-items:stretch !important; justify-content:center !important; gap:9px !important; padding:13px 16px 11px !important; }
+.ml-widget .top-bar .tb-top{ display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; }
+.ml-widget .top-bar .tb-bot{ position:relative; display:flex; align-items:center; justify-content:center; min-height:30px; padding:0 4px; }
+.ml-widget .top-bar .tb-score{ position:absolute; left:6px; top:50%; transform:translateY(-50%); display:flex; align-items:center; gap:6px; background:linear-gradient(180deg,#facc15,#f97316); border:3px solid #fff; border-radius:999px; padding:4px 13px 5px; box-shadow:0 4px 10px rgba(0,0,0,.22); }
+.ml-widget .top-bar .tb-score::before{ content:'⭐'; font-size:16px; line-height:1; }
+.ml-widget .top-bar .tb-score .score-label{ display:none !important; }
+.ml-widget .top-bar .tb-score .score-val{ color:#fff !important; font-weight:900; font-size:20px; line-height:1; text-shadow:0 2px 0 rgba(0,0,0,.22); }
+.ml-widget .top-bar .tb-bot .progress-dots,
+.ml-widget .top-bar .tb-bot #ml-dots,
+.ml-widget .top-bar .tb-bot #mlDots{ justify-content:center !important; padding:0 !important; gap:10px !important; }
+.ml-widget .top-bar .qdot, .ml-widget .top-bar .ml-qdot, .ml-widget .top-bar .dot{ width:11px !important; height:11px !important; border-radius:50% !important; margin:0 !important; flex:0 0 auto !important; background:rgba(255,255,255,.55) !important; box-shadow:none !important; transition:transform .25s, background .25s !important; }
+.ml-widget .top-bar .qdot.active, .ml-widget .top-bar .ml-qdot.active, .ml-widget .top-bar .dot.active{ background:#fff !important; transform:scale(1.4) !important; box-shadow:0 0 0 3px rgba(255,255,255,.28) !important; }
+.ml-widget .top-bar .qdot.done, .ml-widget .top-bar .ml-qdot.done, .ml-widget .top-bar .dot.done{ background:#facc15 !important; transform:none !important; }
+</style>
+<script>
+(function(){
+  function reorg(){
+    var bar=document.querySelector('.ml-widget .top-bar'); if(!bar||bar._reorg)return;
+    var navs=[].slice.call(bar.querySelectorAll('.lsn-btn'));
+    var dots=document.getElementById('ml-dots')||document.getElementById('mlDots');
+    var sl=bar.querySelector('.score-label'), sv=bar.querySelector('.score-val');
+    if(!navs.length || !dots || !sv) return;
+    bar._reorg=true;
+    var top=document.createElement('div'); top.className='tb-top';
+    navs.forEach(function(b){ top.appendChild(b); });
+    var bot=document.createElement('div'); bot.className='tb-bot';
+    var sc=document.createElement('div'); sc.className='tb-score';
+    if(sl) sc.appendChild(sl); if(sv) sc.appendChild(sv);
+    bot.appendChild(sc); bot.appendChild(dots);
+    bar.innerHTML=''; bar.appendChild(top); bar.appendChild(bot);
+  }
+  var n=0, iv=setInterval(function(){
+    n++;
+    var bar=document.querySelector('.ml-widget .top-bar');
+    var navs=bar?bar.querySelectorAll('.lsn-btn').length:0;
+    var dots=document.getElementById('ml-dots')||document.getElementById('mlDots');
+    if((navs && dots) || n>50){ clearInterval(iv); reorg(); }
+  },80);
+})();
+</script>
+
+<style>
+/* ═══════════ Chapter 1 — warm orange identity (kids know they're in الفصل ١) ═══════════ */
+.ml-widget{ background:#FFF7ED !important; }                 /* warm peach page tint */
+.ml-widget::after{                                           /* orange chapter frame, seamless with header */
+  content:''; position:absolute; inset:0; pointer-events:none; z-index:35;
+  border:4px solid #f97316; border-top:none;
+}
+#mlSpeakerBtn, .ml-widget .f-narrator, .f-narrator{        /* narrator/speaker button in chapter colour */
+  background:linear-gradient(135deg,#fb923c,#ea580c) !important;
+  box-shadow:0 4px 0 #c2410c,0 6px 16px rgba(234,88,12,.32) !important;
+}
+</style>
+
+<style id="tb-back-btn">
+/* Back-to-lessons button (bottom row of the top bar, mirrors the score pill) */
+.top-bar{ position:relative; }
+.tb-back{ position:absolute; right:6px; top:50%; transform:translateY(-50%); width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,.30); border:2px solid rgba(255,255,255,.65); display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; box-shadow:0 3px 8px rgba(0,0,0,.22); -webkit-tap-highlight-color:transparent; transition:transform .12s, background .15s; z-index:40; }
+.tb-back:hover{ background:rgba(255,255,255,.46); }
+.tb-back:active{ transform:translateY(-50%) scale(.88); }
+.tb-back svg{ width:21px; height:21px; display:block; }
+</style>
+<script id="tb-back-js">
+(function(){
+  var inCh1=/moosa-lesson-classify/.test(decodeURIComponent(location.pathname||''));
+  var LP=inCh1?'moosa-lessons.html':'../Interactive book for elementary school chapter 1/moosa-lessons.html';
+  function go(){ try{ if(window.parent&&window.parent!==window){ window.parent.postMessage({action:'exitToLessons'},'*'); return; } }catch(e){} location.href=LP; }
+  function make(){
+    var host=document.querySelector('.tb-bot')||document.querySelector('.ml-widget .top-bar')||document.querySelector('.app .top-bar')||document.querySelector('.top-bar');
+    if(!host) return false;
+    if(host.querySelector('.tb-back')) return true;
+    var b=document.createElement('button'); b.className='tb-back'; b.type='button';
+    b.setAttribute('aria-label','العودة إلى قائمة الألعاب');
+    b.title='الألعاب';
+    b.innerHTML='<svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2.2"/><rect x="13" y="3" width="8" height="8" rx="2.2"/><rect x="3" y="13" width="8" height="8" rx="2.2"/><rect x="13" y="13" width="8" height="8" rx="2.2"/></svg>';
+    b.addEventListener('click',function(e){ e.stopPropagation(); e.preventDefault(); go(); });
+    host.appendChild(b);
+    return true;
+  }
+  var n=0, iv=setInterval(function(){ n++; if(make()||n>80){ clearInterval(iv); } },80);
 })();
 </script>
 </body>
