@@ -32,7 +32,7 @@ body{background:linear-gradient(160deg,#FFFFFF 0%,#F2F2F2 100%);margin:0}
 
 .ml-widget .prompt{flex-shrink:0;text-align:center;padding:6px 16px 0}
 .ml-widget .prompt-line{font-family:var(--font-d);font-size:17px;font-weight:800;color:var(--ink);line-height:1.4;display:inline-flex;align-items:center;gap:9px}
-.ml-widget .say-btn{width:44px;height:44px;border-radius:50%;border:none;background:var(--amber);color:#fff;font-size:18px;cursor:pointer;box-shadow:0 3px 0 var(--amber-dark);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.ml-widget .say-btn{position:absolute;bottom:20px;right:16px;z-index:9999;width:48px;height:48px;border-radius:50%;border:none;color:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-tap-highlight-color:transparent}
 .ml-widget .say-btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--amber-dark)}
 
 .ml-widget .play{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:space-evenly;padding:4px 12px}
@@ -364,7 +364,7 @@ function _mlWsSpeak(t){
   try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ar-SA';if(typeof mlVoice!=='undefined'&&mlVoice)u.voice=mlVoice;u.rate=.85;u.pitch=1.05;speechSynthesis.speak(u);}catch(e){}
 }
 
-function renderDots(){var _c=mlEl('mlDots');_c.innerHTML='';var _l=['moosa-chp 4-lesson 1.html', 'moosa-chp 4-lesson 2.html', 'moosa-chp 4-lesson 3.html'];var _cur=window.location.pathname.split('/').pop();var _ci=_l.indexOf(_cur);for(var _i=0;_i<_l.length;_i++){(function(lf,i){var b=document.createElement('button');b.className='dot'+(i===_ci?' active':i<_ci?' done':'');b.textContent=i+1;b.addEventListener('click',function(){window.location.href=lf;});_c.appendChild(b);})(_l[_i],_i);}}
+function renderDots(){var _c=mlEl('mlDots');_c.innerHTML='';var _l=['moosa-chp 4-lesson 1.html', 'moosa-chp 4-lesson 2.html', 'moosa-chp 4-lesson 3.html', 'moosa-chp 4-lesson 4.html', 'moosa-chp 4-lesson 5.html', 'moosa-chp 4-lesson 6.html'];var _cur=window.location.pathname.split('/').pop();var _ci=_l.indexOf(_cur);for(var _i=0;_i<_l.length;_i++){(function(lf,i){var b=document.createElement('button');b.className='dot'+(i===_ci?' active':i<_ci?' done':'');b.textContent=i+1;b.addEventListener('click',function(){window.location.href=lf;});_c.appendChild(b);})(_l[_i],_i);}}
 function objSize(st){
   const maxRow=Math.max(...(st.rows||[st.have+3>8?8:8]));
   return Math.min(96, Math.floor((Math.min(window.innerWidth,480)-30-maxRow*6)/maxRow));
@@ -726,7 +726,7 @@ renderStep();
 </style>
 <script>
 (function(){
-  var L=['moosa-chp 4-lesson 1.html', 'moosa-chp 4-lesson 2.html', 'moosa-chp 4-lesson 3.html'];
+  var L=['moosa-chp 4-lesson 1.html', 'moosa-chp 4-lesson 2.html', 'moosa-chp 4-lesson 3.html', 'moosa-chp 4-lesson 4.html', 'moosa-chp 4-lesson 5.html', 'moosa-chp 4-lesson 6.html'];
   function build(){
     var bar=document.querySelector('.top-bar');
     if(bar){
@@ -828,7 +828,7 @@ renderStep();
   if((m=fn.match(/^moosa-lesson-classify (\d+)\.html$/))){ch='ch1';idx=+m[1]-1;total=5;nextFile='moosa-lesson-classify '+(+m[1]+1)+'.html';}
   else if((m=fn.match(/^moosa-chp 2-lesson (\d+)\.html$/))){ch='ch2';idx=+m[1]-1;total=6;nextFile='moosa-chp 2-lesson '+(+m[1]+1)+'.html';LP=LP_OTHER;}
   else if((m=fn.match(/^moosa-chp 3-lesson (\d+)\.html$/))){ch='ch3';idx=+m[1]-1;total=6;nextFile='moosa-chp 3-lesson '+(+m[1]+1)+'.html';LP=LP_OTHER;}
-  else if((m=fn.match(/^moosa-chp 4-lesson (\d+)\.html$/))){ch='ch4';idx=+m[1]-1;total=3;nextFile='moosa-chp 4-lesson '+(+m[1]+1)+'.html';LP=LP_OTHER;}
+  else if((m=fn.match(/^moosa-chp 4-lesson (\d+)\.html$/))){ch='ch4';idx=+m[1]-1;total=6;nextFile='moosa-chp 4-lesson '+(+m[1]+1)+'.html';LP=LP_OTHER;}
   if(!ch)return;
   var isLast=idx>=total-1;
   function saveDone(){try{var k='moosa_'+ch,p=JSON.parse(localStorage.getItem(k)||'[]');if(p.indexOf(idx)===-1){p.push(idx);localStorage.setItem(k,JSON.stringify(p));}}catch(e){}}

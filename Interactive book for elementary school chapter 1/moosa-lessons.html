@@ -215,7 +215,7 @@ function handleBack(){
    Runs in both embedded and standalone (reads shared localStorage), so it
    works even when the shell can't cross-frame inject (e.g. file://). */
 (function(){
-  var TOTAL={ch1:5,ch2:6,ch3:6,ch4:3}, U2C={'1':'ch1','2':'ch2','3':'ch3','4':'ch4'};
+  var TOTAL={ch1:5,ch2:6,ch3:6,ch4:5}, U2C={'1':'ch1','2':'ch2','3':'ch3','4':'ch4'};
   function chDone(ch){try{return (JSON.parse(localStorage.getItem('moosa_'+ch)||'[]')).length>=TOTAL[ch];}catch(e){return false;}}
   var nextBtn=null;
   lessons.querySelectorAll('.lesson').forEach(function(btn){
