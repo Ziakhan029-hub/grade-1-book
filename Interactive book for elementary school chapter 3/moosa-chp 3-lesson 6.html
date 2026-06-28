@@ -1,6 +1,32 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+<script>
+/* Single narration channel: starting any spoken clip stops the previous one (prevents audio overlap). Tap/win blips use WebAudio and are unaffected. */
+(function(){
+  if(window.__mlAudioBus__)return; window.__mlAudioBus__=1;
+  var cur=null;
+  try{
+    var P=window.HTMLAudioElement&&HTMLAudioElement.prototype;
+    if(P&&P.play){
+      var op=P.play;
+      P.play=function(){
+        if(cur&&cur!==this){try{cur.pause();}catch(e){}try{cur.currentTime=0;}catch(e){}}
+        cur=this;
+        try{if(window.speechSynthesis)speechSynthesis.cancel();}catch(e){}
+        return op.apply(this,arguments);
+      };
+    }
+  }catch(e){}
+  try{
+    var ss=window.speechSynthesis;
+    if(ss&&ss.speak){
+      var osp=ss.speak;
+      ss.speak=function(u){if(cur){try{cur.pause();}catch(e){}}try{return osp.call(ss,u);}catch(e){}};
+    }
+  }catch(e){}
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>موسى التعليمي — النمط بطريقة أخرى — الدرس ٦</title>
@@ -57,7 +83,7 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
 .flash.show{animation:ml-flash .55s ease-out forwards;}
 .next-countdown{padding:0 14px 10px;flex-shrink:0;display:none;}
 .countdown-bar{position:relative;display:flex;align-items:center;justify-content:center;height:44px;border-radius:14px;overflow:hidden;background:rgba(0,0,0,.06);}
-.countdown-fill{position:absolute;inset:0;background:linear-gradient(135deg,#22C55E,#4ADE80);border-radius:14px;transform-origin:right center;}
+.countdown-fill{position:absolute;inset:0;background:linear-gradient(135deg,#a78bfa,#7c3aed);border-radius:14px;transform-origin:right center;}
 @keyframes mlCountdownShrink{0%{transform:scaleX(1)}100%{transform:scaleX(0)}}
 .countdown-txt{position:relative;z-index:1;font-family:var(--font-d);font-size:22px;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);}
 .win-overlay{position:absolute;inset:0;z-index:100;background:rgba(15,8,0,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:24px;}
@@ -74,8 +100,8 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
 .win-score-label{font-size:13px;font-weight:600;color:rgba(255,255,255,.75);}
 .win-score-val{font-size:28px;font-weight:800;color:#fff;}
 .win-btns{display:flex;gap:10px;width:100%;}
-.btn-win{flex:1;padding:14px 0;border:3px solid rgba(255,255,255,.9);border-radius:20px;font-family:var(--font-d);font-size:17px;font-weight:800;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.2);cursor:pointer;background:linear-gradient(135deg,#4ADE80 0%,#22C55E 55%,#16A34A 100%);box-shadow:0 6px 0 #15803D,0 8px 20px rgba(22,163,74,.28);transition:transform .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;}
-.btn-win:active{transform:translateY(4px);box-shadow:0 1px 0 #15803D,0 3px 8px rgba(22,163,74,.2);}
+.btn-win{flex:1;padding:14px 0;border:3px solid rgba(255,255,255,.9);border-radius:20px;font-family:var(--font-d);font-size:17px;font-weight:800;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.2);cursor:pointer;background:linear-gradient(135deg,#c4b5fd 0%,#a78bfa 55%,#7c3aed 100%);box-shadow:0 6px 0 #6d28d9,0 8px 20px rgba(124,58,237,.28);transition:transform .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;}
+.btn-win:active{transform:translateY(4px);box-shadow:0 1px 0 #6d28d9,0 3px 8px rgba(124,58,237,.2);}
 .btn-win-next{background:linear-gradient(135deg,#60A5FA 0%,#3B82F6 55%,#2563EB 100%);box-shadow:0 6px 0 #1D4ED8,0 8px 20px rgba(37,99,235,.28);}
 .btn-win-next:active{box-shadow:0 1px 0 #1D4ED8,0 3px 8px rgba(37,99,235,.2);}
 #confettiCont{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:9998;}
@@ -131,7 +157,7 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
   <div class="progress-dots" id="mlDots"></div>
   <div class="screen" id="mlScreen"></div>
   <div class="next-countdown" id="nextCountdown">
-    <div class="countdown-bar"><div class="countdown-fill" id="countdownFill"></div><span class="countdown-txt" id="countdownTxt">٥</span></div>
+    <div class="countdown-bar"><div class="countdown-fill" id="countdownFill"></div><span class="countdown-txt" id="countdownTxt">٣</span></div>
   </div>
   <div class="win-overlay" id="winOverlay">
     <div class="win-card">
@@ -246,7 +272,7 @@ function mlFlash(type){const f=mlEl('flashMain');f.className='flash '+type;f.off
 
 function renderDots(){const d=mlEl('mlDots');d.innerHTML='';ML_STEPS.forEach((_,i)=>{const s=document.createElement('span');s.className='dot'+(i<mlStepIdx?' done':i===mlStepIdx?' active':'');d.appendChild(s);});}
 
-function mlRunCountdown(onDone){clearInterval(_cdTimer);_cdTimer=null;const wrap=mlEl('nextCountdown'),fill=mlEl('countdownFill'),txt=mlEl('countdownTxt');if(!wrap)return;let secs=5;wrap.style.display='block';fill.style.animation='none';void fill.offsetHeight;fill.style.animation='mlCountdownShrink 5s linear forwards';txt.textContent=toAr(secs);_cdTimer=setInterval(function(){secs--;if(txt)txt.textContent=toAr(Math.max(0,secs));if(secs<=0){clearInterval(_cdTimer);_cdTimer=null;wrap.style.display='none';onDone();}},1000);}
+function mlRunCountdown(onDone){clearInterval(_cdTimer);_cdTimer=null;const wrap=mlEl('nextCountdown'),fill=mlEl('countdownFill'),txt=mlEl('countdownTxt');if(!wrap)return;let secs=3;wrap.style.display='block';fill.style.animation='none';void fill.offsetHeight;fill.style.animation='mlCountdownShrink 3s linear forwards';txt.textContent=toAr(secs);_cdTimer=setInterval(function(){secs--;if(txt)txt.textContent=toAr(Math.max(0,secs));if(secs<=0){clearInterval(_cdTimer);_cdTimer=null;wrap.style.display='none';onDone();}},1000);}
 
 function renderStep(){
   clearInterval(_cdTimer);_cdTimer=null;mlEl('nextCountdown').style.display='none';

@@ -1,6 +1,32 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+<script>
+/* Single narration channel: starting any spoken clip stops the previous one (prevents audio overlap). Tap/win blips use WebAudio and are unaffected. */
+(function(){
+  if(window.__mlAudioBus__)return; window.__mlAudioBus__=1;
+  var cur=null;
+  try{
+    var P=window.HTMLAudioElement&&HTMLAudioElement.prototype;
+    if(P&&P.play){
+      var op=P.play;
+      P.play=function(){
+        if(cur&&cur!==this){try{cur.pause();}catch(e){}try{cur.currentTime=0;}catch(e){}}
+        cur=this;
+        try{if(window.speechSynthesis)speechSynthesis.cancel();}catch(e){}
+        return op.apply(this,arguments);
+      };
+    }
+  }catch(e){}
+  try{
+    var ss=window.speechSynthesis;
+    if(ss&&ss.speak){
+      var osp=ss.speak;
+      ss.speak=function(u){if(cur){try{cur.pause();}catch(e){}}try{return osp.call(ss,u);}catch(e){}};
+    }
+  }catch(e){}
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>موسى يتعلم — قراءة العدد صفر وكتابته</title>
@@ -159,8 +185,8 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
   font-family:var(--font-d),'Baloo Bhaijaan 2',sans-serif !important;
   font-size:20px !important;font-weight:800 !important;
   color:#fff !important;text-shadow:0 1px 2px rgba(0,0,0,.2) !important;
-  background:linear-gradient(135deg,#4ADE80 0%,#22C55E 55%,#16A34A 100%) !important;
-  box-shadow:0 6px 0 #15803D,0 8px 20px rgba(22,163,74,.28) !important;
+  background:linear-gradient(135deg,#7dd3fc 0%,#38bdf8 55%,#0284c7 100%) !important;
+  box-shadow:0 6px 0 #075985,0 8px 20px rgba(2,132,199,.28) !important;
   cursor:pointer;
   transition:transform 150ms cubic-bezier(.34,1.56,.64,1),box-shadow 150ms ease;
   -webkit-tap-highlight-color:transparent;
@@ -169,7 +195,7 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
 .ml-widget .win-btn:active,.win-btn:active,
 .btn-win-again:active{
   transform:translateY(4px) !important;
-  box-shadow:0 1px 0 #15803D,0 3px 8px rgba(22,163,74,.2) !important;
+  box-shadow:0 1px 0 #075985,0 3px 8px rgba(2,132,199,.2) !important;
 }
 
 
@@ -220,7 +246,7 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
 @keyframes guideAppear{0%{opacity:0;transform:scale(.4) rotate(-30deg)}100%{opacity:1;transform:scale(1.2) rotate(-20deg)}}
 /* ── countdown bar ── */
 .countdown-bar{position:relative;display:flex;align-items:center;justify-content:center;height:44px;border-radius:14px;overflow:hidden;background:rgba(0,0,0,.06);}
-.countdown-fill{position:absolute;inset:0;background:linear-gradient(135deg,#22C55E,#4ADE80);border-radius:14px;transform-origin:right center;animation:mlCountdownShrink 5s linear forwards;}
+.countdown-fill{position:absolute;inset:0;background:linear-gradient(135deg,#38bdf8,#0284c7);border-radius:14px;transform-origin:right center;animation:mlCountdownShrink 3s linear forwards;}
 @keyframes mlCountdownShrink{0%{transform:scaleX(1)}100%{transform:scaleX(0)}}
 .countdown-txt{position:relative;z-index:1;font-family:var(--font-d),'Baloo Bhaijaan 2',sans-serif;font-size:22px;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);}
 /* ── win two-button row ── */
@@ -269,7 +295,7 @@ html,body{height:100%;margin:0;padding:0;overflow:hidden;background:linear-gradi
   <div class="next-wrap" id="ml-nextWrap" style="display:none">
     <div class="countdown-bar">
       <div class="countdown-fill" id="ml-countdownFill"></div>
-      <span class="countdown-txt" id="ml-countdownTxt">٥</span>
+      <span class="countdown-txt" id="ml-countdownTxt">٣</span>
     </div>
   </div>
   <div class="win-overlay" id="ml-winOverlay">
@@ -405,7 +431,7 @@ function showWin(){g('winScoreVal').textContent=toAr(score);g('winOverlay').clas
 function mlWinContinue(){stepIdx=0;score=0;g('scoreVal').textContent=toAr(0);g('winOverlay').classList.remove('show');document.getElementById('ml-confettiContainer').innerHTML='';loadStep();}
 var mlCountdownTimer = null;
 function mlStartCountdown() {
-  var secs = 5;
+  var secs = 3;
   var wrap = document.getElementById('ml-nextWrap');
   var fill = document.getElementById('ml-countdownFill');
   var txt  = document.getElementById('ml-countdownTxt');
@@ -413,7 +439,7 @@ function mlStartCountdown() {
   wrap.style.display = 'block';
   fill.style.animation = 'none';
   void fill.offsetHeight;
-  fill.style.animation = 'mlCountdownShrink 5s linear forwards';
+  fill.style.animation = 'mlCountdownShrink 3s linear forwards';
   txt.textContent = toAr(secs);
   mlCountdownTimer = setInterval(function() {
     secs--;
@@ -670,8 +696,8 @@ window.addEventListener('resize',function(){sizeCanvas();drawGuide();});
 .win-score-label{font-size:13px;font-weight:600;color:rgba(255,255,255,.75);}
 .win-score-val{font-size:28px;font-weight:800;color:#fff;}
 .win-btns{display:flex!important;gap:10px!important;margin-top:14px!important;width:100%;}
-.win-btns .btn-win,.btn-win{flex:1;min-width:0;margin-top:0!important;padding:14px 0!important;border:3px solid rgba(255,255,255,.9)!important;border-radius:20px!important;font-family:'Baloo Bhaijaan 2','Tajawal',sans-serif!important;font-size:17px!important;font-weight:800!important;color:#fff!important;text-shadow:0 1px 2px rgba(0,0,0,.2)!important;background:linear-gradient(135deg,#4ADE80 0%,#22C55E 55%,#16A34A 100%)!important;box-shadow:0 6px 0 #15803D,0 8px 20px rgba(22,163,74,.28)!important;cursor:pointer;transition:transform 150ms cubic-bezier(.34,1.56,.64,1),box-shadow 150ms ease;-webkit-tap-highlight-color:transparent;}
-.btn-win:active{transform:translateY(4px)!important;box-shadow:0 1px 0 #15803D,0 3px 8px rgba(22,163,74,.2)!important;}
+.win-btns .btn-win,.btn-win{flex:1;min-width:0;margin-top:0!important;padding:14px 0!important;border:3px solid rgba(255,255,255,.9)!important;border-radius:20px!important;font-family:'Baloo Bhaijaan 2','Tajawal',sans-serif!important;font-size:17px!important;font-weight:800!important;color:#fff!important;text-shadow:0 1px 2px rgba(0,0,0,.2)!important;background:linear-gradient(135deg,#7dd3fc 0%,#38bdf8 55%,#0284c7 100%)!important;box-shadow:0 6px 0 #075985,0 8px 20px rgba(2,132,199,.28)!important;cursor:pointer;transition:transform 150ms cubic-bezier(.34,1.56,.64,1),box-shadow 150ms ease;-webkit-tap-highlight-color:transparent;}
+.btn-win:active{transform:translateY(4px)!important;box-shadow:0 1px 0 #075985,0 3px 8px rgba(2,132,199,.2)!important;}
 .btn-win-next{background:linear-gradient(135deg,#60A5FA 0%,#3B82F6 55%,#2563EB 100%)!important;box-shadow:0 6px 0 #1D4ED8,0 8px 20px rgba(37,99,235,.28)!important;}
 .btn-win-next:active{box-shadow:0 1px 0 #1D4ED8,0 3px 8px rgba(37,99,235,.2)!important;}
 @keyframes ml-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}

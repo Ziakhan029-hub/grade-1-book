@@ -1,6 +1,32 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+<script>
+/* Single narration channel: starting any spoken clip stops the previous one (prevents audio overlap). Tap/win blips use WebAudio and are unaffected. */
+(function(){
+  if(window.__mlAudioBus__)return; window.__mlAudioBus__=1;
+  var cur=null;
+  try{
+    var P=window.HTMLAudioElement&&HTMLAudioElement.prototype;
+    if(P&&P.play){
+      var op=P.play;
+      P.play=function(){
+        if(cur&&cur!==this){try{cur.pause();}catch(e){}try{cur.currentTime=0;}catch(e){}}
+        cur=this;
+        try{if(window.speechSynthesis)speechSynthesis.cancel();}catch(e){}
+        return op.apply(this,arguments);
+      };
+    }
+  }catch(e){}
+  try{
+    var ss=window.speechSynthesis;
+    if(ss&&ss.speak){
+      var osp=ss.speak;
+      ss.speak=function(u){if(cur){try{cur.pause();}catch(e){}}try{return osp.call(ss,u);}catch(e){}};
+    }
+  }catch(e){}
+})();
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>موسى أكاديمي</title>
@@ -123,6 +149,8 @@
 
   var ROOT4 = 'Interactive book for elementary school chapter 4/';
 
+  var ROOT5 = 'Interactive book for elementary school chapter 5/';
+
   var CHAPTERS = {
     ch1: {
       root: ROOT1,
@@ -170,10 +198,26 @@
         'moosa-chp 4-lesson 3.html',
         'moosa-chp 4-lesson 4.html',
         'moosa-chp 4-lesson 5.html',
-        'moosa-chp 4-lesson 6.html'
+        'moosa-chp 4-lesson 6.html',
+        'moosa-chp 4-lesson 7.html',
+        'moosa-chp 4-lesson 8.html'
       ],
       lessonsPage: ROOT1 + 'moosa-lessons.html',
       dataId: '4'
+    },
+    ch5: {
+      root: ROOT5,
+      lessons: [
+        'moosa-chp 5-lesson 1.html',
+        'moosa-chp 5-lesson 2.html',
+        'moosa-chp 5-lesson 3.html',
+        'moosa-chp 5-lesson 4.html',
+        'moosa-chp 5-lesson 5.html',
+        'moosa-chp 5-lesson 6.html',
+        'moosa-chp 5-lesson 7.html'
+      ],
+      lessonsPage: ROOT1 + 'moosa-lessons.html',
+      dataId: '5'
     }
   };
 
@@ -251,7 +295,7 @@
 
     if (fname === 'moosa-lessons.html') {
       injectLessonsPage();
-    } else if (fname.match(/moosa-lesson-classify|moosa-chp 2-lesson|moosa-chp 3-lesson|moosa-chp 4-lesson/)) {
+    } else if (fname.match(/moosa-lesson-classify|moosa-chp 2-lesson|moosa-chp 3-lesson|moosa-chp 4-lesson|moosa-chp 5-lesson/)) {
       watchForWin();
     }
   });
@@ -344,7 +388,7 @@
     if (!d || typeof d !== 'object') return;
 
     if (d.action === 'openLesson') {
-      var idMap = { '1': 'ch1', '2': 'ch2', '3': 'ch3', '4': 'ch4' };
+      var idMap = { '1': 'ch1', '2': 'ch2', '3': 'ch3', '4': 'ch4', '5': 'ch5' };
       var chKey = idMap[String(d.id)];
       if (chKey) startChapter(chKey);
       else if (GAMES[String(d.id)]) { currentChapter = null; loadUrl(GAMES[String(d.id)]); }

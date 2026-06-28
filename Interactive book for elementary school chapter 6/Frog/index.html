@@ -1,6 +1,32 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
+<script>
+/* Single narration channel: starting any spoken clip stops the previous one (prevents audio overlap). Tap/win blips use WebAudio and are unaffected. */
+(function(){
+  if(window.__mlAudioBus__)return; window.__mlAudioBus__=1;
+  var cur=null;
+  try{
+    var P=window.HTMLAudioElement&&HTMLAudioElement.prototype;
+    if(P&&P.play){
+      var op=P.play;
+      P.play=function(){
+        if(cur&&cur!==this){try{cur.pause();}catch(e){}try{cur.currentTime=0;}catch(e){}}
+        cur=this;
+        try{if(window.speechSynthesis)speechSynthesis.cancel();}catch(e){}
+        return op.apply(this,arguments);
+      };
+    }
+  }catch(e){}
+  try{
+    var ss=window.speechSynthesis;
+    if(ss&&ss.speak){
+      var osp=ss.speak;
+      ss.speak=function(u){if(cur){try{cur.pause();}catch(e){}}try{return osp.call(ss,u);}catch(e){}};
+    }
+  }catch(e){}
+})();
+</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>قفزة الضفادع — جمع الخضراء والبنية</title>

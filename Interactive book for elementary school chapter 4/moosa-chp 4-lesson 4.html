@@ -1,3 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<script>
+/* Single narration channel: starting any spoken clip stops the previous one (prevents audio overlap). Tap/win blips use WebAudio and are unaffected. */
+(function(){
+  if(window.__mlAudioBus__)return; window.__mlAudioBus__=1;
+  var cur=null;
+  try{
+    var P=window.HTMLAudioElement&&HTMLAudioElement.prototype;
+    if(P&&P.play){
+      var op=P.play;
+      P.play=function(){
+        if(cur&&cur!==this){try{cur.pause();}catch(e){}try{cur.currentTime=0;}catch(e){}}
+        cur=this;
+        try{if(window.speechSynthesis)speechSynthesis.cancel();}catch(e){}
+        return op.apply(this,arguments);
+      };
+    }
+  }catch(e){}
+  try{
+    var ss=window.speechSynthesis;
+    if(ss&&ss.speak){
+      var osp=ss.speak;
+      ss.speak=function(u){if(cur){try{cur.pause();}catch(e){}}try{return osp.call(ss,u);}catch(e){}};
+    }
+  }catch(e){}
+})();
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>موسى أكاديمي</title>
+</head>
+<body>
 <script>window.__NARR_AUDIO__={"ضع تسع نحلات في المربعات ثم اكتب العدد تسعة":"../audio/03e6e9a9.mp3","ضع عشر فراشات في المربعات ثم اكتب العدد عشرة":"../audio/0ab6881b.mp3","عُدَّ وحيدات القرن ثم اكتب العدد":"../audio/0eaca1be.mp3","عُدَّ الزرافات ثم اكتب العدد":"../audio/022a2e62.mp3","عُدَّ أفراس النهر ثم اكتب العدد":"../audio/ba7d7414.mp3","عُدَّ الفِيَلة ثم اكتب العدد":"../audio/1921b551.mp3","واحد":"../audio/b72cd1b4.mp3","اثنان":"../audio/656d784b.mp3","ثلاثة":"../audio/b82a9429.mp3","أربعة":"../audio/555e79ec.mp3","خمسة":"../audio/c3624b9e.mp3","ستة":"../audio/f2c2013b.mp3","سبعة":"../audio/082a36d9.mp3","ثمانية":"../audio/355990d0.mp3","تسعة":"../audio/e5f1340b.mp3","عشرة":"../audio/211adb76.mp3","صنّف الفاكهة المتشابهة":"../audio/12fc14bb.mp3","صنّف الأحذية المتشابهة":"../audio/39a1115d.mp3","صنّف أدوات المائدة":"../audio/96eb0a49.mp3","صنّف الفاكهة المتشابهة. الخاصية: نوع الفاكهة":"../audio/911403d4.mp3","صنّف الأحذية المتشابهة. الخاصية: نوع الحذاء":"../audio/0c07bfbb.mp3","صنّف أدوات المائدة. الخاصية: نوع الإناء":"../audio/f29cbb76.mp3","صنّف حسب الشكل":"../audio/1eef0024.mp3","صنّف حسب اللون":"../audio/26423a87.mp3","صنّف حسب الشكل. الخاصية: الشكل":"../audio/af43ae0b.mp3","صنّف حسب اللون. الخاصية: اللون":"../audio/6ae4c9d5.mp3","صنِّف القمصان حسب اللون":"../audio/fa64cf44.mp3","صنِّف الجوارب حسب اللون":"../audio/b75f353c.mp3","صنِّف القبعات حسب اللون":"../audio/486853c1.mp3","صنِّف الأحذية حسب اللون":"../audio/3f27263f.mp3","صنِّف القمصان حسب اللون. الخاصية: اللون الأزرق":"../audio/76bb1571.mp3","صنِّف الجوارب حسب اللون. الخاصية: اللون البنفسجي":"../audio/e04c4a41.mp3","صنِّف القبعات حسب اللون. الخاصية: اللون البرتقالي":"../audio/2d2cc644.mp3","صنِّف الأحذية حسب اللون. الخاصية: اللون الأحمر":"../audio/d718372b.mp3","صِل كلّ عنصر بما يُسَاويه":"../audio/e231db15.mp3","عُدّ الفراشات ثم اكتب الرقم ١":"../audio/e549fdcf.mp3","عُدّ الكُرات ثم اكتب الرقم ٢":"../audio/16025ff7.mp3","عُدّ الزهور ثم اكتب الرقم ٣":"../audio/90522597.mp3","اكتب الرقم ٢ من الذاكرة":"../audio/abb683e2.mp3","اكتب الرقم ٣ من الذاكرة":"../audio/48bc5016.mp3","اعدد الدببة 🐻":"../audio/6e7fb3d7.mp3","صنّف الأعداد":"../audio/601a00e5.mp3","اعدد النحل 🐝":"../audio/b35998fb.mp3","كم عدد الضفادع؟":"../audio/91044a58.mp3","صنّف حسب الكمية":"../audio/8eec2fcc.mp3","كم عدد المناطيد؟":"../audio/a8be7208.mp3","صنّف الأعداد. العدد ٤ أم ٥؟":"../audio/2f16749a.mp3","صنّف حسب الكمية. قليل أم كثير؟":"../audio/6af0e663.mp3","عُدّ الشاحنات ثم اكتب الرقم ٤":"../audio/22a80dc5.mp3","عُدّ اللافتات ثم اكتب الرقم ٥":"../audio/e44a6799.mp3","عُدّ الخوذات ثم اكتب الرقم ٤":"../audio/1500bf34.mp3","عُدّ الشاحنات ثم اكتب الرقم ٥":"../audio/e923d3ec.mp3","عُدّ المخاريط ثم اكتب الرقم ٤":"../audio/c2484382.mp3","الآلة فارغة! اكتب الرقم صفر ٠":"../audio/af541735.mp3","عُدّ الكرات ثم اكتب الرقم ١":"../audio/0bb4540d.mp3","عُدّ الكرات ثم اكتب الرقم ٢":"../audio/7626557c.mp3","عُدّ الكرات ثم اكتب الرقم ٣":"../audio/0764a620.mp3","عُدّ الكرات ثم اكتب الرقم ٤":"../audio/654330c7.mp3","عُدّ الكرات ثم اكتب الرقم ٥":"../audio/48fbbfbd.mp3","اكتب صفر ٠ من الذاكرة":"../audio/18181245.mp3","اضغط على القطعة في":"../audio/c525b826.mp3","اضغط على الصندوق في":"../audio/12d9c720.mp3","اضغط على الزهرة في":"../audio/102c6369.mp3","اضغط على القبعة في":"../audio/35a9d68e.mp3","اضغط على الوسادة في":"../audio/16740c8a.mp3","اضغط على العلبة في":"../audio/626397d2.mp3","اضغط على الأعلى":"../audio/da7cc779.mp3","اضغط على الوسط":"../audio/f5a3842e.mp3","اضغط على الأسفل":"../audio/bce89087.mp3","اضغط على الديك الذي يسير قبل الكتكوت":"../audio/4b2ceb3a.mp3","اضغط على الطائر الذي يسير بعد الكتكوت":"../audio/0acc1c88.mp3","اضغط على الطير الذي يسير قبل الضفدع":"../audio/93b72f90.mp3","اضغط على الحيوان الذي يسير بعد الضفدع":"../audio/9a88d2ba.mp3","اضغط على الحيوان الذي يسير قبل الماعز":"../audio/c48c7e1a.mp3","اضغط على الحيوان الذي يسير بعد الماعز":"../audio/2a69bb5b.mp3","اضغط على الخروف الذي يسير قبل الخروف الأسود":"../audio/210dbac3.mp3","اضغط على الخروف الذي يسير بعد الخروف الأسود":"../audio/f92dbefa.mp3","اضغط على الطائر الذي يطير قبل الطائر الأزرق":"../audio/37b3397a.mp3","اضغط على الطائر الذي يطير بعد الطائر الأزرق":"../audio/e0dc0936.mp3","اضغط على الحصان الذي يجري قبل الأحصنة الأخرى":"../audio/e7286a01.mp3","اضغط على الحصان الذي يجري بعد الأحصنة الأخرى":"../audio/d551b9b9.mp3","لوّن المربعات مثل النمط: أزرق، أصفر":"../audio/c33e9642.mp3","أنشئ النمط: بنفسجي، برتقالي":"../audio/60134ddc.mp3","أنشئ النمط: أخضر، أحمر":"../audio/a00f1e8a.mp3","لوّن المربعات مثل النمط: أخضر، أزرق":"../audio/08e20619.mp3","أنشئ النمط: أصفر، أحمر":"../audio/ab93b388.mp3","ما الزر التالي في النمط؟":"../audio/46e530ad.mp3","أنشئ النمط بالأزرار: مربع أصفر، دائرة زرقاء":"../audio/62097e1f.mp3","انظر إلى النمط ثم لوّن الدوائر لتعرضه بطريقة أخرى":"../audio/71d573f0.mp3","انظر إلى النمط ثم لوّن النجوم لتعرضه بطريقة أخرى":"../audio/c2c7f6f6.mp3","عُدَّ البالونات ثم اختر العدد":"../audio/7d90c587.mp3","عُدَّ الأطباق ثم أكمل ليصبح عددها ثمانية":"../audio/b600ea68.mp3","عُدَّ الأبواق ثم اختر العدد":"../audio/d3aa9cc8.mp3","عُدَّ الهدايا ثم اختر العدد":"../audio/f1f574ea.mp3","عُدَّ العلب ثم لوّن المربعات حسب عددها":"../audio/b1f42aee.mp3","عُدَّ القبعات ثم لوّن المربعات حسب عددها":"../audio/2af766c0.mp3","عُدَّ الأكواب ثم لوّن المربعات حسب عددها":"../audio/b6375c47.mp3","عُدَّ أقراص البسكويت ثم اكتب العدد":"../audio/f9433585.mp3","عُدَّ الأقلام ثم اكتب العدد":"../audio/cb8d4735.mp3","عُدَّ قطع الحلوى ثم اكتب العدد":"../audio/fd32ed72.mp3","ارسم ثماني كرات في المربعات ثم اكتب العدد ثمانية":"../audio/1b6e2c9c.mp3","ارسم سبع كرات في المربعات ثم اكتب العدد سبعة":"../audio/c31aa279.mp3","ارسم ست كرات في المربعات ثم اكتب العدد ستة":"../audio/8553611b.mp3","عُدَّ مشابك الشعر ثم اكتب العدد":"../audio/6d66ea2b.mp3","عُدَّ الديدان في كل صف":"../audio/718192d3.mp3","عُدَّ الأعشاش في كل صف":"../audio/0b8f7e08.mp3","عُدَّ الجِمال في كل مجموعة":"../audio/0c54b9a7.mp3","عُدَّ الريشات في كل مجموعة":"../audio/bf5f260a.mp3","عُدَّ المظلات ثم أكمل ليصبح عددها عشرة":"../audio/aa81adad.mp3","عُدَّ الأشجار ثم أكمل ليصبح عددها تسعة":"../audio/9335f8d3.mp3","عُدَّ بيوت الطيور في كل مجموعة":"../audio/567bf6b2.mp3","حوّط المجموعة التي عددها ستة":"../audio/59c92ad3.mp3","حوّط المجموعة التي عددها سبعة":"../audio/1c469981.mp3","حوّط المجموعة التي عددها ثمانية":"../audio/f1bf6d89.mp3","حوّط المجموعة التي عددها تسعة":"../audio/e1048183.mp3","حوّط المجموعة التي عددها عشرة":"../audio/0aad71a8.mp3","ستة! أحسنت":"../audio/16f0a490.mp3","سبعة! أحسنت":"../audio/ecf66b4c.mp3","ثمانية! أحسنت":"../audio/e1e74153.mp3","تسعة! أحسنت":"../audio/ebc9cb30.mp3","عشرة! أحسنت":"../audio/d7ba4202.mp3","ستة!":"../audio/2318a2a4.mp3","سبعة!":"../audio/99cd8690.mp3","ثمانية!":"../audio/6d9f9da9.mp3","تسعة!":"../audio/43e541ef.mp3","عشرة!":"../audio/89cfad85.mp3","أحسنت! رائع!":"../audio/619f8927.mp3","أحسنت! رائع جداً!":"../audio/97ea11b3.mp3"};</script>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -87,8 +121,8 @@ body{background:linear-gradient(160deg,#FFFFFF 0%,#F2F2F2 100%);margin:0}
 .ml-widget .next-btn:disabled{background:var(--tile);box-shadow:0 5px 0 #A89062;opacity:.55;cursor:default}
 .ml-widget .countdown-bar{position:relative;display:flex;align-items:center;justify-content:center;height:46px;border-radius:16px;overflow:hidden;background:rgba(0,0,0,.06)}
 .ml-widget .countdown-bar.hide{display:none}
-.ml-widget .countdown-fill{position:absolute;inset:0;background:linear-gradient(135deg,#4ADE80,#22C55E);border-radius:16px;transform-origin:right center}
-.ml-widget .countdown-fill.run{animation:mlCdShrink 5s linear forwards}
+.ml-widget .countdown-fill{position:absolute;inset:0;background:linear-gradient(135deg,#4ade80,#16a34a);border-radius:16px;transform-origin:right center}
+.ml-widget .countdown-fill.run{animation:mlCdShrink 3s linear forwards}
 @keyframes mlCdShrink{0%{transform:scaleX(1)}100%{transform:scaleX(0)}}
 .ml-widget .countdown-txt{position:relative;z-index:1;font-family:var(--font-d);font-size:20px;font-weight:800;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3)}
 
@@ -232,7 +266,7 @@ body{background:linear-gradient(160deg,#FFFFFF 0%,#F2F2F2 100%);margin:0}
   <div class="top-bar"><span class="score-label">النقاط</span><span class="score-val" id="mlScoreVal">٠</span></div>
   <div class="progress-dots" id="mlDots"></div>
   <div class="screen" id="mlScreen"></div>
-  <div class="next-wrap"><div class="countdown-bar hide" id="mlCdBar"><div class="countdown-fill" id="mlCdFill"></div><span class="countdown-txt" id="mlCdTxt">٥</span></div></div>
+  <div class="next-wrap"><div class="countdown-bar hide" id="mlCdBar"><div class="countdown-fill" id="mlCdFill"></div><span class="countdown-txt" id="mlCdTxt">٣</span></div></div>
   <div class="flash ok" id="mlFlashOk"></div>
   <div class="flash bad" id="mlFlashBad"></div>
   <div class="win-overlay" id="mlWin">
@@ -357,7 +391,7 @@ function _mlWsSpeak(t){
   try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ar-SA';if(typeof mlVoice!=='undefined'&&mlVoice)u.voice=mlVoice;u.rate=.85;u.pitch=1.05;speechSynthesis.speak(u);}catch(e){}
 }
 
-function renderDots(){var _c=mlEl('mlDots');_c.innerHTML='';var _l=['moosa-chp 4-lesson 1.html', 'moosa-chp 4-lesson 2.html', 'moosa-chp 4-lesson 3.html', 'moosa-chp 4-lesson 4.html', 'moosa-chp 4-lesson 5.html', 'moosa-chp 4-lesson 6.html'];var _cur=window.location.pathname.split('/').pop();var _ci=_l.indexOf(_cur);for(var _i=0;_i<_l.length;_i++){(function(lf,i){var b=document.createElement('button');b.className='dot'+(i===_ci?' active':i<_ci?' done':'');b.textContent=i+1;b.addEventListener('click',function(){window.location.href=lf;});_c.appendChild(b);})(_l[_i],_i);}}
+function renderDots(){var _c=mlEl('mlDots');_c.innerHTML='';var _l=['moosa-chp 4-lesson 1.html', 'moosa-chp 4-lesson 2.html', 'moosa-chp 4-lesson 3.html', 'moosa-chp 4-lesson 4.html', 'moosa-chp 4-lesson 5.html', 'moosa-chp 4-lesson 6.html', 'moosa-chp 4-lesson 7.html', 'moosa-chp 4-lesson 8.html'];var _cur=window.location.pathname.split('/').pop();var _ci=_l.indexOf(_cur);for(var _i=0;_i<_l.length;_i++){(function(lf,i){var b=document.createElement('button');b.className='dot'+(i===_ci?' active':i<_ci?' done':'');b.textContent='٠١٢٣٤٥٦٧٨٩'[i+1];b.addEventListener('click',function(){window.location.href=lf;});_c.appendChild(b);})(_l[_i],_i);}}
 
 /* ════════ TRACER ════════ */
 function makeTracer(container, num, opts){
@@ -438,7 +472,7 @@ function makeTracer(container, num, opts){
       if(hit<0)break; nextCp=hit+1;advanced=true;
     }
     if(advanced) updateProgress();
-    if(nextCp>=total*0.90 && !done){done=true;nextCp=total;updateProgress();setTimeout(()=>finish(true),120);}
+    if(nextCp>=total*0.80 && !done){done=true;nextCp=total;updateProgress();setTimeout(()=>finish(true),120);}
   }
   function finish(ok){ drawing=false; if(ok){ box.classList.add('success'); sd.remove(); progs.forEach(pr=>pr.setAttribute('stroke-dashoffset',0)); opts.onSuccess&&opts.onSuccess(); } }
   function clearInk(){ nextCp=0;done=false;updateProgress(); }
@@ -674,7 +708,7 @@ function mlStartCountdown(){
   if(!bar)return;
   bar.classList.remove('hide');
   fill.classList.remove('run');void fill.offsetWidth;fill.classList.add('run');
-  var s=5;txt.textContent=toAr(s);
+  var s=3;txt.textContent=toAr(s);
   clearInterval(mlCdTimer);
   mlCdTimer=setInterval(function(){s--;if(s<=0){clearInterval(mlCdTimer);mlCdTimer=null;bar.classList.add('hide');mlNextStep();}else{txt.textContent=toAr(s);}},1000);
 }
@@ -704,7 +738,7 @@ function mlRestart(){
   mlEl('mlWin').classList.remove('show');mlEl('mlConfetti').innerHTML='';
   renderStep();
 }
-function mlHandleWinNext(){if(window.parent&&window.parent!==window){window.parent.postMessage({action:'nextLesson'},'*');}else{window.location.href='moosa-chp 4-lesson 3.html';}}
+function mlHandleWinNext(){if(window.parent&&window.parent!==window){window.parent.postMessage({action:'nextLesson'},'*');}else{window.location.href='moosa-chp 4-lesson 5.html';}}
 renderStep();
 </script>
 
@@ -771,7 +805,7 @@ renderStep();
 </style>
 <script>
 (function(){
-  var L=['moosa-chp 4-lesson 1.html', 'moosa-chp 4-lesson 2.html', 'moosa-chp 4-lesson 3.html', 'moosa-chp 4-lesson 4.html', 'moosa-chp 4-lesson 5.html', 'moosa-chp 4-lesson 6.html'];
+  var L=['moosa-chp 4-lesson 1.html', 'moosa-chp 4-lesson 2.html', 'moosa-chp 4-lesson 3.html', 'moosa-chp 4-lesson 4.html', 'moosa-chp 4-lesson 5.html', 'moosa-chp 4-lesson 6.html', 'moosa-chp 4-lesson 7.html', 'moosa-chp 4-lesson 8.html'];
   function build(){
     var bar=document.querySelector('.top-bar');
     if(bar){
@@ -781,7 +815,7 @@ renderStep();
       L.forEach(function(lf,i){
         var b=document.createElement('button');
         b.className='lsn-btn'+(i===ci?' active':i<ci?' done':'');
-        b.textContent=i+1;
+        b.textContent='٠١٢٣٤٥٦٧٨٩'[i+1];
         b.addEventListener('click',function(){window.location.href=lf;});
         bar.appendChild(b);
       });
@@ -873,7 +907,7 @@ renderStep();
   if((m=fn.match(/^moosa-lesson-classify (\d+)\.html$/))){ch='ch1';idx=+m[1]-1;total=5;nextFile='moosa-lesson-classify '+(+m[1]+1)+'.html';}
   else if((m=fn.match(/^moosa-chp 2-lesson (\d+)\.html$/))){ch='ch2';idx=+m[1]-1;total=6;nextFile='moosa-chp 2-lesson '+(+m[1]+1)+'.html';LP=LP_OTHER;}
   else if((m=fn.match(/^moosa-chp 3-lesson (\d+)\.html$/))){ch='ch3';idx=+m[1]-1;total=6;nextFile='moosa-chp 3-lesson '+(+m[1]+1)+'.html';LP=LP_OTHER;}
-  else if((m=fn.match(/^moosa-chp 4-lesson (\d+)\.html$/))){ch='ch4';idx=+m[1]-1;total=6;nextFile='moosa-chp 4-lesson '+(+m[1]+1)+'.html';LP=LP_OTHER;}
+  else if((m=fn.match(/^moosa-chp 4-lesson (\d+)\.html$/))){ch='ch4';idx=+m[1]-1;total=8;nextFile='moosa-chp 4-lesson '+(+m[1]+1)+'.html';LP=LP_OTHER;}
   if(!ch)return;
   var isLast=idx>=total-1;
   function saveDone(){try{var k='moosa_'+ch,p=JSON.parse(localStorage.getItem(k)||'[]');if(p.indexOf(idx)===-1){p.push(idx);localStorage.setItem(k,JSON.stringify(p));}}catch(e){}}
@@ -967,3 +1001,5 @@ renderStep();
   var n=0, iv=setInterval(function(){ n++; if(make()||n>80){ clearInterval(iv); } },80);
 })();
 </script>
+</body>
+</html>
