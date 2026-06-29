@@ -35,10 +35,12 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; }
-  body { font-family: "Baloo 2", "Comic Sans MS", "Trebuchet MS", system-ui, sans-serif; overflow: hidden; user-select: none; }
+  body { font-family: "Baloo 2", "Comic Sans MS", "Trebuchet MS", system-ui, sans-serif; overflow: hidden; user-select: none;
+    background: linear-gradient(180deg, #d3eecf 0%, #a9d9b4 100%);
+    display: flex; align-items: center; justify-content: center; }
   #app {
-    position: relative; height: 100vh; height: 100svh; width: 100vw; overflow: hidden;
-    background: url("background.png") center / cover no-repeat; background-color: #bfe3c9;
+    position: relative; aspect-ratio: 1536 / 2752; height: 100svh; max-width: 100vw; overflow: hidden;
+    background: url("background.png") center / contain no-repeat; background-color: #bfe3c9; container-type: size;
   }
 
   /* ---------- HUD ---------- */
@@ -46,11 +48,11 @@
     display: flex; align-items: center; justify-content: space-between; padding: 14px; }
   .hud-group { display: flex; align-items: center; gap: 8px; }
   .chip { border: 3px solid #fff; border-radius: 999px; padding: 6px 16px;
-    font-size: clamp(16px, 3.6vw, 24px); font-weight: 900; color: #fff;
+    font-size: clamp(16px, 3.6cqw, 24px); font-weight: 900; color: #fff;
     text-shadow: 0 2px 0 rgba(0,0,0,0.25); box-shadow: 0 6px 16px rgba(0,0,0,0.2); white-space: nowrap; }
   .chip.score { background: linear-gradient(180deg, #facc15, #f97316); }
   .chip.lvldots { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 5; display: flex; align-items: center; gap: 6px; padding: 6px 11px; background: linear-gradient(180deg, #22c55e, #15803d); }
-  .chip.lvldots .de { font-size: clamp(15px, 3.4vw, 21px); line-height: 1; }
+  .chip.lvldots .de { font-size: clamp(15px, 3.4cqw, 21px); line-height: 1; }
   .chip .dot { width: 12px; height: 12px; border-radius: 50%; box-sizing: border-box; background: rgba(255,255,255,0.30); border: 2px solid rgba(255,255,255,0.75); transition: transform .2s, background .2s, box-shadow .2s; }
   .chip .dot.on { background: #fde047; border-color: #fff; box-shadow: 0 0 7px rgba(253,224,71,.9); transform: scale(1.18); }
   .hud-btn { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; border: 3px solid #fff;
@@ -66,7 +68,7 @@
   .msg { position: relative;
     border: 5px solid #fff; border-radius: 24px; background: linear-gradient(180deg, #16a34a, #065f46);
     padding: 10px 24px; text-align: center; direction: rtl;
-    font-size: clamp(17px, 4.2vw, 28px); font-weight: 900; color: #fff;
+    font-size: clamp(17px, 4.2cqw, 28px); font-weight: 900; color: #fff;
     text-shadow: 0 3px 0 rgba(0,0,0,0.3); box-shadow: 0 12px 26px rgba(0,0,0,0.3); max-width: 92%;
     animation: dropIn .35s ease both; }
   @keyframes dropIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -75,16 +77,16 @@
     border: 4px solid #fff; border-radius: 22px;
     background: linear-gradient(180deg, #22c55e, #15803d);
     padding: 8px 20px; box-shadow: 0 12px 26px rgba(0,0,0,.3); }
-  .banner .digit { font-size: clamp(32px, 8vw, 52px); font-weight: 900; color: #fff; text-shadow: 0 4px 0 rgba(0,0,0,0.3); }
-  .banner .op { font-size: clamp(26px, 6.5vw, 44px); font-weight: 900; color: #ffd60a; text-shadow: 0 3px 0 rgba(0,0,0,0.3); }
-  .banner .qmark { font-size: clamp(32px, 8vw, 52px); font-weight: 900; color: #ffd60a; text-shadow: 0 4px 0 rgba(0,0,0,0.3);
+  .banner .digit { font-size: clamp(32px, 8cqw, 52px); font-weight: 900; color: #fff; text-shadow: 0 4px 0 rgba(0,0,0,0.3); }
+  .banner .op { font-size: clamp(26px, 6.5cqw, 44px); font-weight: 900; color: #ffd60a; text-shadow: 0 3px 0 rgba(0,0,0,0.3); }
+  .banner .qmark { font-size: clamp(32px, 8cqw, 52px); font-weight: 900; color: #ffd60a; text-shadow: 0 4px 0 rgba(0,0,0,0.3);
     display: inline-block; animation: wobble 1.4s ease-in-out infinite; }
   @keyframes wobble { 0%,100% { transform: rotate(-6deg);} 50% { transform: rotate(6deg);} }
 
   /* ---------- Butterfly zone ---------- */
   .bf-zone { position: absolute; left: 0; right: 0; top: 52%; transform: translateY(-50%); z-index: 10;
     display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 14px; padding: 0 12px; }
-  .bf { width: clamp(76px, 17vw, 124px); height: auto; flex-shrink: 0;
+  .bf { width: clamp(76px, 17cqw, 124px); height: auto; flex-shrink: 0;
     filter: drop-shadow(0 6px 6px rgba(0,0,0,.35)); animation: bfIn .6s cubic-bezier(.34,1.56,.64,1) both; }
   @keyframes bfIn {
     0%   { transform: translateY(120%) rotate(-14deg) scale(.35); opacity: 0; }
@@ -92,7 +94,7 @@
     100% { transform: translateY(0) rotate(0) scale(1); opacity: 1; }
   }
   .bf-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
-  .cnum { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: inherit; font-weight: 900; font-size: clamp(30px, 7vw, 50px); color: #fde047; -webkit-text-stroke: 4px #14532d; paint-order: stroke fill; opacity: 0; transform: scale(.4); pointer-events: none; }
+  .cnum { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: inherit; font-weight: 900; font-size: clamp(30px, 7cqw, 50px); color: #fde047; -webkit-text-stroke: 4px #14532d; paint-order: stroke fill; opacity: 0; transform: scale(.4); pointer-events: none; }
   .cnum.show { animation: cnumpop .35s cubic-bezier(.34,1.56,.64,1) forwards; }
   @keyframes cnumpop { 0% { opacity: 0; transform: scale(.4);} 60% { opacity: 1; transform: scale(1.3);} 100% { opacity: 1; transform: scale(1);} }
   .bf-wrap.pulse { animation: bfPulse .42s cubic-bezier(.34,1.56,.64,1); }
@@ -100,9 +102,9 @@
 
   /* ---------- Choices ---------- */
   .choices { position: absolute; left: 50%; bottom: 22px; z-index: 30; transform: translateX(-50%); display: flex; gap: 18px; }
-  .choice { height: clamp(80px, 18vw, 112px); width: clamp(80px, 18vw, 112px);
+  .choice { height: clamp(80px, 18cqw, 112px); width: clamp(80px, 18cqw, 112px);
     border: 5px solid #fff; border-radius: 999px; background: linear-gradient(180deg, #4ade80, #15803d);
-    font-family: inherit; font-weight: 900; color: #fff; cursor: pointer; font-size: clamp(38px, 9vw, 56px);
+    font-family: inherit; font-weight: 900; color: #fff; cursor: pointer; font-size: clamp(38px, 9cqw, 56px);
     text-shadow: 0 3px 0 rgba(0,0,0,0.35); box-shadow: 0 10px 0 rgba(0,0,0,0.2); transition: transform .12s ease; animation: rise .4s ease both; }
   @keyframes rise { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   .choice:not(:disabled):hover { transform: translateY(-6px) scale(1.1); }
@@ -127,18 +129,18 @@
   .gk-rays svg { position: absolute; inset: 0; width: 100%; height: 100%; animation: spin 8s linear infinite; }
   .gk-mascot { width: 140px; height: 140px; object-fit: contain; position: relative; z-index: 2;
     animation: bob 1.8s ease-in-out infinite; filter: drop-shadow(0 6px 14px rgba(0,0,0,.35)); }
-  .gk-win-title { font-size: clamp(30px,8vw,40px); font-weight: 900; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,.3); margin-top: 6px; }
-  .gk-win-sub { font-size: clamp(17px,4.6vw,22px); font-weight: 800; color: #ffe08a; margin-top: 2px; direction: rtl; }
+  .gk-win-title { font-size: clamp(30px,8cqw,40px); font-weight: 900; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,.3); margin-top: 6px; }
+  .gk-win-sub { font-size: clamp(17px,4.6cqw,22px); font-weight: 800; color: #ffe08a; margin-top: 2px; direction: rtl; }
   .gk-stars { font-size: 38px; letter-spacing: 6px; margin: 8px 0 2px; }
   .gk-stars span { display: inline-block; opacity: 0; animation: gkStarPop .45s cubic-bezier(.34,1.56,.64,1) forwards; }
   .gk-stars span:nth-child(1) { animation-delay: .3s; }
   .gk-stars span:nth-child(2) { animation-delay: .48s; }
   .gk-stars span:nth-child(3) { animation-delay: .66s; }
   @keyframes gkStarPop { 0% { transform: scale(0) rotate(-30deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
-  .gk-score { font-size: clamp(18px,5vw,24px); font-weight: 800; color: #fff; margin: 6px 0 14px; direction: rtl; }
+  .gk-score { font-size: clamp(18px,5cqw,24px); font-weight: 800; color: #fff; margin: 6px 0 14px; direction: rtl; }
   .gk-win-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
   .gk-btn { border: 3px solid #fff; border-radius: 18px; padding: 12px 24px; font-family: inherit;
-    font-size: clamp(17px,4.6vw,20px); font-weight: 900; color: #fff; cursor: pointer; box-shadow: 0 6px 0 rgba(0,0,0,.25); direction: rtl; }
+    font-size: clamp(17px,4.6cqw,20px); font-weight: 900; color: #fff; cursor: pointer; box-shadow: 0 6px 0 rgba(0,0,0,.25); direction: rtl; }
   .gk-btn-replay { background: linear-gradient(180deg,#4ade80,#16a34a); }
   .gk-btn-menu { background: linear-gradient(180deg,#1cb0f6,#0a84c2); }
   .gk-btn-next { background: linear-gradient(180deg,#f59e0b,#d97706); }
@@ -151,7 +153,6 @@
   <div class="hud" id="hud">
     <div class="hud-group">
       <button class="hud-btn back" id="backBtn" aria-label="العودة للقائمة">🏠</button>
-      <button class="hud-btn next" id="nextGameBtn" aria-label="اللعبة التالية">⏭️</button>
       <div class="chip lvldots" id="dots" aria-label="المستوى"><span class="de">🦋</span><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></div>
     </div>
     <div class="hud-group">
@@ -382,10 +383,9 @@ el.score.textContent = toArabic(state.score);
 newRound();
 
 document.getElementById("backBtn").addEventListener("click", function(){ window.location.href = "../../Interactive book for elementary school chapter 1/moosa-lessons.html"; });
-document.getElementById("nextGameBtn").addEventListener("click", function(){ window.location.href = "../Deer/index.html"; });
 document.getElementById("sayBtn").addEventListener("click", askQuestion);
 document.getElementById("gkReplay").addEventListener("click", restartGame);
-document.getElementById("gkNext").addEventListener("click", function(){ document.getElementById("nextGameBtn").click(); });
+document.getElementById("gkNext").addEventListener("click", function(){ window.location.href = "../Deer/index.html"; });
 
 // Autoplay gated until first gesture — ask the question on first touch
 let _firstGesture = false;
@@ -394,5 +394,6 @@ el.app.addEventListener("pointerdown", () => {
   if (!_firstGesture) { _firstGesture = true; askQuestion(); }
 }, { passive: true });
 </script>
+<script>/* mark-chapter-done */(function(){var w=document.querySelector(".gk-win, .fs-win");if(!w)return;function m(){if(w.classList.contains("show")){try{localStorage.setItem("moosa_done_ch6","1");}catch(e){}}}new MutationObserver(m).observe(w,{attributes:true,attributeFilter:["class"]});m();})();</script>
 </body>
 </html>

@@ -40,7 +40,7 @@
 html,body{width:100%;height:100%;overflow-x:hidden}
 body{font-family:var(--font-b);display:flex;align-items:center;justify-content:center;min-height:100dvh;
   background:linear-gradient(160deg,#e0f2fe 0%,#ede9fe 50%,#fce7f3 100%);}
-.phone{position:relative;z-index:1;width:100%;max-width:480px;min-height:100dvh;height:100dvh;
+.phone{position:relative;z-index:1;width:100%;max-width:560px;min-height:100dvh;height:100dvh;
   background:linear-gradient(180deg,#f8fbff 0%,#eef4ff 100%);
   display:flex;flex-direction:column;overflow:hidden;
   box-shadow:0 0 0 1px rgba(0,0,0,.05),0 24px 64px rgba(0,0,0,.12);}
@@ -109,6 +109,22 @@ body{font-family:var(--font-b);display:flex;align-items:center;justify-content:c
   transition:transform .12s var(--ease-b);-webkit-tap-highlight-color:transparent;}
 .btn-home:active{transform:translateY(3px);box-shadow:0 3px 0 #0369a1}
 .btn-home .ico{font-size:22px;line-height:1}
+
+/* ── Part switcher (الجزء الأول / الجزء الثاني) ── */
+.lesson[data-part="2"]{display:none}                              /* part 2 hidden by default */
+.lessons.show-part-2 .lesson:not([data-part="2"]){display:none}   /* hide part 1 when viewing part 2 */
+.lessons.show-part-2 .lesson[data-part="2"]{display:flex}
+.lesson:nth-child(7){animation-delay:.04s} .lesson:nth-child(8){animation-delay:.10s}
+.lesson:nth-child(9){animation-delay:.16s} .lesson:nth-child(10){animation-delay:.22s}
+.lesson:nth-child(11){animation-delay:.28s} .lesson:nth-child(12){animation-delay:.34s}
+.lesson:nth-child(13){animation-delay:.40s}
+.lesson.soon{cursor:pointer}                                      /* upcoming units stay colourful + show a ribbon */
+.btn-part{display:inline-flex;align-items:center;gap:9px;border:4px solid #fff;border-radius:20px;padding:11px 30px;
+  background:linear-gradient(135deg,#7c3aed,#db2777);color:#fff;font-family:var(--font-d);font-size:18px;font-weight:800;
+  cursor:pointer;box-shadow:0 6px 0 #6d28d9,0 8px 18px rgba(124,58,237,.32);text-shadow:0 1px 2px rgba(0,0,0,.2);
+  transition:transform .12s var(--ease-b);-webkit-tap-highlight-color:transparent;}
+.btn-part:active{transform:translateY(3px);box-shadow:0 3px 0 #6d28d9}
+.btn-part .ico{font-size:22px;line-height:1}
 </style>
 </head>
 <body>
@@ -118,7 +134,7 @@ body{font-family:var(--font-b);display:flex;align-items:center;justify-content:c
     <img class="header-mascot" src="../mascot.png" alt="موسى">
     <div class="header-text">
       <div class="header-title">موسى</div>
-      <div class="header-sub">اختر لعبة لتلعب بها!</div>
+      <div class="header-sub" id="headerSub">الجزء الأول</div>
     </div>
     <button class="hdr-say" id="hdrSay" aria-label="استمع">🔊</button>
   </div>
@@ -161,10 +177,59 @@ body{font-family:var(--font-b);display:flex;align-items:center;justify-content:c
       <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
     </button>
 
+    <!-- ── الجزء الثاني — 7 units (coming soon). Wire each to its first lesson + remove `soon` when ready. ── -->
+    <button class="lesson" data-id="7" data-part="2" style="--c1:#f87171;--c2:#dc2626">
+      <span class="tile" aria-hidden="true">🍎</span>
+      <span class="lesson-label">الطرح</span>
+      <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
+    </button>
+
+    <button class="lesson soon" data-id="8" data-part="2" style="--c1:#fbbf24;--c2:#f59e0b">
+      <span class="soon-ribbon">قريباً</span>
+      <span class="tile" aria-hidden="true">🧮</span>
+      <span class="lesson-label">طرائق الجمع والطرح</span>
+      <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
+    </button>
+
+    <button class="lesson soon" data-id="9" data-part="2" style="--c1:#22d3ee;--c2:#0891b2">
+      <span class="soon-ribbon">قريباً</span>
+      <span class="tile" aria-hidden="true">🧱</span>
+      <span class="lesson-label">القيمة المنزلية</span>
+      <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
+    </button>
+
+    <button class="lesson soon" data-id="10" data-part="2" style="--c1:#4ade80;--c2:#16a34a">
+      <span class="soon-ribbon">قريباً</span>
+      <span class="tile" aria-hidden="true">📏</span>
+      <span class="lesson-label">القياس</span>
+      <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
+    </button>
+
+    <button class="lesson soon" data-id="11" data-part="2" style="--c1:#818cf8;--c2:#4f46e5">
+      <span class="soon-ribbon">قريباً</span>
+      <span class="tile" aria-hidden="true">🔁</span>
+      <span class="lesson-label">أنماط الأعداد</span>
+      <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
+    </button>
+
+    <button class="lesson soon" data-id="12" data-part="2" style="--c1:#fcd34d;--c2:#d97706">
+      <span class="soon-ribbon">قريباً</span>
+      <span class="tile" aria-hidden="true">🪙</span>
+      <span class="lesson-label">النقود</span>
+      <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
+    </button>
+
+    <button class="lesson soon" data-id="13" data-part="2" style="--c1:#f472b6;--c2:#db2777">
+      <span class="soon-ribbon">قريباً</span>
+      <span class="tile" aria-hidden="true">📐</span>
+      <span class="lesson-label">الأشكال الهندسية والكسور</span>
+      <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
+    </button>
+
   </div>
 
   <div class="bottom">
-    <button class="btn-home" onclick="handleBack()"><span class="ico">🏠</span> الصفحة الرئيسية</button>
+    <button class="btn-part" id="partToggle" aria-label="تبديل الجزء"><span class="ico">📗</span> <span class="lbl">الجزء الثاني</span></button>
   </div>
 
 </div>
@@ -178,7 +243,8 @@ var embedded = !!(window.parent && window.parent !== window);
 var NAV = {
   welcome:'../audio/84b12e63.mp3', soon:'../audio/1986216a.mp3',
   names:{ '1':'../audio/36a7db03.mp3','2':'../audio/54b0b96d.mp3','3':'../audio/1c885f45.mp3',
-          '4':'../audio/c98970ea.mp3','5':'../audio/f1a21c40.mp3','6':'../audio/42a34ab4.mp3' }
+          '4':'../audio/c98970ea.mp3','5':'../audio/f1a21c40.mp3','6':'../audio/42a34ab4.mp3',
+          '7':'../audio/dcc69136.mp3' }
 };
 var _na=null;
 function say(url){ if(!url)return; try{ if(_na)_na.pause(); _na=new Audio(url); _na.play().catch(function(){}); }catch(e){} }
@@ -196,11 +262,11 @@ function welcome(){ if(_welcomed)return; try{ if(_na)_na.pause(); _na=new Audio(
 lessons.querySelectorAll('.lesson').forEach(function(el){
   var sp=el.querySelector('.say-name');
   if(sp){
-    sp.addEventListener('click',function(ev){ ev.stopPropagation(); say(NAV.names[el.dataset.id]); });
-    sp.addEventListener('keydown',function(ev){ if(ev.key==='Enter'||ev.key===' '){ev.stopPropagation();ev.preventDefault();say(NAV.names[el.dataset.id]);} });
+    sp.addEventListener('click',function(ev){ ev.stopPropagation(); say(NAV.names[el.dataset.id]||NAV.soon); });
+    sp.addEventListener('keydown',function(ev){ if(ev.key==='Enter'||ev.key===' '){ev.stopPropagation();ev.preventDefault();say(NAV.names[el.dataset.id]||NAV.soon);} });
   }
   el.addEventListener('click',function(){
-    if(el.classList.contains('locked')){
+    if(el.classList.contains('locked')||el.classList.contains('soon')){
       AC.buzz(); say(NAV.soon);
       el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
       return;
@@ -229,7 +295,8 @@ window.__UNIT_FIRST__ = {
   '3':'../Interactive book for elementary school chapter 3/moosa-chp 3-lesson 1.html',
   '4':'../Interactive book for elementary school chapter 4/moosa-chp 4-lesson 1.html',
   '5':'../Interactive book for elementary school chapter 5/moosa-chp 5-lesson 1.html',
-  '6':'../Interactive book for elementary school chapter 6/goal-kick-math/index.html'
+  '6':'../Interactive book for elementary school chapter 6/goal-kick-math/index.html',
+  '7':'../Interactive-book-for-elementary-school-chapter-7/Apples/index.html'
 };
 
 function handleBack(){
@@ -237,23 +304,50 @@ function handleBack(){
   else { window.location.href = 'moosa-splash.html'; }
 }
 
+/* ── Part switcher: bottom button flips between الجزء الأول and الجزء الثاني ── */
+(function(){
+  var currentPart = 1;
+  var toggle = document.getElementById('partToggle');
+  var sub = document.getElementById('headerSub');
+  if(!toggle) return;
+  function setPart(p){
+    currentPart = p;
+    lessons.classList.toggle('show-part-2', p===2);
+    toggle.querySelector('.lbl').textContent = (p===1 ? 'الجزء الثاني' : 'الجزء الأول');
+    toggle.querySelector('.ico').textContent = (p===1 ? '📗' : '📘');
+    if(sub) sub.textContent = (p===1 ? 'الجزء الأول' : 'الجزء الثاني');
+    /* replay the entrance animation for the cards now in view */
+    lessons.querySelectorAll('.lesson').forEach(function(c){
+      var inP2 = c.getAttribute('data-part')==='2';
+      if((p===2)===inP2){ c.style.animation='none'; void c.offsetWidth; c.style.animation=''; }
+    });
+    lessons.scrollTop = 0;
+  }
+  toggle.addEventListener('click',function(){ AC.pop(); setPart(currentPart===1 ? 2 : 1); });
+})();
+
 /* ── Progress: star on completed units + highlight the next one ──
    Runs in both embedded and standalone (reads shared localStorage), so it
    works even when the shell can't cross-frame inject (e.g. file://). */
 (function(){
   var TOTAL={ch1:5,ch2:6,ch3:6,ch4:8,ch5:7}, U2C={'1':'ch1','2':'ch2','3':'ch3','4':'ch4','5':'ch5'};
   function chDone(ch){try{return (JSON.parse(localStorage.getItem('moosa_'+ch)||'[]')).length>=TOTAL[ch];}catch(e){return false;}}
+  // a unit (chapter) is complete when its games/lessons set a done flag, or all its lessons are finished
+  function unitDone(id){
+    try{ if(localStorage.getItem('moosa_done_ch'+id)==='1') return true; }catch(e){}
+    var ch=U2C[id]; return !!(ch && chDone(ch));
+  }
   var nextBtn=null;
   lessons.querySelectorAll('.lesson').forEach(function(btn){
     btn.classList.remove('selected'); btn.setAttribute('aria-selected','false');
-    var ch=U2C[btn.dataset.id];
-    if(ch && chDone(ch)){
+    var id=btn.dataset.id;
+    if(unitDone(id)){
       if(!btn.querySelector('.ch-done-badge')){
-        var b=document.createElement('span'); b.className='ch-done-badge'; b.textContent='⭐';
-        b.style.cssText='position:absolute;top:7px;left:7px;width:34px;height:34px;background:#facc15;color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;box-shadow:0 3px 8px rgba(0,0,0,.25);z-index:7';
+        var b=document.createElement('span'); b.className='ch-done-badge'; b.textContent='✓';
+        b.style.cssText='position:absolute;top:7px;left:7px;width:36px;height:36px;background:linear-gradient(180deg,#34d399,#16a34a);color:#fff;border:3px solid #fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:21px;font-weight:900;line-height:1;box-shadow:0 3px 8px rgba(0,0,0,.28);z-index:7';
         btn.appendChild(b);
       }
-    } else if(ch && !nextBtn && !btn.classList.contains('locked')){ nextBtn=btn; }
+    } else if(!nextBtn && !btn.classList.contains('locked') && !btn.classList.contains('soon')){ nextBtn=btn; }
   });
   if(!nextBtn) nextBtn=lessons.querySelector('.lesson[data-id="1"]');
   if(nextBtn){ nextBtn.classList.add('selected'); nextBtn.setAttribute('aria-selected','true'); selectedId=nextBtn.dataset.id; }

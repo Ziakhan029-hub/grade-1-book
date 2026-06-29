@@ -232,5 +232,6 @@ g('homeBtn').addEventListener('click',goMenu);g('menuBtn').addEventListener('cli
 buildQuestion();
 var _fg=false;document.addEventListener('pointerdown',function(){if(!_fg){_fg=true;askQuestion();}},{passive:true});
 </script>
+<script>/* mark-chapter-done */(function(){var w=document.querySelector(".gk-win, .fs-win");if(!w)return;function m(){if(w.classList.contains("show")){try{localStorage.setItem("moosa_done_ch6","1");}catch(e){}}}new MutationObserver(m).observe(w,{attributes:true,attributeFilter:["class"]});m();})();</script>
 </body>
 </html>

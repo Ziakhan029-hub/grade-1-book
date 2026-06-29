@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<script>
+/* Single narration channel: starting any spoken clip stops the previous one (prevents audio overlap). Tap/win blips use WebAudio and are unaffected. */
+(function(){
+  if(window.__mlAudioBus__)return; window.__mlAudioBus__=1;
+  var cur=null;
+  try{
+    var P=window.HTMLAudioElement&&HTMLAudioElement.prototype;
+    if(P&&P.play){
+      var op=P.play;
+      P.play=function(){
+        if(cur&&cur!==this){try{cur.pause();}catch(e){}try{cur.currentTime=0;}catch(e){}}
+        cur=this;
+        try{if(window.speechSynthesis)speechSynthesis.cancel();}catch(e){}
+        return op.apply(this,arguments);
+      };
+    }
+  }catch(e){}
+  try{
+    var ss=window.speechSynthesis;
+    if(ss&&ss.speak){
+      var osp=ss.speak;
+      ss.speak=function(u){if(cur){try{cur.pause();}catch(e){}}try{return osp.call(ss,u);}catch(e){}};
+    }
+  }catch(e){}
+})();
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>طرح التفّاح — كم تفّاحة بقيت على الشجرة؟</title>
+<meta name="description" content="٥ تفّاحات على الشجرة، تسقط منها بعضها… كم بقي؟ لعبة طرح ممتعة للأطفال." />
+<script src="confetti.browser.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body { font-family: "Baloo 2", "Comic Sans MS", "Trebuchet MS", system-ui, sans-serif; overflow: hidden; user-select: none;
+    background: linear-gradient(180deg, #a9ddf4 0%, #bfe39a 100%);
+    display: flex; align-items: center; justify-content: center; }
+  #app {
+    position: relative; aspect-ratio: 1536 / 2750; height: 100svh; max-width: 100vw; overflow: hidden;
+    background: url("Background.png") center / contain no-repeat; background-color: #a9ddf4; container-type: size;
+  }
+
+  /* ---------- HUD ---------- */
+  .hud { position: absolute; top: 0; left: 0; right: 0; z-index: 40; direction: ltr;
+    display: flex; align-items: center; justify-content: space-between; padding: 2.6cqw; }
+  .hud-group { display: flex; align-items: center; gap: 2cqw; }
+  .hud-btn { flex-shrink: 0; width: 11cqw; height: 11cqw; max-width: 54px; max-height: 54px; border-radius: 50%;
+    border: 0.7cqw solid #fff; color: #fff; font-size: 5cqw; cursor: pointer; box-shadow: 0 1.2cqw 3cqw rgba(0,0,0,0.25);
+    display: flex; align-items: center; justify-content: center; transition: transform .12s ease; }
+  .hud-btn:active { transform: scale(.9); }
+  .hud-btn.back { background: linear-gradient(180deg, #f59e0b, #d97706); }
+  .hud-btn.next { background: linear-gradient(180deg, #a855f7, #7e22ce); }
+  .hud-btn.say  { background: linear-gradient(180deg, #1cb0f6, #0a84c2); }
+  .chip { border: 0.7cqw solid #fff; border-radius: 999px; padding: 1.4cqw 3.6cqw; font-weight: 900; color: #fff;
+    font-size: 4.6cqw; text-shadow: 0 2px 0 rgba(0,0,0,0.25); box-shadow: 0 1.2cqw 3cqw rgba(0,0,0,0.2); white-space: nowrap; }
+  .chip.score { background: linear-gradient(180deg, #facc15, #f97316); }
+  .chip.lvldots { position: absolute; left: 50%; top: 2.6cqw; transform: translateX(-50%); z-index: 5;
+    display: flex; align-items: center; gap: 1.4cqw; padding: 1.6cqw 3cqw; background: linear-gradient(180deg, #22c55e, #15803d); }
+  .chip.lvldots .de { font-size: 4.4cqw; line-height: 1; }
+  .chip .dot { width: 3cqw; height: 3cqw; max-width: 15px; max-height: 15px; border-radius: 50%; box-sizing: border-box;
+    background: rgba(255,255,255,0.30); border: 0.5cqw solid rgba(255,255,255,0.78); transition: transform .2s, background .2s, box-shadow .2s; }
+  .chip .dot.on { background: #fde047; border-color: #fff; box-shadow: 0 0 1.6cqw rgba(253,224,71,.9); transform: scale(1.18); }
+
+  /* ---------- Question + equation ---------- */
+  .question { position: absolute; top: 8.2%; left: 50%; transform: translateX(-50%); z-index: 8;
+    text-align: center; direction: rtl; max-width: 84%; padding: 2.2cqw 5.5cqw; border: 1cqw solid #fff; border-radius: 6cqw;
+    background: linear-gradient(180deg, #16a34a, #065f46); font-weight: 900; font-size: 4.5cqw; line-height: 1.16; color: #fff;
+    text-shadow: 0 0.5cqw 0 rgba(0,0,0,0.3); box-shadow: 0 2cqw 5cqw rgba(0,0,0,0.3); }
+
+  .equation { position: absolute; top: 22.5%; left: 50%; transform: translateX(-50%); z-index: 8;
+    display: flex; align-items: center; justify-content: center; gap: 2.6cqw; direction: ltr;
+    border: 0.9cqw solid #fff; border-radius: 5cqw; padding: 1.6cqw 5cqw;
+    background: linear-gradient(180deg, #f97316, #c2410c);
+    font-weight: 900; font-size: 8.5cqw; color: #fff; text-shadow: 0 0.6cqw 0 rgba(0,0,0,0.3);
+    opacity: 0; transform: translateX(-50%) translateY(-3cqw) scale(.8); transition: opacity .3s, transform .35s cubic-bezier(.34,1.56,.64,1); }
+  .equation.show { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  .equation .op { color: #ffe08a; }
+  .equation #eqAns { color: #fff59d; min-width: 1.1em; display: inline-block; text-align: center; transition: color .3s; }
+  .equation #eqAns.done { color: #bbf7d0; }
+
+  /* ---------- Orchard (apples) ---------- */
+  #orchard { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+  .apple { position: absolute; width: 11cqw; height: 11cqw; transform: translate(-50%, -50%);
+    transition: top .9s cubic-bezier(.4,0,.85,.7), left .9s ease-in; }
+  .apple img { width: 100%; height: 100%; display: block; object-fit: contain; position: relative; z-index: 1;
+    filter: drop-shadow(0 1cqw 1.2cqw rgba(0,0,0,.4));
+    animation: appleIn .55s cubic-bezier(.34,1.56,.64,1) both; }
+  @keyframes appleIn { 0% { transform: translateY(-34cqw) scale(.4); opacity: 0; }
+    60% { transform: translateY(2cqw) scale(1.1); opacity: 1; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
+  .apple.fall img { animation: appleSpin .9s ease-in both; }
+  @keyframes appleSpin { 0% { transform: rotate(0); } 100% { transform: rotate(26deg); } }
+  .apple.stay.pulse img { animation: applePulse .5s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes applePulse { 0% { transform: scale(1);} 45% { transform: scale(1.22);} 100% { transform: scale(1);} }
+
+  /* ---------- Choices ---------- */
+  .choices { position: absolute; left: 50%; bottom: 3.2cqw; transform: translateX(-50%); z-index: 30;
+    display: flex; gap: 5cqw; }
+  .choice { width: 19cqw; height: 19cqw; max-width: 104px; max-height: 104px; border: 1.1cqw solid #fff; border-radius: 50%;
+    background: linear-gradient(180deg, #4ade80, #15803d); font-family: inherit; font-weight: 900; color: #fff;
+    cursor: pointer; font-size: 9cqw; text-shadow: 0 0.6cqw 0 rgba(0,0,0,0.35); box-shadow: 0 2.2cqw 0 rgba(0,0,0,0.2);
+    transition: transform .12s ease; animation: rise .4s ease both; }
+  @keyframes rise { from { transform: translateY(14cqw); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .choice:not(:disabled):active { transform: scale(.9); }
+  .choice:disabled { cursor: default; }
+  .choice.shake { animation: shake .5s; }
+  @keyframes shake { 0%,100% { transform: translateX(0);} 20%,60% { transform: translateX(-2.4cqw);} 40%,80% { transform: translateX(2.4cqw);} }
+  .choice.gone { opacity: 0; pointer-events: none; }
+
+  @keyframes bob { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-2.4cqw);} }
+  @keyframes spin { to { transform: rotate(360deg);} }
+  @keyframes fadeIn { from { opacity: 0;} to { opacity: 1;} }
+
+  /* ---------- Win overlay ---------- */
+  .gk-win { position: absolute; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; padding: 6cqw;
+    background: rgba(8,30,12,0.82); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .gk-win.show { display: flex; animation: fadeIn .35s ease; }
+  .gk-win-card { text-align: center; display: flex; flex-direction: column; align-items: center;
+    background: rgba(255,255,255,0.10); border: 0.5cqw solid rgba(255,255,255,0.22); border-radius: 7cqw;
+    padding: 5cqw 7cqw 6cqw; box-shadow: 0 2cqw 8cqw rgba(0,0,0,0.3); animation: gkWinPop .5s cubic-bezier(.34,1.56,.64,1) both; }
+  @keyframes gkWinPop { 0% { transform: scale(.5); opacity: 0; } 70% { transform: scale(1.06); } 100% { transform: scale(1); opacity: 1; } }
+  .gk-rays { position: relative; width: 42cqw; height: 42cqw; display: flex; align-items: center; justify-content: center; margin-bottom: -34cqw; }
+  .gk-rays svg { position: absolute; inset: 0; width: 100%; height: 100%; animation: spin 8s linear infinite; }
+  .gk-mascot { width: 32cqw; height: 32cqw; object-fit: contain; position: relative; z-index: 2;
+    animation: bob 1.8s ease-in-out infinite; filter: drop-shadow(0 1.4cqw 3cqw rgba(0,0,0,.35)); }
+  .gk-win-title { font-size: 8.5cqw; font-weight: 900; color: #fff; text-shadow: 0 0.5cqw 1.5cqw rgba(0,0,0,.3); margin-top: 1.4cqw; }
+  .gk-win-sub { font-size: 4.8cqw; font-weight: 800; color: #ffe08a; margin-top: 0.5cqw; direction: rtl; }
+  .gk-stars { font-size: 9cqw; letter-spacing: 1.4cqw; margin: 2cqw 0 0.5cqw; }
+  .gk-stars span { display: inline-block; opacity: 0; animation: gkStarPop .45s cubic-bezier(.34,1.56,.64,1) forwards; }
+  .gk-stars span:nth-child(1) { animation-delay: .3s; } .gk-stars span:nth-child(2) { animation-delay: .48s; } .gk-stars span:nth-child(3) { animation-delay: .66s; }
+  @keyframes gkStarPop { 0% { transform: scale(0) rotate(-30deg); opacity: 0; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+  .gk-score { font-size: 5cqw; font-weight: 800; color: #fff; margin: 1.4cqw 0 3.4cqw; direction: rtl; }
+  .gk-win-btns { display: flex; gap: 3cqw; flex-wrap: wrap; justify-content: center; }
+  .gk-btn { border: 0.7cqw solid #fff; border-radius: 4cqw; padding: 3cqw 6cqw; font-family: inherit;
+    font-size: 4.8cqw; font-weight: 900; color: #fff; cursor: pointer; box-shadow: 0 1.4cqw 0 rgba(0,0,0,.25); direction: rtl; }
+  .gk-btn-replay { background: linear-gradient(180deg,#4ade80,#16a34a); }
+  .gk-btn-menu { background: linear-gradient(180deg,#1cb0f6,#0a84c2); }
+  .gk-btn:active { transform: translateY(0.7cqw); box-shadow: 0 0.6cqw 0 rgba(0,0,0,.25); }
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- HUD -->
+  <div class="hud">
+    <div class="hud-group">
+      <button class="hud-btn back" id="backBtn" aria-label="العودة للقائمة">🏠</button>
+    </div>
+    <div class="chip lvldots" id="dots" aria-label="المستوى"><span class="de">🍎</span><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i></div>
+    <div class="hud-group">
+      <div class="chip score">⭐ <span id="score">٠</span></div>
+      <button class="hud-btn say" id="sayBtn" aria-label="استمع للسؤال">🔊</button>
+    </div>
+  </div>
+
+  <div class="question" id="question">كم تفّاحة بقيت على الشجرة؟</div>
+
+  <div class="equation" id="equation">
+    <span id="eqN">٥</span><span class="op">−</span><span id="eqK">٢</span><span class="op">=</span><span id="eqAns">؟</span>
+  </div>
+
+  <div id="orchard"></div>
+
+  <div class="choices" id="choices"></div>
+
+  <!-- completion overlay -->
+  <div class="gk-win" id="gkWin">
+    <div class="gk-win-card">
+      <div class="gk-rays"><svg viewBox="-95 -95 190 190">
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(0)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(30)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(60)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(90)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(120)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(150)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(180)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(210)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(240)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(270)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(300)"/>
+        <polygon points="0,-88 6,-46 -6,-46" fill="rgba(255,220,80,.55)" transform="rotate(330)"/>
+      </svg></div>
+      <img class="gk-mascot" src="../../mascot.png" alt="موسى" />
+      <div class="gk-win-title">أحسنت! 🎉</div>
+      <div class="gk-win-sub">أكملتَ كل المسائل!</div>
+      <div class="gk-stars"><span>⭐</span><span>⭐</span><span>⭐</span></div>
+      <div class="gk-score">النقاط: <span id="winScore">٠</span></div>
+      <div class="gk-win-btns">
+        <button class="gk-btn gk-btn-menu" id="gkMenu">القائمة 📋</button>
+        <button class="gk-btn gk-btn-replay" id="gkReplay">العب مجدداً 🔄</button>
+        <button class="gk-btn gk-btn-next" id="gkNext" style="background:linear-gradient(180deg,#34d399,#0f766e)">البطّ 🦆 ➡️</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- WebAudio blips ----------
+var AC=(function(){var ctx=null;function gc(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();if(ctx.state==='suspended')ctx.resume();return ctx;}
+  function t(f,s,d,ty,v){var c=gc(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=ty||'sine';o.frequency.setValueAtTime(f,s);g.gain.setValueAtTime(v||0.2,s);g.gain.exponentialRampToValueAtTime(0.001,s+d);o.start(s);o.stop(s+d+.01);}
+  return{
+    tap:function(){try{var c=gc(),n=c.currentTime;t(700,n,.08,'triangle',.14);}catch(e){}},
+    count:function(i){try{var c=gc(),n=c.currentTime;t(540+i*70,n,.12,'triangle',.16);}catch(e){}},
+    drop:function(){try{var c=gc(),n=c.currentTime;t(300,n,.14,'sine',.18);t(180,n+.08,.18,'sine',.16);}catch(e){}},
+    correct:function(){try{var c=gc(),n=c.currentTime;[[523,0],[659,.1],[784,.2],[1047,.32]].forEach(function(p){t(p[0],n+p[1],.18,'triangle',.2);});}catch(e){}},
+    wrong:function(){try{var c=gc(),n=c.currentTime;t(392,n,.16,'sine',.14);t(294,n+.12,.2,'sine',.14);}catch(e){}},
+    win:function(){try{var c=gc(),n=c.currentTime;[523,659,784,1047,1319].forEach(function(f,i){t(f,n+i*.1,.22,'triangle',.2);});}catch(e){}}
+  };
+})();
+
+// ---------- Narrator (FatimaNeural) ----------
+var NARR = {
+  q:'../../audio/3f7df3aa.mp3',           // "كم تفّاحة بقيت على الشجرة؟" (FatimaNeural)
+  done:'../../audio/3cc9305a.mp3',         // win (shared)
+  ok:{ 1:'../../audio/02e8fa1d.mp3', 2:'../../audio/5983779a.mp3', 3:'../../audio/8f692057.mp3',
+       4:'../../audio/0ad42161.mp3', 5:'../../audio/946cca9c.mp3', 6:'../../audio/16f0a490.mp3',
+       7:'../../audio/ecf66b4c.mp3', 8:'../../audio/e1e74153.mp3' }   // "N! أحسنت"
+};
+var _na=null;
+function narrate(u){ if(!u)return; try{ if(_na)_na.pause(); _na=new Audio(u); _na.play().catch(function(){}); }catch(e){} }
+function askQuestion(){ narrate(NARR.q); }
+
+function fireConfetti(){ try{ confetti({particleCount:170,spread:115,origin:{y:0.4},colors:['#ef4444','#22c55e','#facc15','#1cb0f6','#f97316','#a3e635'],scalar:1.3}); }catch(e){} }
+
+// ---------- Helpers ----------
+var AR=['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];function toAr(n){return String(n).replace(/[0-9]/g,function(d){return AR[+d];});}
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function g(id){return document.getElementById(id);}
+
+// apple slots (percent of #app): nestled inside the leafy crown (not above / outside it)
+var TREE=[[50,36],[34,40],[66,40],[26,47],[44,46],[58,46],[74,48],[38,55],[62,55]];
+// where fallen apples land (spread on the grass below the tree)
+var GROUND=[[30,82],[66,83],[48,80],[18,85],[80,84],[40,87],[60,87],[24,80],[74,87]];
+
+// difficulty: 5 rounds, easiest -> hardest (N on the tree)
+var ROUNDS=[[3,4],[4,5],[5,6],[6,7],[7,9]];
+var TOTAL=ROUNDS.length;
+
+var roundIdx=0, solved=0, score=0, locked=true, N=5, K=2, R=3, seq=0;
+var orchard=g('orchard'), choicesEl=g('choices');
+
+function renderDots(){ var c=g('dots'); for(var j=0;j<5;j++){ c.children[j+1] && c.children[j+1].classList.toggle('on', j<solved); } }
+
+function makeChoices(answer){
+  var set={}; set[answer]=1; var list=[answer];
+  while(list.length<3){ var d=(Math.random()<0.5?-1:1)*rand(1,2); var v=Math.max(0,Math.min(9,answer+d)); if(!set[v]){set[v]=1;list.push(v);} }
+  return list.sort(function(){return Math.random()-0.5;});
+}
+
+function makeApple(slot){
+  var a=document.createElement('div'); a.className='apple';
+  a.style.left=slot[0]+'%'; a.style.top=slot[1]+'%';
+  a.innerHTML='<img src="apples.png" alt="">';
+  orchard.appendChild(a); return a;
+}
+
+function newRound(){
+  var s=++seq; locked=true;
+  orchard.innerHTML=''; choicesEl.innerHTML='';
+  g('equation').classList.remove('show');
+  g('eqAns').textContent='؟'; g('eqAns').classList.remove('done');
+
+  var rg=ROUNDS[roundIdx]; N=rand(rg[0],rg[1]); K=rand(1,N-1); R=N-K;
+
+  // place N apples on the tree, appearing one-by-one (count-up feel + ascending tone)
+  var apples=[];
+  for(var i=0;i<N;i++){ var a=makeApple(TREE[i]); a.querySelector('img').style.animationDelay=(i*0.23)+'s'; apples.push(a); }
+  apples.forEach(function(a,i){
+    setTimeout(function(){ if(s!==seq)return; AC.count(i); }, 360+i*230);
+  });
+
+  // after counting, the last K apples fall to the ground
+  var afterCount=360+N*230+650;
+  setTimeout(function(){ if(s!==seq)return;
+    for(var f=0; f<K; f++){
+      (function(idx,order){
+        setTimeout(function(){ if(s!==seq)return;
+          var a=apples[idx]; a.classList.add('fall');
+          var gpos=GROUND[order]; a.style.top=gpos[1]+'%'; a.style.left=gpos[0]+'%';
+          AC.drop();
+        }, order*280);
+      })(N-1-f, f);
+    }
+    // mark remaining apples
+    for(var r=0;r<R;r++){ apples[r].classList.add('stay'); }
+  }, afterCount);
+
+  // reveal equation + choices, ask the question
+  var afterFall=afterCount + K*280 + 900;
+  setTimeout(function(){ if(s!==seq)return;
+    g('eqN').textContent=toAr(N); g('eqK').textContent=toAr(K);
+    g('equation').classList.add('show');
+    state_choices(R);
+    locked=false;
+    askQuestion();
+  }, afterFall);
+}
+
+function state_choices(answer){
+  var opts=makeChoices(answer);
+  choicesEl.innerHTML='';
+  opts.forEach(function(v){
+    var b=document.createElement('button'); b.className='choice'; b.textContent=toAr(v); b.dataset.val=v;
+    b.addEventListener('click',function(){ pick(v,b); });
+    choicesEl.appendChild(b);
+  });
+}
+
+function pick(v,btn){
+  if(locked)return;
+  if(v===R){
+    locked=true; AC.tap();
+    narrate(NARR.ok[R]||null);
+    g('eqAns').textContent=toAr(R); g('eqAns').classList.add('done');
+    // celebrate the apples left on the tree
+    orchard.querySelectorAll('.apple.stay').forEach(function(a){ a.classList.add('pulse'); });
+    choicesEl.querySelectorAll('.choice').forEach(function(b){ b.disabled=true; if(b!==btn) b.classList.add('gone'); });
+    AC.correct(); fireConfetti();
+    solved++; score+=10; g('score').textContent=toAr(score); renderDots();
+    setTimeout(function(){ if(roundIdx>=TOTAL-1){ showWin(); } else { roundIdx++; newRound(); } }, 2200);
+  } else {
+    AC.wrong();
+    btn.classList.remove('shake'); void btn.offsetWidth; btn.classList.add('shake');
+  }
+}
+
+function showWin(){
+  g('winScore').textContent=toAr(score);
+  g('gkWin').classList.add('show');
+  AC.win(); fireConfetti(); narrate(NARR.done);
+}
+function restart(){ g('gkWin').classList.remove('show'); roundIdx=0; solved=0; score=0; g('score').textContent=toAr(0); renderDots(); newRound(); }
+function skipRound(){ AC.tap(); if(roundIdx>=TOTAL-1){ showWin(); } else { roundIdx++; newRound(); } }
+function goMenu(){ window.location.href='../../Interactive book for elementary school chapter 1/moosa-lessons.html'; }
+function goDucks(){ window.location.href='../Ducks/index.html'; }
+
+g('backBtn').addEventListener('click',goMenu);
+g('gkMenu').addEventListener('click',goMenu);
+g('gkReplay').addEventListener('click',restart);
+g('gkNext').addEventListener('click',goDucks);
+g('sayBtn').addEventListener('click',askQuestion);
+
+renderDots();
+newRound();
+
+// autoplay gate — narrate on first touch
+var _fg=false;
+g('app').addEventListener('pointerdown',function(){ if(!_fg){_fg=true; if(!locked) askQuestion();} },{passive:true});
+</script>
+<script>/* mark-chapter-done */(function(){var w=document.querySelector(".gk-win, .fs-win");if(!w)return;function m(){if(w.classList.contains("show")){try{localStorage.setItem("moosa_done_ch7","1");}catch(e){}}}new MutationObserver(m).observe(w,{attributes:true,attributeFilter:["class"]});m();})();</script>
+</body>
+</html>

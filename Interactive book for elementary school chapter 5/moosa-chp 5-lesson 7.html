@@ -46,7 +46,7 @@ body{background:linear-gradient(160deg,#FFFFFF 0%,#F2F2F2 100%);margin:0}
   --ease-b:cubic-bezier(.34,1.56,.64,1);
   display:flex;flex-direction:column;
   height:100vh;height:100svh;
-  max-width:480px;margin:0 auto;
+  max-width:560px;margin:0 auto;
   background:var(--cream);overflow:hidden;position:relative;
   font-family:var(--font-b);color:var(--ink);
   -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;
@@ -1522,3 +1522,98 @@ renderStep();
 </script>
 </body>
 </html>
+
+
+<style>@keyframes mlHintPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}</style>
+<script>
+/* Kid-UX: tap-to-continue + tap-to-hear + gentle wrong tone */
+(function(){
+  if(window.__mlKidUX__) return; window.__mlKidUX__=1;
+
+  /* shared soft audio context */
+  var _ac=null;
+  function ac(){ try{ if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)(); if(_ac.state==='suspended')_ac.resume(); }catch(e){} return _ac; }
+
+  /* ---- #6 gentle "try again" tone (replaces the harsh buzzer) ---- */
+  function gentleWrong(){
+    try{ var c=ac(); if(!c)return; var t=c.currentTime;
+      [[392,0,.16],[294,.12,.22]].forEach(function(a){
+        var o=c.createOscillator(), g=c.createGain();
+        o.type='sine'; o.frequency.value=a[0];
+        g.gain.setValueAtTime(0,t+a[1]);
+        g.gain.linearRampToValueAtTime(.11,t+a[1]+.02);
+        g.gain.exponentialRampToValueAtTime(.0001,t+a[1]+a[2]);
+        o.connect(g); g.connect(c.destination);
+        o.start(t+a[1]); o.stop(t+a[1]+a[2]+.03);
+      });
+    }catch(e){}
+  }
+  function applyGentleWrong(){
+    try{ if(typeof mlAudio!=='undefined'&&mlAudio&&mlAudio.wrong) mlAudio.wrong=gentleWrong; }catch(e){}
+    try{ if(typeof mlSnd!=='undefined'&&mlSnd&&mlSnd.wrong) mlSnd.wrong=gentleWrong; }catch(e){}
+    try{ if(typeof AC!=='undefined'&&AC&&AC.buzz) AC.buzz=gentleWrong; }catch(e){}
+  }
+  for(var d=0; d<=2000; d+=300) setTimeout(applyGentleWrong, d);
+
+  /* ---- #2 tap-to-continue (replaces forced 3s auto-advance) ---- */
+  function canAdvance(){
+    try{ if(typeof mlNextStep==='function')return 1; }catch(e){}
+    try{ if(typeof mlNextQuestion==='function')return 1; }catch(e){}
+    try{ if(typeof mlNext==='function')return 1; }catch(e){}
+    try{ if(typeof mlNextQ==='function')return 1; }catch(e){}
+    try{ if(typeof goNext==='function')return 1; }catch(e){}
+    try{ if(typeof window.advance==='function')return 1; }catch(e){}
+    return 0;
+  }
+  function advance(){
+    try{ if(typeof mlNextStep==='function'){mlNextStep();return;} }catch(e){}
+    try{ if(typeof mlNextQuestion==='function'){mlNextQuestion();return;} }catch(e){}
+    try{ if(typeof mlNext==='function'){mlNext();return;} }catch(e){}
+    try{ if(typeof mlNextQ==='function'){mlNextQ();return;} }catch(e){}
+    try{ if(typeof goNext==='function'){goNext();return;} }catch(e){}
+    try{ if(typeof window.advance==='function'){window.advance();return;} }catch(e){}
+  }
+  function clearLessonTimers(){
+    try{ clearInterval(mlCountdownTimer); }catch(e){}
+    try{ clearInterval(mlCdTimer); }catch(e){}
+    try{ clearInterval(_cdTimer); }catch(e){}
+  }
+  var HOLD=5000, lastReRun=0;
+  document.addEventListener('animationstart', function(e){
+    if(!e || e.animationName!=='mlCountdownShrink') return;
+    if(Date.now()-lastReRun < 250) return;     /* swallow only our own re-run; every real round is processed */
+    var fill=e.target; if(!fill) return;
+    var bar=(fill.closest&&fill.closest('.countdown-bar'))||fill.parentElement;
+    if(!bar) return;
+    if(!canAdvance()) return;                   /* safety: never take over if we can't advance */
+    clearLessonTimers();                         /* stop the lesson's quick auto-advance */
+    lastReRun=Date.now();
+    try{ fill.style.animation='none'; void fill.offsetWidth; fill.style.animation='mlCountdownShrink '+(HOLD/1000)+'s linear forwards'; }catch(e){}
+    var txt=bar.querySelector('.countdown-txt');
+    if(txt){ txt.textContent='التالي ›'; txt.style.fontSize='20px'; txt.style.fontWeight='800'; }
+    bar.style.cursor='pointer';
+    try{ bar.setAttribute('role','button'); bar.setAttribute('aria-label','التالي'); }catch(e){}
+    var gone=false, ft=null;
+    function go(){ if(gone)return; gone=true; try{ if(ft)clearTimeout(ft); }catch(e){} if(bar.__goH){ bar.removeEventListener('click', bar.__goH); bar.__goH=null; } advance(); }
+    if(bar.__goH) bar.removeEventListener('click', bar.__goH);
+    bar.__goH=go; bar.addEventListener('click', go);
+    ft=setTimeout(go, HOLD);                     /* gentle fallback — slower than the old 3s, never a dead-end */
+  }, true);
+
+  /* ---- #3 "tap to hear" hint if the prompt audio did not autoplay ---- */
+  window.addEventListener('load', function(){
+    var heard=false, hint=null;
+    function rm(){ if(hint&&hint.parentNode){ hint.parentNode.removeChild(hint); hint=null; } }
+    document.addEventListener('play', function(){ heard=true; rm(); }, true);
+    document.addEventListener('pointerdown', function(){ heard=true; rm(); }, {once:true,passive:true});
+    setTimeout(function(){
+      if(heard||hint) return;
+      hint=document.createElement('div');
+      hint.textContent='اسمع 🔊';
+      hint.style.cssText='position:absolute;bottom:74px;right:14px;z-index:10000;background:#1F1F1F;color:#fff;font-family:"Baloo Bhaijaan 2","Tajawal",sans-serif;font-weight:800;font-size:14px;padding:7px 13px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,.3);animation:mlHintPulse 1s ease-in-out infinite;pointer-events:none;';
+      (document.querySelector('.ml-widget')||document.body).appendChild(hint);
+    }, 2200);
+    setTimeout(rm, 9000);
+  });
+})();
+</script>
