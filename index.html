@@ -151,6 +151,12 @@
 
   var ROOT5 = 'Interactive book for elementary school chapter 5/';
 
+  var ROOT8 = 'Interactive book for elementary school chapter 8/';
+
+  var ROOT9 = 'Interactive book for elementary school chapter 9/';
+
+  var ROOT10 = 'Interactive book for elementary school chapter 10/';
+
   var CHAPTERS = {
     ch1: {
       root: ROOT1,
@@ -218,6 +224,44 @@
       ],
       lessonsPage: ROOT1 + 'moosa-lessons.html',
       dataId: '5'
+    },
+    ch8: {
+      root: ROOT8,
+      lessons: [
+        'moosa-chp 8-lesson 1.html',
+        'moosa-chp 8-lesson 2.html',
+        'moosa-chp 8-lesson 3.html',
+        'moosa-chp 8-lesson 4.html',
+        'moosa-chp 8-lesson 5.html'
+      ],
+      lessonsPage: ROOT1 + 'moosa-lessons.html',
+      dataId: '8'
+    },
+    ch9: {
+      root: ROOT9,
+      lessons: [
+        'moosa-chp 9-lesson 1.html',
+        'moosa-chp 9-lesson 2.html',
+        'moosa-chp 9-lesson 3.html',
+        'moosa-chp 9-lesson 4.html',
+        'moosa-chp 9-lesson 5.html',
+        'moosa-chp 9-lesson 6.html',
+        'moosa-chp 9-lesson 7.html'
+      ],
+      lessonsPage: ROOT1 + 'moosa-lessons.html',
+      dataId: '9'
+    },
+    ch10: {
+      root: ROOT10,
+      lessons: [
+        'moosa-chp 10-lesson 1.html',
+        'moosa-chp 10-lesson 2.html',
+        'moosa-chp 10-lesson 3.html',
+        'moosa-chp 10-lesson 4.html',
+        'moosa-chp 10-lesson 5.html'
+      ],
+      lessonsPage: ROOT1 + 'moosa-lessons.html',
+      dataId: '10'
     }
   };
 
@@ -252,8 +296,17 @@
     return p.length >= total;
   }
 
+  // Remember the current view so a browser refresh restores it (instead of the splash screen)
+  function saveView(url) {
+    try { localStorage.setItem('moosa_view', JSON.stringify({ url: url, ch: currentChapter, idx: currentIdx })); } catch(e) {}
+  }
+  function readView() {
+    try { return JSON.parse(localStorage.getItem('moosa_view') || 'null'); } catch(e) { return null; }
+  }
+
   // ── Navigation ───────────────────────────────────────────────────────
   function loadUrl(url) {
+    saveView(url);   // persist before loading (works under file://; no cross-origin read needed)
     loader.classList.add('show');
     frame.style.opacity = '0';
     frame.src = url;
@@ -296,9 +349,14 @@
     // Disconnect previous win observer
     if (winObserver) { try { winObserver.disconnect(); } catch(e){} winObserver = null; }
 
+    // Persist current view (covers self-navigations too, e.g. splash → lessons)
+    if (fname && fname !== 'about:blank') {
+      try { saveView(frame.contentWindow.location.href); } catch(e) {}
+    }
+
     if (fname === 'moosa-lessons.html') {
       injectLessonsPage();
-    } else if (fname.match(/moosa-lesson-classify|moosa-chp 2-lesson|moosa-chp 3-lesson|moosa-chp 4-lesson|moosa-chp 5-lesson/)) {
+    } else if (fname.match(/moosa-lesson-classify|moosa-chp 2-lesson|moosa-chp 3-lesson|moosa-chp 4-lesson|moosa-chp 5-lesson|moosa-chp 8-lesson|moosa-chp 9-lesson|moosa-chp 10-lesson/)) {
       watchForWin();
     }
   });
@@ -391,7 +449,7 @@
     if (!d || typeof d !== 'object') return;
 
     if (d.action === 'openLesson') {
-      var idMap = { '1': 'ch1', '2': 'ch2', '3': 'ch3', '4': 'ch4', '5': 'ch5' };
+      var idMap = { '1': 'ch1', '2': 'ch2', '3': 'ch3', '4': 'ch4', '5': 'ch5', '8': 'ch8', '9': 'ch9', '10': 'ch10' };
       var chKey = idMap[String(d.id)];
       if (chKey) startChapter(chKey);
       else if (GAMES[String(d.id)]) { currentChapter = null; loadUrl(GAMES[String(d.id)]); }
@@ -414,8 +472,16 @@
     }
   });
 
-  // ── Initial load ─────────────────────────────────────────────────────
+  // ── Initial load: restore the last view on refresh, else show the splash ──
   loader.classList.add('show');
+  (function restoreView(){
+    var v = readView();
+    if (v && v.url) {
+      currentChapter = v.ch || null;
+      currentIdx = (typeof v.idx === 'number' ? v.idx : 0);
+      loadUrl(v.url);   // overrides the static splash src; cancels its in-flight load
+    }
+  })();
 
 })();
 </script>

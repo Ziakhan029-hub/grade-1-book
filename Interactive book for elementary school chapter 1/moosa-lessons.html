@@ -47,18 +47,11 @@ body{font-family:var(--font-b);display:flex;align-items:center;justify-content:c
 
 /* ── Header ── */
 .header{background:linear-gradient(135deg,#7c3aed 0%,#db2777 100%);
-  padding:14px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;
+  padding:26px 16px;display:flex;align-items:center;justify-content:center;gap:12px;flex-shrink:0;
   box-shadow:0 6px 18px rgba(124,58,237,.35);position:relative;z-index:3;}
-.header-mascot{width:48px;height:48px;flex-shrink:0;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(0,0,0,.25));
-  animation:bob 2.4s ease-in-out infinite;}
-@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-5px) rotate(3deg)}}
-.header-text{flex:1;min-width:0}
-.header-title{font-family:var(--font-d);font-size:22px;font-weight:800;color:#fff;line-height:1;text-shadow:0 2px 4px rgba(0,0,0,.2)}
-.header-sub{font-size:13px;font-weight:600;color:rgba(255,255,255,.92);margin-top:4px}
-.hdr-say{flex-shrink:0;width:46px;height:46px;border:3px solid rgba(255,255,255,.9);border-radius:50%;
-  background:rgba(255,255,255,.22);color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 0 rgba(0,0,0,.18);transition:transform .12s var(--ease-b);-webkit-tap-highlight-color:transparent;}
-.hdr-say:active{transform:scale(.9) translateY(2px)}
+.header-text{min-width:0;text-align:center}
+.header-title{font-family:var(--font-d);font-size:30px;font-weight:800;color:#fff;line-height:1;text-shadow:0 2px 4px rgba(0,0,0,.2)}
+.header-sub{font-size:18px;font-weight:600;color:rgba(255,255,255,.92);margin-top:6px}
 
 /* ── Cards ── */
 .lessons{display:flex;flex-direction:column;gap:11px;flex:1;padding:14px 16px;overflow-y:auto;-webkit-overflow-scrolling:touch;align-content:center;}
@@ -131,12 +124,10 @@ body{font-family:var(--font-b);display:flex;align-items:center;justify-content:c
 <div class="phone">
 
   <div class="header">
-    <img class="header-mascot" src="../mascot.png" alt="موسى">
     <div class="header-text">
-      <div class="header-title">موسى</div>
+      <div class="header-title">الصف الأول الابتدائي</div>
       <div class="header-sub" id="headerSub">الجزء الأول</div>
     </div>
-    <button class="hdr-say" id="hdrSay" aria-label="استمع">🔊</button>
   </div>
 
   <div class="lessons" id="lessons" aria-label="قائمة الألعاب">
@@ -184,22 +175,19 @@ body{font-family:var(--font-b);display:flex;align-items:center;justify-content:c
       <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
     </button>
 
-    <button class="lesson soon" data-id="8" data-part="2" style="--c1:#fbbf24;--c2:#f59e0b">
-      <span class="soon-ribbon">قريباً</span>
+    <button class="lesson" data-id="8" data-part="2" style="--c1:#fbbf24;--c2:#f59e0b">
       <span class="tile" aria-hidden="true">🧮</span>
       <span class="lesson-label">طرائق الجمع والطرح</span>
       <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
     </button>
 
-    <button class="lesson soon" data-id="9" data-part="2" style="--c1:#22d3ee;--c2:#0891b2">
-      <span class="soon-ribbon">قريباً</span>
+    <button class="lesson" data-id="9" data-part="2" style="--c1:#22d3ee;--c2:#0891b2">
       <span class="tile" aria-hidden="true">🧱</span>
       <span class="lesson-label">القيمة المنزلية</span>
       <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
     </button>
 
-    <button class="lesson soon" data-id="10" data-part="2" style="--c1:#4ade80;--c2:#16a34a">
-      <span class="soon-ribbon">قريباً</span>
+    <button class="lesson" data-id="10" data-part="2" style="--c1:#4ade80;--c2:#16a34a">
       <span class="tile" aria-hidden="true">📏</span>
       <span class="lesson-label">القياس</span>
       <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
@@ -244,7 +232,7 @@ var NAV = {
   welcome:'../audio/84b12e63.mp3', soon:'../audio/1986216a.mp3',
   names:{ '1':'../audio/36a7db03.mp3','2':'../audio/54b0b96d.mp3','3':'../audio/1c885f45.mp3',
           '4':'../audio/c98970ea.mp3','5':'../audio/f1a21c40.mp3','6':'../audio/42a34ab4.mp3',
-          '7':'../audio/dcc69136.mp3' }
+          '7':'../audio/dcc69136.mp3','8':'../audio/115da9a6.mp3','9':'../audio/2a39f7ac.mp3','10':'../audio/a7d5d90a.mp3' }
 };
 var _na=null;
 function say(url){ if(!url)return; try{ if(_na)_na.pause(); _na=new Audio(url); _na.play().catch(function(){}); }catch(e){} }
@@ -282,7 +270,6 @@ lessons.querySelectorAll('.lesson').forEach(function(el){
   });
 });
 
-document.getElementById('hdrSay').addEventListener('click',function(){ say(NAV.welcome); });
 
 /* welcome narration — try on load, fall back to first touch (autoplay gate) */
 window.addEventListener('load',function(){ setTimeout(welcome,350); });
@@ -296,7 +283,10 @@ window.__UNIT_FIRST__ = {
   '4':'../Interactive book for elementary school chapter 4/moosa-chp 4-lesson 1.html',
   '5':'../Interactive book for elementary school chapter 5/moosa-chp 5-lesson 1.html',
   '6':'../Interactive book for elementary school chapter 6/goal-kick-math/index.html',
-  '7':'../Interactive-book-for-elementary-school-chapter-7/Apples/index.html'
+  '7':'../Interactive-book-for-elementary-school-chapter-7/Apples/index.html',
+  '8':'../Interactive book for elementary school chapter 8/moosa-chp 8-lesson 1.html',
+  '9':'../Interactive book for elementary school chapter 9/moosa-chp 9-lesson 1.html',
+  '10':'../Interactive book for elementary school chapter 10/moosa-chp 10-lesson 1.html'
 };
 
 function handleBack(){
