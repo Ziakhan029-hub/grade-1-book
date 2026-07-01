@@ -193,24 +193,21 @@ body{font-family:var(--font-b);display:flex;align-items:center;justify-content:c
       <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
     </button>
 
-    <button class="lesson soon" data-id="11" data-part="2" style="--c1:#818cf8;--c2:#4f46e5">
-      <span class="soon-ribbon">قريباً</span>
+    <button class="lesson" data-id="11" data-part="2" style="--c1:#818cf8;--c2:#4f46e5">
       <span class="tile" aria-hidden="true">🔁</span>
       <span class="lesson-label">أنماط الأعداد</span>
       <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
     </button>
 
-    <button class="lesson soon" data-id="12" data-part="2" style="--c1:#fcd34d;--c2:#d97706">
-      <span class="soon-ribbon">قريباً</span>
-      <span class="tile" aria-hidden="true">🪙</span>
-      <span class="lesson-label">النقود</span>
+    <button class="lesson" data-id="12" data-part="2" style="--c1:#f472b6;--c2:#db2777">
+      <span class="tile" aria-hidden="true">📐</span>
+      <span class="lesson-label">الأشكال الهندسية والكسور</span>
       <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
     </button>
 
-    <button class="lesson soon" data-id="13" data-part="2" style="--c1:#f472b6;--c2:#db2777">
-      <span class="soon-ribbon">قريباً</span>
-      <span class="tile" aria-hidden="true">📐</span>
-      <span class="lesson-label">الأشكال الهندسية والكسور</span>
+    <button class="lesson" data-id="13" data-part="2" style="--c1:#fcd34d;--c2:#d97706">
+      <span class="tile" aria-hidden="true">🪙</span>
+      <span class="lesson-label">النقود</span>
       <span class="say-name" role="button" tabindex="0" aria-label="استمع للاسم">🔊</span>
     </button>
 
@@ -232,7 +229,7 @@ var NAV = {
   welcome:'../audio/84b12e63.mp3', soon:'../audio/1986216a.mp3',
   names:{ '1':'../audio/36a7db03.mp3','2':'../audio/54b0b96d.mp3','3':'../audio/1c885f45.mp3',
           '4':'../audio/c98970ea.mp3','5':'../audio/f1a21c40.mp3','6':'../audio/42a34ab4.mp3',
-          '7':'../audio/dcc69136.mp3','8':'../audio/115da9a6.mp3','9':'../audio/2a39f7ac.mp3','10':'../audio/a7d5d90a.mp3' }
+          '7':'../audio/dcc69136.mp3','8':'../audio/115da9a6.mp3','9':'../audio/2a39f7ac.mp3','10':'../audio/a7d5d90a.mp3','11':'../audio/d8a1f902.mp3','12':'../audio/3090d367.mp3','13':'../audio/6082f2e2.mp3' }
 };
 var _na=null;
 function say(url){ if(!url)return; try{ if(_na)_na.pause(); _na=new Audio(url); _na.play().catch(function(){}); }catch(e){} }
@@ -286,7 +283,10 @@ window.__UNIT_FIRST__ = {
   '7':'../Interactive-book-for-elementary-school-chapter-7/Apples/index.html',
   '8':'../Interactive book for elementary school chapter 8/moosa-chp 8-lesson 1.html',
   '9':'../Interactive book for elementary school chapter 9/moosa-chp 9-lesson 1.html',
-  '10':'../Interactive book for elementary school chapter 10/moosa-chp 10-lesson 1.html'
+  '10':'../Interactive book for elementary school chapter 10/moosa-chp 10-lesson 1.html',
+  '11':'../Interactive book for elementary school chapter 11/moosa-chp 11-lesson 1.html',
+  '12':'../Interactive book for elementary school chapter 12/moosa-chp 12-lesson 1.html',
+  '13':'../Interactive book for elementary school chapter 13/moosa-chp 13-lesson 1.html'
 };
 
 function handleBack(){

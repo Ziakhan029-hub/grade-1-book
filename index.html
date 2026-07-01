@@ -157,6 +157,12 @@
 
   var ROOT10 = 'Interactive book for elementary school chapter 10/';
 
+  var ROOT11 = 'Interactive book for elementary school chapter 11/';
+
+  var ROOT12 = 'Interactive book for elementary school chapter 12/';
+
+  var ROOT13 = 'Interactive book for elementary school chapter 13/';
+
   var CHAPTERS = {
     ch1: {
       root: ROOT1,
@@ -262,6 +268,43 @@
       ],
       lessonsPage: ROOT1 + 'moosa-lessons.html',
       dataId: '10'
+    },
+    ch11: {
+      root: ROOT11,
+      lessons: [
+        'moosa-chp 11-lesson 1.html',
+        'moosa-chp 11-lesson 2.html',
+        'moosa-chp 11-lesson 3.html',
+        'moosa-chp 11-lesson 4.html'
+      ],
+      lessonsPage: ROOT1 + 'moosa-lessons.html',
+      dataId: '11'
+    },
+    ch12: {
+      root: ROOT12,
+      lessons: [
+        'moosa-chp 12-lesson 1.html',
+        'moosa-chp 12-lesson 2.html',
+        'moosa-chp 12-lesson 3.html',
+        'moosa-chp 12-lesson 4.html',
+        'moosa-chp 12-lesson 5.html',
+        'moosa-chp 12-lesson 6.html',
+        'moosa-chp 12-lesson 7.html'
+      ],
+      lessonsPage: ROOT1 + 'moosa-lessons.html',
+      dataId: '12'
+    },
+    ch13: {
+      root: ROOT13,
+      lessons: [
+        'moosa-chp 13-lesson 1.html',
+        'moosa-chp 13-lesson 2.html',
+        'moosa-chp 13-lesson 3.html',
+        'moosa-chp 13-lesson 4.html',
+        'moosa-chp 13-lesson 5.html'
+      ],
+      lessonsPage: ROOT1 + 'moosa-lessons.html',
+      dataId: '13'
     }
   };
 
@@ -356,7 +399,7 @@
 
     if (fname === 'moosa-lessons.html') {
       injectLessonsPage();
-    } else if (fname.match(/moosa-lesson-classify|moosa-chp 2-lesson|moosa-chp 3-lesson|moosa-chp 4-lesson|moosa-chp 5-lesson|moosa-chp 8-lesson|moosa-chp 9-lesson|moosa-chp 10-lesson/)) {
+    } else if (fname.match(/moosa-lesson-classify|moosa-chp 2-lesson|moosa-chp 3-lesson|moosa-chp 4-lesson|moosa-chp 5-lesson|moosa-chp 8-lesson|moosa-chp 9-lesson|moosa-chp 10-lesson|moosa-chp 11-lesson|moosa-chp 12-lesson|moosa-chp 13-lesson/)) {
       watchForWin();
     }
   });
@@ -449,7 +492,7 @@
     if (!d || typeof d !== 'object') return;
 
     if (d.action === 'openLesson') {
-      var idMap = { '1': 'ch1', '2': 'ch2', '3': 'ch3', '4': 'ch4', '5': 'ch5', '8': 'ch8', '9': 'ch9', '10': 'ch10' };
+      var idMap = { '1': 'ch1', '2': 'ch2', '3': 'ch3', '4': 'ch4', '5': 'ch5', '8': 'ch8', '9': 'ch9', '10': 'ch10', '11': 'ch11', '12': 'ch12', '13': 'ch13' };
       var chKey = idMap[String(d.id)];
       if (chKey) startChapter(chKey);
       else if (GAMES[String(d.id)]) { currentChapter = null; loadUrl(GAMES[String(d.id)]); }
